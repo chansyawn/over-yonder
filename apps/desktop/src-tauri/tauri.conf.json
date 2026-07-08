@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Continue Demo",
+  "version": "0.0.0",
+  "identifier": "com.continue.demo",
+  "build": {
+    "beforeDevCommand": "vp dev",
+    "beforeBuildCommand": "vp build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Continue Demo",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "icon": []
+  }
+}

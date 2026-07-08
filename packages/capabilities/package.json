@@ -1,0 +1,33 @@
+{
+  "name": "@continue/capabilities",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./opfs": {
+      "types": "./src/opfs.ts",
+      "default": "./src/opfs.ts"
+    },
+    "./tauri": {
+      "types": "./src/tauri.ts",
+      "default": "./src/tauri.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack src/index.ts src/opfs.ts src/tauri.ts",
+    "check": "vp check"
+  },
+  "dependencies": {
+    "@tauri-apps/plugin-fs": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

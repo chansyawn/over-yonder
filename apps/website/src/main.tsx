@@ -1,0 +1,18 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createApp } from "@continue/app";
+import { createOpfsTextFileStore } from "@continue/capabilities/opfs";
+
+const root = document.querySelector<HTMLDivElement>("#app");
+
+if (!root) {
+  throw new Error("App root element was not found.");
+}
+
+createRoot(root).render(
+  <StrictMode>
+    {createApp({
+      demoFile: createOpfsTextFileStore("demo.txt"),
+    })}
+  </StrictMode>,
+);
