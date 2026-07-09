@@ -23,7 +23,7 @@
     "check": "vp check"
   },
   "dependencies": {
-    "@tauri-apps/plugin-fs": "catalog:"
+    "@tauri-apps/plugin-fs": "^2.5.1"
   },
   "devDependencies": {
     "typescript": "catalog:",

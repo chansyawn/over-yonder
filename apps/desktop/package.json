@@ -12,13 +12,13 @@
   "dependencies": {
     "@continue/app": "workspace:*",
     "@continue/capabilities": "workspace:*",
-    "@tauri-apps/api": "catalog:",
-    "@tauri-apps/plugin-fs": "catalog:",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-fs": "^2.5.1",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "catalog:",
+    "@tauri-apps/cli": "^2.11.4",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
