@@ -10,8 +10,8 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
-    "@continue/app": "workspace:*",
-    "@continue/capabilities": "workspace:*",
+    "@over-yonder/app": "workspace:*",
+    "@over-yonder/capabilities": "workspace:*",
     "@tauri-apps/api": "^2.11.1",
     "@tauri-apps/plugin-fs": "^2.5.1",
     "react": "catalog:",

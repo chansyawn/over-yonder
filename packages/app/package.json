@@ -1,5 +1,5 @@
 {
-  "name": "@continue/app",
+  "name": "@over-yonder/app",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -16,7 +16,7 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@continue/capabilities": "workspace:*",
+    "@over-yonder/capabilities": "workspace:*",
     "@tanstack/react-router": "^1.170.17",
     "react": "catalog:",
     "react-dom": "catalog:"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AppCapabilities } from "@continue/capabilities";
+import type { AppCapabilities } from "@over-yonder/capabilities";
 
 interface DemoPageProps {
   capabilities: AppCapabilities;

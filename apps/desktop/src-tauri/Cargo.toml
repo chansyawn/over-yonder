@@ -1,12 +1,12 @@
 [package]
-name = "continue-desktop"
+name = "over-yonder-desktop"
 version = "0.0.0"
-description = "Continue demo desktop app"
-authors = ["Continue"]
+description = "Over Yonder desktop app"
+authors = ["Over Yonder"]
 edition = "2021"
 
 [lib]
-name = "continue_desktop_lib"
+name = "over_yonder_desktop_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

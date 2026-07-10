@@ -6,7 +6,7 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import type { AppCapabilities } from "@continue/capabilities";
+import type { AppCapabilities } from "@over-yonder/capabilities";
 import { DemoPage } from "./features/demo/demo-page.tsx";
 
 export function createApp(capabilities: AppCapabilities): ReactNode {

@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createApp } from "@continue/app";
-import { createTauriTextFileStore } from "@continue/capabilities/tauri";
+import { createApp } from "@over-yonder/app";
+import { createTauriTextFileStore } from "@over-yonder/capabilities/tauri";
 
 const root = document.querySelector<HTMLDivElement>("#app");
 
