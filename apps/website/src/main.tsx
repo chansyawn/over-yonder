@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createApp } from "@over-yonder/app";
+import "@over-yonder/app/styles.css";
 import { createOpfsTextFileStore } from "@over-yonder/capabilities/opfs";
 
 const root = document.querySelector<HTMLDivElement>("#app");

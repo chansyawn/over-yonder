@@ -14,6 +14,8 @@ export default defineConfig({
   },
   fmt: {
     ignorePatterns: generatedPatterns,
+    sortTailwindcss: {},
+    sortPackageJson: {},
   },
   lint: {
     ignorePatterns: generatedPatterns,

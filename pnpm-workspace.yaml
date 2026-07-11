@@ -6,12 +6,14 @@ packages:
 catalogMode: manual
 
 catalog:
+  "@tailwindcss/vite": 4.3.2
   "@types/node": ^24
   "@types/react": ^19.2.17
   "@types/react-dom": ^19.2.3
   "@vitejs/plugin-react": ^6.0.3
   react: ^19.2.7
   react-dom: ^19.2.7
+  tailwindcss: 4.3.2
   typescript: ^6
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4

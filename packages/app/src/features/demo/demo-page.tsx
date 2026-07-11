@@ -29,20 +29,35 @@ export function DemoPage({ capabilities }: DemoPageProps) {
   }
 
   return (
-    <main>
-      <label htmlFor="demo-content">Content</label>
+    <main className="mx-auto flex min-h-screen max-w-xl flex-col justify-center gap-4 px-6 py-12 text-slate-900">
+      <label className="text-sm font-medium" htmlFor="demo-content">
+        Content
+      </label>
       <input
+        className="rounded-md border border-slate-300 px-3 py-2 shadow-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
         id="demo-content"
         value={content}
         onChange={(event) => setContent(event.currentTarget.value)}
       />
-      <button type="button" onClick={saveContent}>
-        Save
-      </button>
-      <button type="button" onClick={readContent}>
-        Read
-      </button>
-      <p role="status">{status}</p>
+      <div className="flex gap-3">
+        <button
+          className="rounded-md bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-700"
+          type="button"
+          onClick={saveContent}
+        >
+          Save
+        </button>
+        <button
+          className="rounded-md border border-slate-300 px-4 py-2 font-medium hover:bg-slate-100"
+          type="button"
+          onClick={readContent}
+        >
+          Read
+        </button>
+      </div>
+      <p className="min-h-6 text-sm text-slate-600" role="status">
+        {status}
+      </p>
     </main>
   );
 }
