@@ -8,8 +8,8 @@
 
 Over Yonder is envisioned as a desktop companion and idle game. It should
 provide a persistent, atmospheric scene that can stay open alongside the
-player's daily activities, with lightweight controls for changing the scene and
-opening practical tools.
+player's daily activities. The experience centers on exploring maps, choosing a
+location, and settling into an ambient scene.
 
 The current design uses the following references:
 
@@ -55,6 +55,18 @@ coordinates, and scenes. The design should support:
 The package format, validation rules, compatibility policy, and installation
 flow have not been defined yet.
 
+## Scene Media
+
+Each scene references exactly one visual media file:
+
+- An **Image Scene** displays a single image.
+- A **Video Scene** displays a single video.
+
+Scenes do not combine multiple visual layers or contain scripts, state machines,
+interactive hotspots, or other executable behavior. Details such as video
+autoplay, looping, and muting are implementation concerns and are not defined by
+this design.
+
 ## Basic Player Flow
 
 1. The player opens the game and chooses an available map.
@@ -63,32 +75,37 @@ flow have not been defined yet.
 4. Selecting a coordinate opens a scene-selection drawer.
 5. The player chooses one of the scenes available at that coordinate.
 6. The selected scene becomes the main desktop companion view.
+7. To choose another map, coordinate, or scene, the player returns to the map
+   and follows the same selection flow again.
 
 This flow establishes navigation between content. It does not yet define
 progression, unlock requirements, or rewards.
 
 ## Scene Interface
 
-The scene view is the primary idle and companion surface. Its initial interface
-is expected to provide:
+The scene view is the primary idle and companion surface. It has two
+responsibilities:
 
-- Scene playback controls.
-- Scene variant controls, including weather and time of day.
-- An entry point for tools such as a TODO list and timer.
-- Background music controls.
+- Display the scene's image or video.
+- Let the player return to the current map.
 
-The exact behavior, state transitions, and persistence rules for these controls
-remain open design questions.
+The scene view does not provide direct map or scene selection. Those choices are
+made through the map and coordinate flow.
 
-## Undefined Systems
+## Out of Scope
 
 The following systems are outside the current baseline and must not be assumed
 to exist:
 
+- Scene variants, including weather or time-of-day changes.
+- TODO lists, timers, or other productivity tools.
+- Background music or ambient audio systems.
+- Playback, pause, progress, or volume controls.
 - Victory, failure, or completion conditions.
 - Player progression or long-term growth.
 - Economy, currencies, or resource management.
 - Combat or other challenge systems.
+- Layered scenes, scripts, state machines, or interactive hotspots.
 - A concrete Scene Pack file format or runtime API.
 - Save-game structure and cross-platform compatibility rules.
 
