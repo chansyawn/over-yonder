@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@over-yonder/app": "workspace:*",
-    "@over-yonder/capabilities": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

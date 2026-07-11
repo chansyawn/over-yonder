@@ -1,27 +1,15 @@
-import {
-  Outlet,
-  RouterProvider,
-  createRootRoute,
-  createRoute,
-  createRouter,
-} from "@tanstack/react-router";
+import { RouterProvider } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import type { AppCapabilities } from "@over-yonder/capabilities";
-import { DemoPage } from "./features/demo/demo-page.tsx";
+import { createOfficialSceneCatalog } from "./features/exploration/content/official-scene-catalog.ts";
+import { ContentErrorPage } from "./features/exploration/pages/content-error-page.tsx";
+import { createAppRouter } from "./routes.tsx";
 
-export function createApp(capabilities: AppCapabilities): ReactNode {
-  const rootRoute = createRootRoute({
-    component: Outlet,
-  });
-  const indexRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: "/",
-    component: () => <DemoPage capabilities={capabilities} />,
-  });
+export function createApp(): ReactNode {
+  try {
+    const router = createAppRouter({ catalog: createOfficialSceneCatalog() });
 
-  const router = createRouter({
-    routeTree: rootRoute.addChildren([indexRoute]),
-  });
-
-  return <RouterProvider router={router} />;
+    return <RouterProvider router={router} />;
+  } catch {
+    return <ContentErrorPage />;
+  }
 }

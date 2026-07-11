@@ -1,95 +1,103 @@
 # Game Design Overview
 
-> **Status:** Early design. The game systems described here are not implemented yet. The repository currently contains a cross-platform persistence demo for the web and desktop applications.
+> **Status:** Phase One baseline. This document defines the implemented map-to-scene exploration flow and its deliberate product boundaries.
 
 ## Vision
 
-Over Yonder is envisioned as a desktop companion and idle game. It should provide a persistent, atmospheric scene that can stay open alongside the player's daily activities. The experience centers on exploring maps, choosing a location, and settling into an ambient scene.
+Over Yonder is envisioned as a desktop companion and idle game. It provides an atmospheric scene that can stay open alongside the player's daily activities. The Phase One experience focuses on exploring maps, choosing a location, and settling into a visual scene.
 
-The current design uses the following references:
+The design uses the following references:
 
 | Area                 | Direction              |
 | -------------------- | ---------------------- |
 | Experience reference | _Ithya: Magic Studies_ |
 | Visual direction     | Moebius-inspired art   |
 
-These references communicate the intended experience and visual tone; they do not imply feature parity.
+These references communicate the intended experience and visual tone; they do not imply feature parity. The bundled Phase One sample media demonstrates the content flow and does not establish the final art direction.
 
 ## Content Model
 
-Game content is organized as a hierarchy. Each parent can contain multiple children:
+Game content is organized as a fixed hierarchy:
 
 ```mermaid
 flowchart LR
     Game["Game"] -->|contains many| Map["Map"]
     Map -->|contains many| Coordinate["Coordinate"]
-    Coordinate -->|offers many| Scene["Scene"]
+    Coordinate -->|offers one or more| Scene["Scene"]
 ```
 
-| Term       | Meaning                                                                    |
-| ---------- | -------------------------------------------------------------------------- |
-| Game       | The application and top-level container for all available maps.            |
-| Map        | An image-based overview that contains coordinate markers.                  |
-| Coordinate | A selectable location rendered on a map.                                   |
-| Scene      | An ambient experience available at a coordinate.                           |
-| Scene Pack | Configuration and related assets describing maps, coordinates, and scenes. |
+| Term       | Meaning                                                                   |
+| ---------- | ------------------------------------------------------------------------- |
+| Game       | The application and top-level container for all available maps.           |
+| Map        | An image-based overview containing normalized coordinate markers.         |
+| Coordinate | A selectable location rendered over its map image.                        |
+| Scene      | A single image or video experience available at a coordinate.             |
+| Scene Pack | Internal configuration and local assets describing the content hierarchy. |
 
-The hierarchy describes the product model, not a concrete storage schema.
+Map, coordinate, and scene order is authored by the Scene Pack and preserved in the interface. A coordinate always offers at least one scene.
 
-## Scene Packs
+## Built-in Scene Pack
 
-A Scene Pack groups the configuration and assets required to present its maps, coordinates, and scenes. The design should support:
+Phase One contains one official, read-only Scene Pack bundled with the shared application. Its maps, images, videos, and video posters are local build assets and remain available without a network connection.
 
-- Official maps included with or distributed by the game.
-- Downloaded third-party maps.
-- User-created content.
+The Scene Pack is an internal content source, not a user-facing file format or extension API. Players cannot import, download, install, edit, or remove packs in Phase One. No compatibility or migration promise is made for the internal definition shape.
 
-The package format, validation rules, compatibility policy, and installation flow have not been defined yet.
+The included open-license media is sample content for validating the experience. Asset provenance and licensing are recorded with the pack rather than shown as an in-game credits interface.
 
-## Scene Media
+## Player Flow
 
-Each scene references exactly one visual media file:
+Phase One has one navigation loop:
 
-- An **Image Scene** displays a single image.
-- A **Video Scene** displays a single video.
+1. Opening the game shows the complete map list.
+2. Selecting a map opens that map and displays its coordinate markers.
+3. Selecting a coordinate opens a drawer containing only the scenes offered at that coordinate.
+4. Selecting a scene replaces the map with the full-screen scene view.
+5. The scene view returns only to its current map.
+6. From the map, the player can select another coordinate or return to the complete map list.
 
-Scenes do not combine multiple visual layers or contain scripts, state machines, interactive hotspots, or other executable behavior. Details such as video autoplay, looping, and muting are implementation concerns and are not defined by this design.
+```mermaid
+flowchart LR
+    Maps["All maps"] --> Map["Selected map"]
+    Map --> Drawer["Coordinate scene drawer"]
+    Drawer --> Scene["Selected scene"]
+    Scene -->|return| Map
+    Map -->|all maps| Maps
+```
 
-## Basic Player Flow
+The coordinate drawer is temporary map-page state. It is not represented in the URL or restored after refresh. Closing it with Escape, the backdrop, or its close action returns focus to the coordinate that opened it. Browser Back follows route history and leaves the map page rather than treating the open drawer as a navigation step.
 
-1. The player opens the game and chooses an available map.
-2. The selected map is displayed as an image.
-3. The game renders coordinate markers over the map.
-4. Selecting a coordinate opens a scene-selection drawer.
-5. The player chooses one of the scenes available at that coordinate.
-6. The selected scene becomes the main desktop companion view.
-7. To choose another map, coordinate, or scene, the player returns to the map and follows the same selection flow again.
+Unknown maps, unknown scenes, and scenes addressed under the wrong map show a not-found state with a route back to the map list.
 
-This flow establishes navigation between content. It does not yet define progression, unlock requirements, or rewards.
+## Scene Presentation
 
-## Scene Interface
+Each scene references exactly one visual medium:
 
-The scene view is the primary idle and companion surface. It has two responsibilities:
+- An **Image Scene** fills the scene viewport with a cover-style image.
+- A **Video Scene** plays a single video automatically, muted, looping, and inline.
 
-- Display the scene's image or video.
-- Let the player return to the current map.
+Video scenes expose no playback, pause, progress, audio, or volume controls. When the operating system requests reduced motion, the video is replaced by its static poster. If scene media cannot load, the player sees an explicit error and can return to the current map.
 
-The scene view does not provide direct map or scene selection. Those choices are made through the map and coordinate flow.
+The scene view contains no direct map, coordinate, or scene switcher. Returning to the current map is the only selection-related action available there.
+
+## Persistence
+
+Phase One stores no player selection or exploration state. Every fresh visit to the root route starts at the map list, and the application does not restore the last map, coordinate, scene, or open drawer. Website and desktop follow the same behavior.
 
 ## Out of Scope
 
-The following systems are outside the current baseline and must not be assumed to exist:
+The following systems are excluded from Phase One:
 
 - Scene variants, including weather or time-of-day changes.
 - TODO lists, timers, or other productivity tools.
-- Background music or ambient audio systems.
-- Playback, pause, progress, or volume controls.
-- Victory, failure, or completion conditions.
-- Player progression or long-term growth.
-- Economy, currencies, or resource management.
-- Combat or other challenge systems.
-- Layered scenes, scripts, state machines, or interactive hotspots.
-- A concrete Scene Pack file format or runtime API.
-- Save-game structure and cross-platform compatibility rules.
+- Background music, ambient audio, or audio playback.
+- Scene playback, pause, progress, or volume controls.
+- Automatic scene sequencing or scene playback control.
+- Scene Pack import, download, installation, editing, or third-party content.
+- User-created maps, coordinates, scenes, or packs.
+- Save games, selection persistence, and cross-platform state synchronization.
+- Victory, failure, completion conditions, progression, unlocks, or rewards.
+- Economy, currencies, resource management, combat, or challenge systems.
+- Layered scenes, scripts, state machines, interactive hotspots, or executable pack behavior.
+- A public Scene Pack schema, runtime API, versioning policy, or compatibility migration system.
 
-These areas should be documented when their product requirements are defined.
+These areas require separate product requirements before they can expand the Phase One baseline.
