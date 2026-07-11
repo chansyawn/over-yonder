@@ -17,6 +17,7 @@
     "test": "vp test"
   },
   "dependencies": {
+    "@base-ui/react": "catalog:",
     "@over-yonder/capabilities": "workspace:*",
     "@tanstack/react-router": "^1.170.17",
     "react": "catalog:",
