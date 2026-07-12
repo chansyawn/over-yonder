@@ -99,6 +99,12 @@ vp run -r build
 
 The root `ready` script runs checks, workspace tests, and workspace builds. Vite+ also manages the staged-file checks used by the Git hooks.
 
+### Unit Testing
+
+Unit tests should primarily cover deterministic application logic, especially Scene Catalog validation, indexing, lookups, and read-model transformations. Test public behavior and edge cases rather than private implementation details.
+
+Keep UI tests selective. Use Testing Library for critical interactions, state transitions, and regressions that affect users; avoid broad snapshots, styling assertions, and tests that merely mirror component structure.
+
 ## Dependency Direction and Future Platform Seams
 
 The website and desktop entry points depend on `@over-yonder/app`; the shared application does not depend on either entry point or on Tauri APIs. Built-in content belongs to the shared application because both platforms consume the same read-only catalog.
