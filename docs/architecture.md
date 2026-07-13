@@ -51,14 +51,14 @@ The desktop frontend mounts the same `createApp()` output inside Tauri. `src-tau
 - TanStack Router configuration and route-level error handling.
 - The map list, map exploration, coordinate drawer, and scene views.
 - The internal Scene Catalog interface, validation, indexing, and read models.
-- The built-in official Scene Pack and its local image and video assets.
+- The built-in official Scene Pack and its media assets.
 - Shared Tailwind CSS styles and Base UI primitives.
 
 The package exposes `createApp()` without configuration arguments. Scene Pack definitions and catalog construction details remain internal and are not part of the package's public API.
 
 ## Content Architecture
 
-Official Phase One content is compiled into `@over-yonder/app`. Media files are imported as static URLs, so website and desktop builds can present all official maps and scenes without a network connection.
+Official Phase One content is compiled into `@over-yonder/app`. Map and scene definitions reference media URLs, which may point to bundled local files or remotely hosted assets.
 
 The content layer separates authored definitions from UI-facing data:
 

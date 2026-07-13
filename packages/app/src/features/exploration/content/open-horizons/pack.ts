@@ -1,143 +1,226 @@
-import type { ScenePackDefinition } from "../../model.ts";
+import type { ImageAsset, ScenePackDefinition } from "../../model.ts";
 
-const northernCoastMapUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Northern_coast_Crete.jpg/1920px-Northern_coast_Crete.jpg";
-const hautefortHighlandsMapUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Landscape_ch%C3%A2teau_Hautefort_32.jpg/1920px-Landscape_ch%C3%A2teau_Hautefort_32.jpg";
-const peristeriViewUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Peristeri_Northern_coast_Crete.jpg/1920px-Peristeri_Northern_coast_Crete.jpg";
-const capeSounionUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Landscape_at_Cape_Sounion%2C_Greece.jpg/1920px-Landscape_at_Cape_Sounion%2C_Greece.jpg";
-const coastalOverlookUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/1/12/Coast_and_beach_landscape_in_U.S.jpg";
-const keralaRidgeUrl =
-  "https://upload.wikimedia.org/wikipedia/commons/f/fb/Mountain_landscape_in_kerala.jpg";
-const windFieldLoopUrl =
-  "https://archive.org/download/f-n-mv-ev-wind-turbine-clouds-3-2/f%20n%20mv%20ev%20wind%20turbine%20clouds%203-2.mp4";
-const windFieldPosterUrl =
-  "https://archive.org/download/f-n-mv-ev-wind-turbine-clouds-3-2/f-n-mv-ev-wind-turbine-clouds-3-2.thumbs/f%20n%20mv%20ev%20wind%20turbine%20clouds%203-2_000008.jpg";
+const assetBaseUrl = "https://pub-c650704a0a0344179ceaa6f95c731202.r2.dev";
+
+function imageAsset(path: string, alt: string): ImageAsset {
+  return {
+    src: `${assetBaseUrl}/${path}`,
+    alt,
+    width: 1672,
+    height: 941,
+  };
+}
 
 export const openHorizonsPack = {
   id: "open-horizons",
   title: "Open Horizons",
   maps: [
     {
-      id: "northern-coast",
-      title: "Northern Coast",
-      description: "Cliff paths and sheltered coves along a bright Mediterranean coast.",
-      image: {
-        src: northernCoastMapUrl,
-        alt: "A wide view across the northern coast of Crete",
-        width: 1920,
-        height: 1278,
-      },
+      id: "mars-city",
+      title: "Mars City",
+      description:
+        "A connected frontier settlement of industry, gardens, launch facilities, and dense city streets.",
+      image: imageAsset(
+        "maps/mars-city.png",
+        "An illustrated map of a connected city and industrial settlements across the Martian desert",
+      ),
       coordinates: [
         {
-          id: "peristeri",
-          title: "Peristeri",
-          description: "A quiet headland looking out over the water.",
-          position: { x: 0.68, y: 0.44 },
+          id: "open-pit-mine",
+          title: "Open-Pit Mine",
+          description: "A vast excavation ringed by refineries, rail lines, and processing plants.",
+          position: { x: 0.79, y: 0.43 },
           scenes: [
             {
-              id: "peristeri-view",
+              id: "open-pit-mine-overlook",
               kind: "image",
-              title: "Peristeri View",
-              description: "Settle above the blue water and distant island.",
-              media: {
-                src: peristeriViewUrl,
-                alt: "The Peristeri peninsula and island off the coast of Crete",
-                width: 1920,
-                height: 1116,
-              },
-            },
-            {
-              id: "cape-sounion",
-              kind: "image",
-              title: "Cape Sounion",
-              description: "A broad, sunlit horizon seen from the cape.",
-              media: {
-                src: capeSounionUrl,
-                alt: "A sunlit coastal landscape seen from Cape Sounion in Greece",
-                width: 1920,
-                height: 1123,
-              },
+              title: "Mine Overlook",
+              description: "Watch the industrial complex work along the edge of the terraced pit.",
+              media: imageAsset(
+                "scenes/mars-city/open-pit-mine.png",
+                "A large terraced Martian mine surrounded by refineries and a passing freight train",
+              ),
             },
           ],
         },
         {
-          id: "western-shore",
-          title: "Western Shore",
-          description: "A low path where the coast opens into a long beach.",
-          position: { x: 0.27, y: 0.64 },
+          id: "city-center",
+          title: "City Center",
+          description:
+            "The settlement's busy circular core, built around a monumental central spire.",
+          position: { x: 0.54, y: 0.73 },
           scenes: [
             {
-              id: "coastal-overlook",
+              id: "city-center-overlook",
               kind: "image",
-              title: "Coastal Overlook",
-              description: "Watch the shore recede into the afternoon haze.",
-              media: {
-                src: coastalOverlookUrl,
-                alt: "A rugged coast and beach beneath a clear sky",
-                width: 1920,
-                height: 1280,
-              },
+              title: "City Overlook",
+              description: "Look across plazas, waterways, towers, and layered neighborhoods.",
+              media: imageAsset(
+                "scenes/mars-city/city-center.png",
+                "A panoramic view over a dense circular Martian city with gardens and tall spires",
+              ),
+            },
+          ],
+        },
+        {
+          id: "spaceport",
+          title: "Spaceport",
+          description: "Launch towers, transit lines, and hangars connect the settlement to orbit.",
+          position: { x: 0.19, y: 0.2 },
+          scenes: [
+            {
+              id: "spaceport-launch-complex",
+              kind: "image",
+              title: "Launch Complex",
+              description: "Settle beside the rail platforms while a rocket waits on the pad.",
+              media: imageAsset(
+                "scenes/mars-city/spaceport.png",
+                "A rocket standing at a Martian spaceport surrounded by rail platforms and hangars",
+              ),
+            },
+          ],
+        },
+        {
+          id: "biodome-gardens",
+          title: "Biodome Gardens",
+          description: "A green district of glass domes, waterways, farms, and shaded paths.",
+          position: { x: 0.46, y: 0.42 },
+          scenes: [
+            {
+              id: "biodome-garden-overlook",
+              kind: "image",
+              title: "Garden Overlook",
+              description:
+                "Rest above the settlement's reservoirs, conservatories, and cultivated terraces.",
+              media: imageAsset(
+                "scenes/mars-city/biodome-gardens.png",
+                "A lush Martian garden district filled with glass biodomes, pools, and cultivated terraces",
+              ),
             },
           ],
         },
       ],
     },
     {
-      id: "hautefort-highlands",
-      title: "Hautefort Highlands",
-      description: "Green ridges, distant farms, and a wind-brushed open sky.",
-      image: {
-        src: hautefortHighlandsMapUrl,
-        alt: "A wide green landscape seen from the hill of Hautefort",
-        width: 1920,
-        height: 1278,
-      },
+      id: "habitat-home",
+      title: "Habitat Home",
+      description:
+        "A compact Martian home with warm rooms for resting, cooking, creating, and watching the city beyond.",
+      image: imageAsset(
+        "maps/habitat-home.png",
+        "A cutaway illustration of a compact two-level home on Mars",
+      ),
       coordinates: [
         {
-          id: "mountain-pass",
-          title: "Mountain Pass",
-          description: "A high trail overlooking layers of green mountains.",
-          position: { x: 0.34, y: 0.38 },
+          id: "living-room",
+          title: "Living Room",
+          description: "A curved sofa and broad window make a quiet place to slow down.",
+          position: { x: 0.74, y: 0.68 },
           scenes: [
             {
-              id: "kerala-ridge",
+              id: "living-room-journal",
               kind: "image",
-              title: "Kerala Ridge",
-              description: "Rest among the shrubs beneath a distant peak.",
-              media: {
-                src: keralaRidgeUrl,
-                alt: "A mountain ridge rising behind green shrubs in Kerala",
-                width: 1280,
-                height: 960,
-              },
+              title: "Window Journal",
+              description: "Write beside the window as evening settles over the city.",
+              media: imageAsset(
+                "scenes/habitat-home/living-room-1.png",
+                "A person writing on a curved sofa beside a large window overlooking the Martian city",
+              ),
+            },
+            {
+              id: "living-room-rest",
+              kind: "image",
+              title: "Evening Rest",
+              description: "Stretch out on the sofa and watch the distant skyline.",
+              media: imageAsset(
+                "scenes/habitat-home/living-room-2.png",
+                "A person resting on a curved sofa beside a panoramic window over the Martian city",
+              ),
             },
           ],
         },
         {
-          id: "wind-field",
-          title: "Wind Field",
-          description: "Open ground under slow clouds and a turning turbine.",
-          position: { x: 0.73, y: 0.58 },
+          id: "kitchen",
+          title: "Kitchen",
+          description: "A small galley kitchen gathered around a table for two.",
+          position: { x: 0.5, y: 0.68 },
           scenes: [
             {
-              id: "wind-field-loop",
-              kind: "video",
-              title: "Wind Field",
-              description: "Stay with the clouds as they move over the field.",
-              media: {
-                src: windFieldLoopUrl,
-                label: "Clouds moving behind a wind turbine",
-                poster: {
-                  src: windFieldPosterUrl,
-                  alt: "A wind turbine beneath a cloudy sky",
-                  width: 720,
-                  height: 480,
-                },
-              },
+              id: "kitchen-meal",
+              kind: "image",
+              title: "Quiet Meal",
+              description: "Take a seat for a simple meal after a long day outside.",
+              media: imageAsset(
+                "scenes/habitat-home/kitchen-1.png",
+                "A person seated at a round table in a warm compact habitat kitchen",
+              ),
+            },
+            {
+              id: "kitchen-preparation",
+              kind: "image",
+              title: "Kitchen Routine",
+              description: "Prepare something warm at the table beneath the galley lights.",
+              media: imageAsset(
+                "scenes/habitat-home/kitchen-2.png",
+                "A person preparing food at a round table in a compact Martian kitchen",
+              ),
+            },
+          ],
+        },
+        {
+          id: "studio",
+          title: "Studio",
+          description:
+            "Cameras, sketches, and collected field notes fill a working corner of the home.",
+          position: { x: 0.72, y: 0.31 },
+          scenes: [
+            {
+              id: "studio-sketch",
+              kind: "image",
+              title: "Field Sketch",
+              description: "Develop a new landscape study at the drawing desk.",
+              media: imageAsset(
+                "scenes/habitat-home/studio-1.png",
+                "A person drawing a Martian landscape in a studio filled with cameras and field photographs",
+              ),
+            },
+            {
+              id: "studio-camera",
+              kind: "image",
+              title: "Camera Setup",
+              description: "Adjust the camera and prepare to document another expedition.",
+              media: imageAsset(
+                "scenes/habitat-home/studio-2.png",
+                "A person adjusting a camera on a tripod in a warm, equipment-filled studio",
+              ),
+            },
+          ],
+        },
+        {
+          id: "bedroom",
+          title: "Bedroom",
+          description: "A sheltered sleeping nook looks out across the red landscape.",
+          position: { x: 0.34, y: 0.3 },
+          scenes: [
+            {
+              id: "bedroom-reading",
+              kind: "image",
+              title: "Morning Reading",
+              description: "Read on the bed while soft light reaches through the window.",
+              media: imageAsset(
+                "scenes/habitat-home/bedroom-1.png",
+                "A person reading on a bed beside a round window overlooking the Martian landscape",
+              ),
+            },
+            {
+              id: "bedroom-packing",
+              kind: "image",
+              title: "Packing Up",
+              description: "Gather supplies beside the bed before heading outside.",
+              media: imageAsset(
+                "scenes/habitat-home/bedroom-2.png",
+                "A person packing supplies beside a bed in a compact Martian bedroom",
+              ),
             },
           ],
         },
