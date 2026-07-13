@@ -1,2 +1,19 @@
 @import "tailwindcss";
 @source ".";
+
+@theme {
+  --color-yonder-paper: oklch(96.5% 0.018 80);
+  --color-yonder-paper-muted: oklch(93.5% 0.021 78);
+  --color-yonder-ink: oklch(30% 0.045 245);
+  --color-yonder-muted: oklch(52% 0.025 245);
+  --color-yonder-rule: oklch(70% 0.025 70);
+  --color-yonder-accent: oklch(50% 0.16 45);
+  --color-yonder-focus: oklch(36% 0.06 245);
+
+  --font-yonder-display: Georgia, "Times New Roman", ui-serif, serif;
+  --font-yonder-body: Inter, Avenir, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-yonder-card: 0 0.5rem 1.25rem oklch(30% 0.03 70 / 8%);
+  --shadow-yonder-glow:
+    0 0 0 0.125rem oklch(68% 0.18 45 / 18%), 0 0.75rem 1.5rem oklch(68% 0.18 45 / 15%);
+}

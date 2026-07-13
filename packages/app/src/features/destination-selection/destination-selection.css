@@ -1,0 +1,43 @@
+.yonder-paper-surface {
+  background-color: var(--color-yonder-paper);
+  background-image:
+    radial-gradient(circle at 18% 14%, oklch(100% 0 0 / 55%) 0 0.08rem, transparent 0.1rem),
+    radial-gradient(circle at 72% 62%, oklch(45% 0.02 70 / 7%) 0 0.06rem, transparent 0.08rem),
+    linear-gradient(115deg, oklch(100% 0 0 / 32%), transparent 28% 76%, oklch(60% 0.03 70 / 5%));
+  background-size:
+    4.5rem 4.5rem,
+    5.5rem 5.5rem,
+    auto;
+}
+
+.yonder-orbit-field {
+  background-image:
+    radial-gradient(
+      circle at 100% 0%,
+      transparent 0 4.75rem,
+      var(--color-yonder-rule) 4.8rem 4.86rem,
+      transparent 4.92rem
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      transparent 0 7.25rem,
+      var(--color-yonder-rule) 7.3rem 7.36rem,
+      transparent 7.42rem
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      transparent 0 10rem,
+      var(--color-yonder-rule) 10.05rem 10.11rem,
+      transparent 10.17rem
+    );
+  opacity: 0.58;
+  mask-image: linear-gradient(to bottom left, black, transparent 78%);
+}
+
+.yonder-compass {
+  background:
+    linear-gradient(var(--color-yonder-rule), var(--color-yonder-rule)) center / 0.0625rem 70%
+      no-repeat,
+    linear-gradient(90deg, var(--color-yonder-rule), var(--color-yonder-rule)) center / 70%
+      0.0625rem no-repeat;
+}
