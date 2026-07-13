@@ -1,7 +1,7 @@
 import { Drawer } from "@base-ui/react/drawer";
 import { Link } from "@tanstack/react-router";
 import type { RefObject } from "react";
-import type { CoordinateDetail } from "../scene-pack/model.ts";
+import type { CoordinateDetail } from "@/features/scene-pack/model.ts";
 
 interface ScenePickerDrawerProps {
   readonly coordinate: CoordinateDetail | undefined;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { SceneDetail } from "../scene-pack/model.ts";
+import type { SceneDetail } from "@/features/scene-pack/model.ts";
 
 interface SceneMediaProps {
   readonly scene: SceneDetail;

@@ -5,6 +5,9 @@
     "lib": ["ES2023", "DOM"],
     "jsx": "react-jsx",
     "types": ["vite/client"],
+    "paths": {
+      "@/*": ["../../packages/app/src/*"]
+    },
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 

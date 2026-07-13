@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { MapDetail, SceneDetail } from "../scene-pack/model.ts";
+import type { MapDetail, SceneDetail } from "@/features/scene-pack/model.ts";
 import { SceneMedia } from "./scene-media.tsx";
 
 interface ScenePageProps {
