@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { MapSummary } from "../model.ts";
+import type { MapSummary } from "../scene-pack/model.ts";
 
 interface MapSelectionPageProps {
   readonly maps: readonly MapSummary[];

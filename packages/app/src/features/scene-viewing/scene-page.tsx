@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { SceneMedia } from "../components/scene-media.tsx";
-import type { MapDetail, SceneDetail } from "../model.ts";
+import type { MapDetail, SceneDetail } from "../scene-pack/model.ts";
+import { SceneMedia } from "./scene-media.tsx";
 
 interface ScenePageProps {
   readonly map: MapDetail;

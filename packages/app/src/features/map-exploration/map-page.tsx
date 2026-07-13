@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { ScenePickerDrawer } from "../components/scene-picker-drawer.tsx";
-import type { CoordinateDetail, MapDetail } from "../model.ts";
+import type { CoordinateDetail, MapDetail } from "../scene-pack/model.ts";
+import { ScenePickerDrawer } from "./scene-picker-drawer.tsx";
 
 interface MapPageProps {
   readonly map: MapDetail;

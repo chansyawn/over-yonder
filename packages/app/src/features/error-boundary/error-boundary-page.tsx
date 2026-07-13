@@ -1,4 +1,4 @@
-export function ContentErrorPage() {
+export function ErrorBoundaryPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-white p-8 text-center text-black">
       <div className="max-w-xl">

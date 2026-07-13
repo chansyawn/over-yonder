@@ -1,4 +1,4 @@
-import type { ImageAsset, ScenePackDefinition } from "../../model.ts";
+import type { ImageAsset, ScenePackDefinition } from "../model.ts";
 
 const assetBaseUrl = "https://pub-c650704a0a0344179ceaa6f95c731202.r2.dev";
 

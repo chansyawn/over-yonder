@@ -17,7 +17,6 @@ export interface SceneCatalog {
   getMap(mapId: string): MapDetail | undefined;
   getScene(mapId: string, sceneId: string): SceneDetail | undefined;
 }
-
 interface IndexedScene {
   readonly mapId: string;
   readonly detail: SceneDetail;
