@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import type { CoordinateDetail, MapDetail } from "@/features/scene-pack/model.ts";
+import type { DestinationDetail, SpotDetail } from "@/features/scene-pack/model.ts";
 import { ScenePickerDrawer } from "./scene-picker-drawer.tsx";
 
-interface MapPageProps {
-  readonly map: MapDetail;
+interface SpotSelectionPageProps {
+  readonly destination: DestinationDetail;
 }
 
-export function MapPage({ map }: MapPageProps) {
-  const [selectedCoordinate, setSelectedCoordinate] = useState<CoordinateDetail>();
+export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
+  const [selectedSpot, setSelectedSpot] = useState<SpotDetail>();
   const [imageFailed, setImageFailed] = useState(false);
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -19,51 +19,51 @@ export function MapPage({ map }: MapPageProps) {
           className="inline-flex border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           to="/"
         >
-          All maps
+          All destinations
         </Link>
-        <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">{map.title}</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6">{map.description}</p>
+        <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">{destination.title}</h1>
+        <p className="mt-3 max-w-2xl text-sm leading-6">{destination.description}</p>
       </header>
 
       <section className="flex flex-1 items-center justify-center px-5 pb-6 sm:px-8">
         <div
           className="relative w-full max-w-6xl overflow-hidden border border-black bg-white"
-          style={{ aspectRatio: `${map.image.width} / ${map.image.height}` }}
+          style={{ aspectRatio: `${destination.image.width} / ${destination.image.height}` }}
         >
           {imageFailed ? (
             <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
               <div>
-                <h2 className="text-2xl font-semibold">Map image unavailable</h2>
-                <p className="mt-2 text-sm">Return to the map list and try another place.</p>
+                <h2 className="text-2xl font-semibold">Destination image unavailable</h2>
+                <p className="mt-2 text-sm">Return to the destination list and try another one.</p>
               </div>
             </div>
           ) : (
             <>
               <img
-                alt={map.image.alt}
+                alt={destination.image.alt}
                 className="absolute inset-0 h-full w-full object-cover"
-                height={map.image.height}
+                height={destination.image.height}
                 onError={() => setImageFailed(true)}
-                src={map.image.src}
-                width={map.image.width}
+                src={destination.image.src}
+                width={destination.image.width}
               />
-              {map.coordinates.map((coordinate) => {
-                const isSelected = selectedCoordinate?.id === coordinate.id;
+              {destination.spots.map((spot) => {
+                const isSelected = selectedSpot?.id === spot.id;
 
                 return (
                   <button
-                    key={coordinate.id}
-                    aria-label={`Explore ${coordinate.title}`}
+                    key={spot.id}
+                    aria-label={`Explore ${spot.title}`}
                     aria-pressed={isSelected}
                     className="absolute grid size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     style={{
-                      left: `${coordinate.position.x * 100}%`,
-                      top: `${coordinate.position.y * 100}%`,
+                      left: `${spot.position.x * 100}%`,
+                      top: `${spot.position.y * 100}%`,
                     }}
                     type="button"
                     onClick={(event) => {
                       lastTriggerRef.current = event.currentTarget;
-                      setSelectedCoordinate(coordinate);
+                      setSelectedSpot(spot);
                     }}
                   >
                     <span
@@ -78,10 +78,10 @@ export function MapPage({ map }: MapPageProps) {
       </section>
 
       <ScenePickerDrawer
-        coordinate={selectedCoordinate}
+        destinationId={destination.id}
         finalFocusRef={lastTriggerRef}
-        mapId={map.id}
-        onClose={() => setSelectedCoordinate(undefined)}
+        spot={selectedSpot}
+        onClose={() => setSelectedSpot(undefined)}
       />
     </main>
   );

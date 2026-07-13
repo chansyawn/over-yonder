@@ -8,10 +8,10 @@ import {
 } from "@tanstack/react-router";
 import { ErrorBoundaryPage } from "@/features/error-boundary/error-boundary-page.tsx";
 import type { SceneCatalog } from "@/features/scene-pack/catalog.ts";
-import { MapPage } from "@/features/map-exploration/map-page.tsx";
-import { MapSelectionPage } from "@/features/map-selection/map-selection-page.tsx";
+import { DestinationSelectionPage } from "@/features/destination-selection/destination-selection-page.tsx";
 import { NotFoundPage } from "@/features/not-found/not-found-page.tsx";
 import { ScenePage } from "@/features/scene-viewing/scene-page.tsx";
+import { SpotSelectionPage } from "@/features/spot-selection/spot-selection-page.tsx";
 
 interface AppRouterContext {
   readonly catalog: SceneCatalog;
@@ -23,43 +23,47 @@ const rootRoute = createRootRouteWithContext<AppRouterContext>()({
   notFoundComponent: NotFoundPage,
 });
 
-const mapSelectionRoute = createRoute({
+const destinationSelectionRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  loader: ({ context }) => context.catalog.listMaps(),
-  component: MapSelectionRoute,
+  loader: ({ context }) => context.catalog.listDestinations(),
+  component: DestinationSelectionRoute,
 });
 
-const mapRoute = createRoute({
+const spotSelectionRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/maps/$mapId",
+  path: "/destinations/$destinationId",
   loader: ({ context, params }) => {
-    const map = context.catalog.getMap(params.mapId);
-    if (!map) {
+    const destination = context.catalog.getDestination(params.destinationId);
+    if (!destination) {
       throw notFound();
     }
 
-    return map;
+    return destination;
   },
-  component: MapRoute,
+  component: SpotSelectionRoute,
 });
 
 const sceneRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/maps/$mapId/scenes/$sceneId",
+  path: "/destinations/$destinationId/scenes/$sceneId",
   loader: ({ context, params }) => {
-    const map = context.catalog.getMap(params.mapId);
-    const scene = context.catalog.getScene(params.mapId, params.sceneId);
-    if (!map || !scene) {
+    const destination = context.catalog.getDestination(params.destinationId);
+    const scene = context.catalog.getScene(params.destinationId, params.sceneId);
+    if (!destination || !scene) {
       throw notFound();
     }
 
-    return { map, scene };
+    return { destination, scene };
   },
   component: SceneRoute,
 });
 
-const routeTree = rootRoute.addChildren([mapSelectionRoute, mapRoute, sceneRoute]);
+const routeTree = rootRoute.addChildren([
+  destinationSelectionRoute,
+  spotSelectionRoute,
+  sceneRoute,
+]);
 
 export interface CreateAppRouterOptions {
   readonly catalog: SceneCatalog;
@@ -76,19 +80,19 @@ export function createAppRouter({ catalog, history }: CreateAppRouterOptions) {
   });
 }
 
-function MapSelectionRoute() {
-  const maps = mapSelectionRoute.useLoaderData();
-  return <MapSelectionPage maps={maps} />;
+function DestinationSelectionRoute() {
+  const destinations = destinationSelectionRoute.useLoaderData();
+  return <DestinationSelectionPage destinations={destinations} />;
 }
 
-function MapRoute() {
-  const map = mapRoute.useLoaderData();
-  return <MapPage key={map.id} map={map} />;
+function SpotSelectionRoute() {
+  const destination = spotSelectionRoute.useLoaderData();
+  return <SpotSelectionPage key={destination.id} destination={destination} />;
 }
 
 function SceneRoute() {
-  const { map, scene } = sceneRoute.useLoaderData();
-  return <ScenePage map={map} scene={scene} />;
+  const { destination, scene } = sceneRoute.useLoaderData();
+  return <ScenePage destination={destination} scene={scene} />;
 }
 
 export type AppRouter = ReturnType<typeof createAppRouter>;

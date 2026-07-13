@@ -14,7 +14,7 @@ export function SceneMedia({ scene }: SceneMediaProps) {
       <div className="absolute inset-0 flex items-center justify-center bg-white p-8 text-center text-black">
         <div>
           <h2 className="text-2xl font-semibold">Scene media unavailable</h2>
-          <p className="mt-2 text-sm">Return to the map and choose another scene.</p>
+          <p className="mt-2 text-sm">Return to the destination and choose another scene.</p>
         </div>
       </div>
     );

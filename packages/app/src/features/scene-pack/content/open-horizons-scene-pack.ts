@@ -14,7 +14,7 @@ function imageAsset(path: string, alt: string): ImageAsset {
 export const openHorizonsPack = {
   id: "open-horizons",
   title: "Open Horizons",
-  maps: [
+  destinations: [
     {
       id: "mars-city",
       title: "Mars City",
@@ -22,9 +22,9 @@ export const openHorizonsPack = {
         "A connected frontier settlement of industry, gardens, launch facilities, and dense city streets.",
       image: imageAsset(
         "maps/mars-city.png",
-        "An illustrated map of a connected city and industrial settlements across the Martian desert",
+        "An illustrated overview of a connected city and industrial settlements across the Martian desert",
       ),
-      coordinates: [
+      spots: [
         {
           id: "open-pit-mine",
           title: "Open-Pit Mine",
@@ -110,7 +110,7 @@ export const openHorizonsPack = {
         "maps/habitat-home.png",
         "A cutaway illustration of a compact two-level home on Mars",
       ),
-      coordinates: [
+      spots: [
         {
           id: "living-room",
           title: "Living Room",

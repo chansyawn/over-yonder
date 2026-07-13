@@ -1,24 +1,24 @@
 import type {
-  CoordinateDefinition,
-  CoordinateDetail,
+  DestinationDefinition,
+  DestinationDetail,
+  DestinationSummary,
   ImageAsset,
-  MapDefinition,
-  MapDetail,
-  MapSummary,
   SceneDefinition,
   SceneDetail,
   ScenePackDefinition,
   SceneSummary,
+  SpotDefinition,
+  SpotDetail,
   VideoAsset,
 } from "./model.ts";
 
 export interface SceneCatalog {
-  listMaps(): readonly MapSummary[];
-  getMap(mapId: string): MapDetail | undefined;
-  getScene(mapId: string, sceneId: string): SceneDetail | undefined;
+  listDestinations(): readonly DestinationSummary[];
+  getDestination(destinationId: string): DestinationDetail | undefined;
+  getScene(destinationId: string, sceneId: string): SceneDetail | undefined;
 }
 interface IndexedScene {
-  readonly mapId: string;
+  readonly destinationId: string;
   readonly detail: SceneDetail;
 }
 
@@ -28,11 +28,11 @@ export function createSceneCatalog(packs: readonly ScenePackDefinition[]): Scene
   }
 
   const packIds = new Set<string>();
-  const mapIds = new Set<string>();
-  const coordinateIds = new Set<string>();
+  const destinationIds = new Set<string>();
+  const spotIds = new Set<string>();
   const sceneIds = new Set<string>();
-  const mapSummaries: MapSummary[] = [];
-  const mapsById = new Map<string, MapDetail>();
+  const destinationSummaries: DestinationSummary[] = [];
+  const destinationsById = new Map<string, DestinationDetail>();
   const scenesById = new Map<string, IndexedScene>();
 
   for (const pack of packs) {
@@ -40,82 +40,79 @@ export function createSceneCatalog(packs: readonly ScenePackDefinition[]): Scene
     validateIdentity(pack.id, pack.title, packPath);
     ensureUnique(packIds, pack.id, "pack");
 
-    if (pack.maps.length === 0) {
-      throw new Error(`${packPath} must contain at least one map.`);
+    if (pack.destinations.length === 0) {
+      throw new Error(`${packPath} must contain at least one destination.`);
     }
 
-    for (const map of pack.maps) {
-      const mapPath = `${packPath}, map ${JSON.stringify(map.id)}`;
-      validateMap(map, mapPath);
-      ensureUnique(mapIds, map.id, "map");
+    for (const destination of pack.destinations) {
+      const destinationPath = `${packPath}, destination ${JSON.stringify(destination.id)}`;
+      validateDestination(destination, destinationPath);
+      ensureUnique(destinationIds, destination.id, "destination");
 
-      const coordinates = map.coordinates.map((coordinate) => {
-        const coordinatePath = `${mapPath}, coordinate ${JSON.stringify(coordinate.id)}`;
-        validateCoordinate(coordinate, coordinatePath);
-        ensureUnique(coordinateIds, coordinate.id, "coordinate");
+      const spots = destination.spots.map((spot) => {
+        const spotPath = `${destinationPath}, spot ${JSON.stringify(spot.id)}`;
+        validateSpot(spot, spotPath);
+        ensureUnique(spotIds, spot.id, "spot");
 
-        const scenes = coordinate.scenes.map((scene) => {
-          const scenePath = `${coordinatePath}, scene ${JSON.stringify(scene.id)}`;
+        const scenes = spot.scenes.map((scene) => {
+          const scenePath = `${spotPath}, scene ${JSON.stringify(scene.id)}`;
           validateScene(scene, scenePath);
           ensureUnique(sceneIds, scene.id, "scene");
 
           const detail = createSceneDetail(scene);
-          scenesById.set(scene.id, { mapId: map.id, detail });
+          scenesById.set(scene.id, { destinationId: destination.id, detail });
           return createSceneSummary(scene);
         });
 
-        return createCoordinateDetail(coordinate, scenes);
+        return createSpotDetail(spot, scenes);
       });
 
-      const sceneCount = coordinates.reduce(
-        (count, coordinate) => count + coordinate.scenes.length,
-        0,
-      );
-      const summary = createMapSummary(map, sceneCount);
-      const detail: MapDetail = {
+      const sceneCount = spots.reduce((count, spot) => count + spot.scenes.length, 0);
+      const summary = createDestinationSummary(destination, sceneCount);
+      const detail: DestinationDetail = {
         ...summary,
-        coordinates,
+        spots,
       };
 
-      mapSummaries.push(summary);
-      mapsById.set(map.id, detail);
+      destinationSummaries.push(summary);
+      destinationsById.set(destination.id, detail);
     }
   }
 
   return {
-    listMaps() {
-      return mapSummaries;
+    listDestinations() {
+      return destinationSummaries;
     },
-    getMap(mapId) {
-      return mapsById.get(mapId);
+    getDestination(destinationId) {
+      return destinationsById.get(destinationId);
     },
-    getScene(mapId, sceneId) {
+    getScene(destinationId, sceneId) {
       const scene = scenesById.get(sceneId);
-      return scene?.mapId === mapId ? scene.detail : undefined;
+      return scene?.destinationId === destinationId ? scene.detail : undefined;
     },
   };
 }
 
-function createMapSummary(map: MapDefinition, sceneCount: number): MapSummary {
+function createDestinationSummary(
+  destination: DestinationDefinition,
+  sceneCount: number,
+): DestinationSummary {
   return {
-    id: map.id,
-    title: map.title,
-    description: map.description,
-    image: map.image,
-    coordinateCount: map.coordinates.length,
+    id: destination.id,
+    title: destination.title,
+    description: destination.description,
+    image: destination.image,
+    spotCount: destination.spots.length,
     sceneCount,
   };
 }
 
-function createCoordinateDetail(
-  coordinate: CoordinateDefinition,
-  scenes: readonly SceneSummary[],
-): CoordinateDetail {
+function createSpotDetail(spot: SpotDefinition, scenes: readonly SceneSummary[]): SpotDetail {
   return {
-    id: coordinate.id,
-    title: coordinate.title,
-    ...(coordinate.description ? { description: coordinate.description } : {}),
-    position: coordinate.position,
+    id: spot.id,
+    title: spot.title,
+    ...(spot.description ? { description: spot.description } : {}),
+    position: spot.position,
     scenes,
   };
 }
@@ -144,22 +141,22 @@ function createSceneDetail(scene: SceneDefinition): SceneDetail {
   return { ...common, kind: "video", media: scene.media };
 }
 
-function validateMap(map: MapDefinition, path: string): void {
-  validateIdentity(map.id, map.title, path);
-  assertNonEmpty(map.description, `${path} description`);
-  validateImage(map.image, `${path} image`);
+function validateDestination(destination: DestinationDefinition, path: string): void {
+  validateIdentity(destination.id, destination.title, path);
+  assertNonEmpty(destination.description, `${path} description`);
+  validateImage(destination.image, `${path} image`);
 
-  if (map.coordinates.length === 0) {
-    throw new Error(`${path} must contain at least one coordinate.`);
+  if (destination.spots.length === 0) {
+    throw new Error(`${path} must contain at least one spot.`);
   }
 }
 
-function validateCoordinate(coordinate: CoordinateDefinition, path: string): void {
-  validateIdentity(coordinate.id, coordinate.title, path);
-  validateNormalizedPosition(coordinate.position.x, `${path} x`);
-  validateNormalizedPosition(coordinate.position.y, `${path} y`);
+function validateSpot(spot: SpotDefinition, path: string): void {
+  validateIdentity(spot.id, spot.title, path);
+  validateNormalizedPosition(spot.position.x, `${path} x`);
+  validateNormalizedPosition(spot.position.y, `${path} y`);
 
-  if (coordinate.scenes.length === 0) {
+  if (spot.scenes.length === 0) {
     throw new Error(`${path} must contain at least one scene.`);
   }
 }

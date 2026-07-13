@@ -29,7 +29,7 @@ export interface VideoSceneDefinition extends SceneDefinitionBase {
 
 export type SceneDefinition = ImageSceneDefinition | VideoSceneDefinition;
 
-export interface CoordinateDefinition {
+export interface SpotDefinition {
   readonly id: string;
   readonly title: string;
   readonly description?: string;
@@ -40,26 +40,26 @@ export interface CoordinateDefinition {
   readonly scenes: readonly SceneDefinition[];
 }
 
-export interface MapDefinition {
+export interface DestinationDefinition {
   readonly id: string;
   readonly title: string;
   readonly description: string;
   readonly image: ImageAsset;
-  readonly coordinates: readonly CoordinateDefinition[];
+  readonly spots: readonly SpotDefinition[];
 }
 
 export interface ScenePackDefinition {
   readonly id: string;
   readonly title: string;
-  readonly maps: readonly MapDefinition[];
+  readonly destinations: readonly DestinationDefinition[];
 }
 
-export interface MapSummary {
+export interface DestinationSummary {
   readonly id: string;
   readonly title: string;
   readonly description: string;
   readonly image: ImageAsset;
-  readonly coordinateCount: number;
+  readonly spotCount: number;
   readonly sceneCount: number;
 }
 
@@ -71,16 +71,16 @@ export interface SceneSummary {
   readonly preview: ImageAsset;
 }
 
-export interface CoordinateDetail {
+export interface SpotDetail {
   readonly id: string;
   readonly title: string;
   readonly description?: string;
-  readonly position: CoordinateDefinition["position"];
+  readonly position: SpotDefinition["position"];
   readonly scenes: readonly SceneSummary[];
 }
 
-export interface MapDetail extends MapSummary {
-  readonly coordinates: readonly CoordinateDetail[];
+export interface DestinationDetail extends DestinationSummary {
+  readonly spots: readonly SpotDetail[];
 }
 
 interface SceneDetailBase {

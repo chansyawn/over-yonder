@@ -14,16 +14,16 @@ function createPack(): ScenePackDefinition {
   return {
     id: "pack-one",
     title: "Pack One",
-    maps: [
+    destinations: [
       {
-        id: "map-one",
-        title: "Map One",
-        description: "The first map.",
+        id: "destination-one",
+        title: "Destination One",
+        description: "The first destination.",
         image,
-        coordinates: [
+        spots: [
           {
-            id: "coordinate-one",
-            title: "Coordinate One",
+            id: "spot-one",
+            title: "Spot One",
             position: { x: 0.25, y: 0.75 },
             scenes: [
               {
@@ -48,20 +48,20 @@ function createPack(): ScenePackDefinition {
         ],
       },
       {
-        id: "map-two",
-        title: "Map Two",
-        description: "The second map.",
+        id: "destination-two",
+        title: "Destination Two",
+        description: "The second destination.",
         image,
-        coordinates: [
+        spots: [
           {
-            id: "coordinate-two",
-            title: "Coordinate Two",
+            id: "spot-two",
+            title: "Spot Two",
             position: { x: 0.5, y: 0.5 },
             scenes: [
               {
-                id: "second-map-scene",
+                id: "second-destination-scene",
                 kind: "image",
-                title: "Second Map Scene",
+                title: "Second Destination Scene",
                 media: image,
               },
             ],
@@ -76,11 +76,11 @@ describe("createSceneCatalog", () => {
   it("preserves authored order and creates UI-facing read models", () => {
     const catalog = createSceneCatalog([createPack()]);
 
-    expect(catalog.listMaps()).toEqual([
-      expect.objectContaining({ id: "map-one", coordinateCount: 1, sceneCount: 2 }),
-      expect.objectContaining({ id: "map-two", coordinateCount: 1, sceneCount: 1 }),
+    expect(catalog.listDestinations()).toEqual([
+      expect.objectContaining({ id: "destination-one", spotCount: 1, sceneCount: 2 }),
+      expect.objectContaining({ id: "destination-two", spotCount: 1, sceneCount: 1 }),
     ]);
-    expect(catalog.getMap("map-one")?.coordinates[0]?.scenes).toEqual([
+    expect(catalog.getDestination("destination-one")?.spots[0]?.scenes).toEqual([
       expect.objectContaining({ id: "image-scene", preview: image }),
       expect.objectContaining({
         id: "video-scene",
@@ -89,34 +89,36 @@ describe("createSceneCatalog", () => {
     ]);
   });
 
-  it("resolves scenes only within their owning map", () => {
+  it("resolves scenes only within their owning destination", () => {
     const catalog = createSceneCatalog([createPack()]);
 
-    expect(catalog.getScene("map-one", "video-scene")).toEqual(
+    expect(catalog.getScene("destination-one", "video-scene")).toEqual(
       expect.objectContaining({ id: "video-scene", kind: "video" }),
     );
-    expect(catalog.getScene("map-two", "video-scene")).toBeUndefined();
-    expect(catalog.getMap("missing-map")).toBeUndefined();
-    expect(catalog.getScene("map-one", "missing-scene")).toBeUndefined();
+    expect(catalog.getScene("destination-two", "video-scene")).toBeUndefined();
+    expect(catalog.getDestination("missing-destination")).toBeUndefined();
+    expect(catalog.getScene("destination-one", "missing-scene")).toBeUndefined();
   });
 
   it("rejects empty catalog hierarchy levels", () => {
     expect(() => createSceneCatalog([])).toThrow("at least one pack");
 
     const pack = createPack();
-    expect(() => createSceneCatalog([{ ...pack, maps: [] }])).toThrow("at least one map");
-
-    const map = pack.maps[0];
-    expect(() => createSceneCatalog([{ ...pack, maps: [{ ...map, coordinates: [] }] }])).toThrow(
-      "at least one coordinate",
+    expect(() => createSceneCatalog([{ ...pack, destinations: [] }])).toThrow(
+      "at least one destination",
     );
 
-    const coordinate = map?.coordinates[0];
+    const destination = pack.destinations[0];
+    expect(() =>
+      createSceneCatalog([{ ...pack, destinations: [{ ...destination, spots: [] }] }]),
+    ).toThrow("at least one spot");
+
+    const spot = destination?.spots[0];
     expect(() =>
       createSceneCatalog([
         {
           ...pack,
-          maps: [{ ...map, coordinates: [{ ...coordinate, scenes: [] }] }],
+          destinations: [{ ...destination, spots: [{ ...spot, scenes: [] }] }],
         },
       ]),
     ).toThrow("at least one scene");
@@ -132,25 +134,25 @@ describe("createSceneCatalog", () => {
           ...pack,
           id: "pack-two",
           title: "Pack Two",
-          maps: [{ ...pack.maps[0], title: "Duplicate Map" }],
+          destinations: [{ ...pack.destinations[0], title: "Duplicate Destination" }],
         },
       ]),
-    ).toThrow('Duplicate map id "map-one"');
+    ).toThrow('Duplicate destination id "destination-one"');
   });
 
-  it("rejects invalid coordinates and media dimensions", () => {
+  it("rejects invalid spots and media dimensions", () => {
     const pack = createPack();
-    const map = pack.maps[0];
-    const coordinate = map?.coordinates[0];
+    const destination = pack.destinations[0];
+    const spot = destination?.spots[0];
 
     expect(() =>
       createSceneCatalog([
         {
           ...pack,
-          maps: [
+          destinations: [
             {
-              ...map,
-              coordinates: [{ ...coordinate, position: { x: -0.1, y: 0.5 } }],
+              ...destination,
+              spots: [{ ...spot, position: { x: -0.1, y: 0.5 } }],
             },
           ],
         },
@@ -161,7 +163,7 @@ describe("createSceneCatalog", () => {
       createSceneCatalog([
         {
           ...pack,
-          maps: [{ ...map, image: { ...image, width: 0 } }],
+          destinations: [{ ...destination, image: { ...image, width: 0 } }],
         },
       ]),
     ).toThrow("width must be a positive integer");

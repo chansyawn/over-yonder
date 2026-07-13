@@ -49,7 +49,7 @@ The desktop frontend mounts the same `createApp()` output inside Tauri. `src-tau
 `@over-yonder/app` owns the complete shared Phase One experience:
 
 - TanStack Router configuration and route-level error handling.
-- The map list, map exploration, coordinate drawer, and scene views.
+- The destination list, spot selection, scene drawer, and scene views.
 - The internal Scene Catalog interface, validation, indexing, and read models.
 - The built-in official Scene Pack and its media assets.
 - Shared Tailwind CSS styles and Base UI primitives.
@@ -58,7 +58,7 @@ The package exposes `createApp()` without configuration arguments. Scene Pack de
 
 ## Content Architecture
 
-Official Phase One content is compiled into `@over-yonder/app`. Map and scene definitions reference media URLs, which may point to bundled local files or remotely hosted assets.
+Official Phase One content is compiled into `@over-yonder/app`. Destination and scene definitions reference media URLs, which may point to bundled local files or remotely hosted assets.
 
 The content layer separates authored definitions from UI-facing data:
 
@@ -69,7 +69,7 @@ flowchart LR
     Catalog --> UI["Route loaders and exploration UI"]
 ```
 
-`SceneCatalog` is the application-facing boundary for listing maps and resolving map/scene relationships. It hides raw pack configuration, preserves authored display order, rejects invalid official content during application construction, and prevents routes and components from depending on the storage shape.
+`SceneCatalog` is the application-facing boundary for listing destinations and resolving destination/scene relationships. It hides raw pack configuration, preserves authored display order, rejects invalid official content during application construction, and prevents routes and components from depending on the storage shape.
 
 Phase One intentionally defines no external Scene Pack file format, import adapter, compatibility contract, download flow, or persistence layer.
 
@@ -80,7 +80,7 @@ Phase One intentionally defines no external Scene Pack file format, import adapt
 | React           | Shared user interface                                                             |
 | TanStack Router | Application routing inside the shared UI                                          |
 | Tailwind CSS    | Shared utility-first styling                                                      |
-| Base UI         | Headless, accessible UI primitives, including the coordinate drawer               |
+| Base UI         | Headless, accessible UI primitives, including the spot scene drawer               |
 | Tauri           | Desktop window and application shell                                              |
 | Vite+           | Development server, builds, formatting, linting, type checks, and workspace tasks |
 | pnpm catalog    | Central dependency versions shared by workspace packages                          |

@@ -1,24 +1,24 @@
 import { Drawer } from "@base-ui/react/drawer";
 import { Link } from "@tanstack/react-router";
 import type { RefObject } from "react";
-import type { CoordinateDetail } from "@/features/scene-pack/model.ts";
+import type { SpotDetail } from "@/features/scene-pack/model.ts";
 
 interface ScenePickerDrawerProps {
-  readonly coordinate: CoordinateDetail | undefined;
-  readonly mapId: string;
+  readonly spot: SpotDetail | undefined;
+  readonly destinationId: string;
   readonly finalFocusRef: RefObject<HTMLButtonElement | null>;
   readonly onClose: () => void;
 }
 
 export function ScenePickerDrawer({
-  coordinate,
-  mapId,
+  spot,
+  destinationId,
   finalFocusRef,
   onClose,
 }: ScenePickerDrawerProps) {
   return (
     <Drawer.Root
-      open={coordinate !== undefined}
+      open={spot !== undefined}
       swipeDirection="right"
       onOpenChange={(open, eventDetails) => {
         if (!open) {
@@ -42,10 +42,10 @@ export function ScenePickerDrawer({
               <div className="mb-6 flex items-start justify-between gap-4">
                 <div>
                   <Drawer.Title className="text-2xl font-semibold">
-                    {coordinate?.title ?? "Choose a scene"}
+                    {spot?.title ?? "Choose a scene"}
                   </Drawer.Title>
                   <Drawer.Description className="mt-2 text-sm leading-6">
-                    {coordinate?.description ?? "Select a scene from this location."}
+                    {spot?.description ?? "Select a scene from this spot."}
                   </Drawer.Description>
                 </div>
                 <Drawer.Close className="border border-black bg-white px-3 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
@@ -54,12 +54,12 @@ export function ScenePickerDrawer({
               </div>
 
               <div className="grid gap-4">
-                {coordinate?.scenes.map((scene) => (
+                {spot?.scenes.map((scene) => (
                   <Link
                     key={scene.id}
                     className="border border-black bg-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    params={{ mapId, sceneId: scene.id }}
-                    to="/maps/$mapId/scenes/$sceneId"
+                    params={{ destinationId, sceneId: scene.id }}
+                    to="/destinations/$destinationId/scenes/$sceneId"
                   >
                     <div className="aspect-video overflow-hidden border-b border-black bg-white">
                       <img
