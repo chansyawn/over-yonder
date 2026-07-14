@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 export function NotFoundPage() {
   return (
-    <main className="grid min-h-screen place-items-center bg-white p-8 text-center text-black">
+    <main className="grid min-h-screen place-items-center p-8 text-center text-black">
       <div className="max-w-xl">
         <p className="text-xs font-semibold uppercase">Beyond reach</p>
         <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">

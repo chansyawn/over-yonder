@@ -1,6 +1,5 @@
 import type { DestinationSummary } from "#app/features/scene-pack/model.ts";
 import { DestinationCard } from "./destination-card.tsx";
-import "./destination-selection.css";
 
 interface DestinationSelectionPageProps {
   readonly destinations: readonly DestinationSummary[];
@@ -8,38 +7,34 @@ interface DestinationSelectionPageProps {
 
 export function DestinationSelectionPage({ destinations }: DestinationSelectionPageProps) {
   return (
-    <main className="yonder-paper-surface font-yonder-body text-yonder-ink xs:px-10 xs:py-10 relative flex min-h-screen flex-col overflow-hidden px-8 py-8 md:px-20 md:py-12">
+    <main className="text-foreground xs:px-10 xs:py-10 relative flex min-h-screen flex-col overflow-hidden px-8 py-8 font-sans md:px-20 md:py-12">
       <div
         aria-hidden="true"
-        className="border-yonder-rule/55 pointer-events-none absolute inset-2 rounded-2xl border"
+        className="border-border/55 pointer-events-none absolute inset-2 rounded-2xl border"
       />
       <div
         aria-hidden="true"
-        className="yonder-orbit-field pointer-events-none absolute top-0 right-0 hidden size-96 md:block"
-      />
-      <div
-        aria-hidden="true"
-        className="bg-yonder-rule/60 pointer-events-none absolute top-24 bottom-20 left-12 hidden w-px md:block"
+        className="bg-border/60 pointer-events-none absolute top-24 bottom-20 left-12 hidden w-px md:block"
       >
-        <span className="border-yonder-rule bg-yonder-paper absolute top-0 left-1/2 size-2 -translate-x-1/2 rotate-45 border" />
-        <span className="border-yonder-rule bg-yonder-paper absolute bottom-0 left-1/2 size-2 -translate-x-1/2 rotate-45 border" />
+        <span className="border-border bg-background absolute top-0 left-1/2 size-2 -translate-x-1/2 rotate-45 border" />
+        <span className="border-border bg-background absolute bottom-0 left-1/2 size-2 -translate-x-1/2 rotate-45 border" />
       </div>
       <div
         aria-hidden="true"
-        className="bg-yonder-rule/60 pointer-events-none absolute top-64 right-12 bottom-24 hidden w-px md:block"
+        className="bg-border/60 pointer-events-none absolute top-64 right-12 bottom-24 hidden w-px md:block"
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col">
         <header className="mb-4 max-w-3xl">
-          <div className="text-yonder-muted mb-3 flex items-center gap-3 text-xs tracking-widest uppercase md:text-sm">
-            <span aria-hidden="true" className="bg-yonder-rule size-1.5 rounded-full" />
+          <div className="text-muted-foreground mb-3 flex items-center gap-3 text-xs tracking-widest uppercase md:text-sm">
+            <span aria-hidden="true" className="bg-border size-1.5 rounded-full" />
             <span>Over Yonder</span>
-            <span aria-hidden="true" className="bg-yonder-rule h-px w-16" />
+            <span aria-hidden="true" className="bg-border h-px w-16" />
           </div>
-          <h1 className="font-yonder-display text-5xl font-normal tracking-tight md:text-6xl">
+          <h1 className="font-serif text-5xl font-normal tracking-tight md:text-6xl">
             Destinations
           </h1>
-          <p className="text-yonder-muted mt-3 text-base tracking-wider md:text-lg">
+          <p className="text-muted-foreground mt-3 text-base tracking-wider md:text-lg">
             Open a place and begin wandering.
           </p>
         </header>
@@ -57,10 +52,10 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
           ))}
         </section>
 
-        <footer className="text-yonder-muted mt-auto flex items-center gap-3 pt-10 text-center text-xs tracking-widest md:text-sm">
-          <span aria-hidden="true" className="bg-yonder-rule/70 h-px flex-1" />
+        <footer className="text-muted-foreground mt-auto flex items-center gap-3 pt-10 text-center text-xs tracking-widest md:text-sm">
+          <span aria-hidden="true" className="bg-border/70 h-px flex-1" />
           <p>Select a destination to continue</p>
-          <span aria-hidden="true" className="bg-yonder-rule/70 h-px flex-1" />
+          <span aria-hidden="true" className="bg-border/70 h-px flex-1" />
         </footer>
       </div>
     </main>

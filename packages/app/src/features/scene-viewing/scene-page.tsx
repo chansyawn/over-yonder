@@ -9,7 +9,7 @@ interface ScenePageProps {
 
 export function ScenePage({ destination, scene }: ScenePageProps) {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-black">
+    <main className="relative min-h-screen overflow-hidden text-black">
       <SceneMedia scene={scene} />
       <h1 className="sr-only">{scene.title}</h1>
       <Link

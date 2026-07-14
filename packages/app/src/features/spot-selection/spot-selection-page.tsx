@@ -13,7 +13,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <main className="flex min-h-screen flex-col bg-white text-black">
+    <main className="flex min-h-screen flex-col text-black">
       <header className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8">
         <Link
           className="inline-flex border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"

@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createApp } from "@over-yonder/app";
-import "@over-yonder/app/styles.css";
+import "@over-yonder/app/styles/index.css";
 
 const root = document.querySelector<HTMLDivElement>("#app");
 

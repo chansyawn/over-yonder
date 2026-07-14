@@ -1,6 +1,6 @@
 export function ErrorBoundaryPage() {
   return (
-    <main className="grid min-h-screen place-items-center bg-white p-8 text-center text-black">
+    <main className="grid min-h-screen place-items-center p-8 text-center text-black">
       <div className="max-w-xl">
         <h1 className="text-3xl font-semibold sm:text-4xl">Official content is unavailable</h1>
         <p className="mt-4 text-sm leading-6">
