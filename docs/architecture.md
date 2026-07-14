@@ -85,6 +85,12 @@ Phase One intentionally defines no external Scene Pack file format, import adapt
 | Vite+           | Development server, builds, formatting, linting, type checks, and workspace tasks |
 | pnpm catalog    | Central dependency versions shared by workspace packages                          |
 
+## Styling Guidelines
+
+- Prefer Tailwind CSS utility classes for component styling.
+- Reuse theme tokens for colors, breakpoints, and fonts. Add reusable design values to the theme before introducing one-off values.
+- Avoid arbitrary values for conventional styling, such as `text-[0.6875rem]`. Use them for dynamic or special styling only when neither a built-in utility nor a theme token can express the requirement.
+
 ## Development Workflow
 
 Run commands from the repository root:

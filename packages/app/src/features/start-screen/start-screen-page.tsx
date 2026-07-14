@@ -20,9 +20,9 @@ function MenuItemContent({ icon, label, description }: MenuItemContentProps) {
         {icon}
       </span>
       <span className="min-w-0 pl-4 sm:pl-5">
-        <span className="block text-sm tracking-[0.25em] uppercase sm:text-base">{label}</span>
+        <span className="block text-sm tracking-widest uppercase sm:text-base">{label}</span>
         {description ? (
-          <span className="text-muted-foreground mt-0.5 block truncate text-[0.6875rem] tracking-[0.16em] sm:text-xs">
+          <span className="text-muted-foreground mt-0.5 block truncate text-xs tracking-widest sm:text-xs">
             {description}
           </span>
         ) : null}
@@ -39,7 +39,7 @@ export function StartScreenPage() {
           <Orbit aria-hidden="true" className="text-muted-foreground size-14 stroke-1 sm:size-16" />
           <h1
             aria-label="Over Yonder"
-            className="mt-2 flex flex-col font-serif text-[clamp(3.25rem,12vw,5.25rem)] leading-[0.88] font-normal tracking-[0.18em]"
+            className="mt-2 flex flex-col font-serif text-6xl leading-none font-normal tracking-widest sm:text-7xl"
           >
             <span>OVER</span>
             <span className="mt-2">YONDER</span>
@@ -47,11 +47,11 @@ export function StartScreenPage() {
           <div aria-hidden="true" className="mt-7 flex w-full items-center gap-4 sm:gap-5">
             <span className="bg-border h-px flex-1" />
             <span className="border-border size-2.5 rotate-45 border">
-              <span className="bg-border block size-1 translate-x-[2px] translate-y-[2px]" />
+              <span className="bg-border block size-1 translate-x-0.5 translate-y-0.5" />
             </span>
             <span className="bg-border h-px flex-1" />
           </div>
-          <p className="text-muted-foreground mt-3 text-xs tracking-[0.55em] lowercase sm:text-sm">
+          <p className="text-muted-foreground mt-3 text-xs tracking-widest lowercase sm:text-sm">
             quiet journeys
           </p>
         </header>
@@ -63,19 +63,19 @@ export function StartScreenPage() {
           <button className={menuItemClassName} type="button">
             <MenuItemContent
               description="Resume: Glass Coast"
-              icon={<Compass className="size-6 stroke-[1.5] sm:size-7" />}
+              icon={<Compass className="size-6 stroke-1 sm:size-7" />}
               label="Continue"
             />
           </button>
           <Link className={menuItemClassName} to="/destinations">
             <MenuItemContent
-              icon={<MapPin className="size-6 stroke-[1.5] sm:size-7" />}
+              icon={<MapPin className="size-6 stroke-1 sm:size-7" />}
               label="Destinations"
             />
           </Link>
           <button className={menuItemClassName} type="button">
             <MenuItemContent
-              icon={<Settings className="size-6 stroke-[1.5] sm:size-7" />}
+              icon={<Settings className="size-6 stroke-1 sm:size-7" />}
               label="Settings"
             />
           </button>

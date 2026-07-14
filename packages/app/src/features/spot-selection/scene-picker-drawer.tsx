@@ -35,7 +35,7 @@ export function ScenePickerDrawer({
         <Drawer.Backdrop className="fixed inset-0 z-40 min-h-dvh" />
         <Drawer.Viewport className="fixed inset-0 z-50 flex justify-end">
           <Drawer.Popup
-            className="h-full w-full [transform:translateX(var(--drawer-swipe-movement-x))] touch-auto overflow-y-auto overscroll-contain border-l border-black bg-white p-5 text-black transition-transform duration-200 outline-none data-ending-style:[transform:translateX(100%)] data-starting-style:[transform:translateX(100%)] data-swiping:duration-0 sm:max-w-sm sm:p-6"
+            className="h-full w-full [transform:translateX(var(--drawer-swipe-movement-x))] touch-auto overflow-y-auto overscroll-contain border-l border-black bg-white p-5 text-black transition-transform duration-200 outline-none data-ending-style:translate-x-full data-starting-style:translate-x-full data-swiping:duration-0 sm:max-w-sm sm:p-6"
             finalFocus={finalFocusRef}
           >
             <Drawer.Content>
