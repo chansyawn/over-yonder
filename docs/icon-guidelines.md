@@ -32,7 +32,15 @@ Only use `path`, `line`, `polygon`, `polyline`, `circle`, `ellipse`, and `rect` 
 
 ## React Usage
 
-Import icons as React components through Vite SVGR's `?react` query. Use PascalCase local names ending in `Icon`.
+Prefer icons from `lucide-react` when an appropriate icon is available. Import the component export whose name ends in `Icon`; do not use the equivalent name without the suffix.
+
+```tsx
+import { CompassIcon } from "lucide-react";
+
+<CompassIcon aria-hidden="true" className="size-5 shrink-0" />;
+```
+
+Import custom icons as React components through Vite SVGR's `?react` query. Use PascalCase local names ending in `Icon`.
 
 ```tsx
 import AuroraTrailIcon from "#app/assets/icons/aurora-trail.svg?react";

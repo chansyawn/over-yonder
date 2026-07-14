@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Compass, MapPin, Orbit, Settings } from "lucide-react";
+import { CompassIcon, MapPinIcon, OrbitIcon, SettingsIcon } from "lucide-react";
 
 const menuItemClassName =
   "border-border bg-background/75 hover:bg-muted/80 focus-visible:ring-foreground/45 relative block w-full cursor-pointer rounded-lg border p-1 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -36,7 +36,10 @@ export function StartScreenPage() {
     <main className="text-foreground flex min-h-screen items-center justify-center px-5 py-8 font-sans sm:px-8 sm:py-10">
       <div className="flex w-full max-w-md flex-col items-center sm:max-w-lg">
         <header className="flex flex-col items-center text-center">
-          <Orbit aria-hidden="true" className="text-muted-foreground size-14 stroke-1 sm:size-16" />
+          <OrbitIcon
+            aria-hidden="true"
+            className="text-muted-foreground size-14 stroke-1 sm:size-16"
+          />
           <h1
             aria-label="Over Yonder"
             className="mt-2 flex flex-col font-serif text-6xl leading-none font-normal tracking-widest sm:text-7xl"
@@ -63,19 +66,19 @@ export function StartScreenPage() {
           <button className={menuItemClassName} type="button">
             <MenuItemContent
               description="Resume: Glass Coast"
-              icon={<Compass className="size-6 stroke-1 sm:size-7" />}
+              icon={<CompassIcon className="size-6 stroke-1 sm:size-7" />}
               label="Continue"
             />
           </button>
           <Link className={menuItemClassName} to="/destinations">
             <MenuItemContent
-              icon={<MapPin className="size-6 stroke-1 sm:size-7" />}
+              icon={<MapPinIcon className="size-6 stroke-1 sm:size-7" />}
               label="Destinations"
             />
           </Link>
           <button className={menuItemClassName} type="button">
             <MenuItemContent
-              icon={<Settings className="size-6 stroke-1 sm:size-7" />}
+              icon={<SettingsIcon className="size-6 stroke-1 sm:size-7" />}
               label="Settings"
             />
           </button>
