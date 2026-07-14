@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import CompassIcon from "@/assets/icons/compass.svg?react";
 import type { DestinationSummary } from "@/features/scene-pack/model.ts";
 
 interface DestinationCardProps {
@@ -38,12 +39,7 @@ export function DestinationCard({ destination, priority }: DestinationCardProps)
             </span>
             {destination.sceneCount} scenes
           </p>
-          <span
-            aria-hidden="true"
-            className="yonder-compass relative size-5 shrink-0 rounded-full border border-current"
-          >
-            <span className="bg-yonder-paper absolute top-1/2 left-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border border-current" />
-          </span>
+          <CompassIcon aria-hidden="true" className="size-5 shrink-0 stroke-1" />
         </div>
       </div>
     </Link>

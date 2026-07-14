@@ -33,11 +33,3 @@
   opacity: 0.58;
   mask-image: linear-gradient(to bottom left, black, transparent 78%);
 }
-
-.yonder-compass {
-  background:
-    linear-gradient(var(--color-yonder-rule), var(--color-yonder-rule)) center / 0.0625rem 70%
-      no-repeat,
-    linear-gradient(90deg, var(--color-yonder-rule), var(--color-yonder-rule)) center / 70%
-      0.0625rem no-repeat;
-}
