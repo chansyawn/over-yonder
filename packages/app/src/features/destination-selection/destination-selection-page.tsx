@@ -11,7 +11,7 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
     <main className="yonder-paper-surface font-yonder-body text-yonder-ink xs:px-10 xs:py-10 relative flex min-h-screen flex-col overflow-hidden px-8 py-8 md:px-20 md:py-12">
       <div
         aria-hidden="true"
-        className="border-yonder-rule/55 pointer-events-none absolute inset-2 rounded-[1.35rem] border"
+        className="border-yonder-rule/55 pointer-events-none absolute inset-2 rounded-2xl border"
       />
       <div
         aria-hidden="true"
@@ -30,23 +30,23 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col">
-        <header className="mb-8 max-w-3xl">
-          <div className="text-yonder-muted mb-5 flex items-center gap-3 text-xs tracking-[0.2em] uppercase md:text-sm">
+        <header className="mb-4 max-w-3xl">
+          <div className="text-yonder-muted mb-3 flex items-center gap-3 text-xs tracking-widest uppercase md:text-sm">
             <span aria-hidden="true" className="bg-yonder-rule size-1.5 rounded-full" />
             <span>Over Yonder</span>
             <span aria-hidden="true" className="bg-yonder-rule h-px w-16" />
           </div>
-          <h1 className="font-yonder-display text-5xl leading-[0.95] font-normal tracking-[-0.035em] md:text-6xl">
+          <h1 className="font-yonder-display text-5xl font-normal tracking-tight md:text-6xl">
             Destinations
           </h1>
-          <p className="text-yonder-muted mt-3 text-base tracking-[0.02em] md:text-lg">
+          <p className="text-yonder-muted mt-3 text-base tracking-wider md:text-lg">
             Open a place and begin wandering.
           </p>
         </header>
 
         <section
           aria-label="Available destinations"
-          className="grid grid-cols-1 gap-5 md:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]"
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {destinations.map((destination, index) => (
             <DestinationCard
@@ -57,7 +57,7 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
           ))}
         </section>
 
-        <footer className="text-yonder-muted mt-auto flex items-center gap-3 pt-10 text-center text-xs tracking-[0.08em] md:text-sm">
+        <footer className="text-yonder-muted mt-auto flex items-center gap-3 pt-10 text-center text-xs tracking-widest md:text-sm">
           <span aria-hidden="true" className="bg-yonder-rule/70 h-px flex-1" />
           <p>Select a destination to continue</p>
           <span aria-hidden="true" className="bg-yonder-rule/70 h-px flex-1" />

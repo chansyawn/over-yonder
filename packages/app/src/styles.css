@@ -4,8 +4,8 @@
 @theme {
   --breakpoint-xs: 30rem;
 
-  --color-yonder-paper: oklch(96.5% 0.018 80);
-  --color-yonder-paper-muted: oklch(93.5% 0.021 78);
+  --color-yonder-paper: oklch(98% 0.012 80);
+  --color-yonder-paper-muted: oklch(96.2% 0.014 78);
   --color-yonder-ink: oklch(30% 0.045 245);
   --color-yonder-muted: oklch(52% 0.025 245);
   --color-yonder-rule: oklch(70% 0.025 70);

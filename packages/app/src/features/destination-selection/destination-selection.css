@@ -1,9 +1,9 @@
 .yonder-paper-surface {
   background-color: var(--color-yonder-paper);
   background-image:
-    radial-gradient(circle at 18% 14%, oklch(100% 0 0 / 55%) 0 0.08rem, transparent 0.1rem),
-    radial-gradient(circle at 72% 62%, oklch(45% 0.02 70 / 7%) 0 0.06rem, transparent 0.08rem),
-    linear-gradient(115deg, oklch(100% 0 0 / 32%), transparent 28% 76%, oklch(60% 0.03 70 / 5%));
+    radial-gradient(circle at 18% 14%, oklch(100% 0 0 / 42%) 0 0.08rem, transparent 0.1rem),
+    radial-gradient(circle at 72% 62%, oklch(45% 0.02 70 / 4%) 0 0.06rem, transparent 0.08rem),
+    linear-gradient(115deg, oklch(100% 0 0 / 24%), transparent 28% 76%, oklch(60% 0.03 70 / 3%));
   background-size:
     4.5rem 4.5rem,
     5.5rem 5.5rem,
