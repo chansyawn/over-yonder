@@ -18,8 +18,6 @@ flowchart TD
     Catalog --> Pack["Bundled official Scene Pack and media"]
 ```
 
-Phase One does not have a capabilities package or platform adapter layer. The shared application does not currently require platform-specific services, and the desktop shell does not add native persistence or file-system behavior.
-
 ## Workspace Structure
 
 ```text
@@ -29,51 +27,10 @@ over-yonder/
 │   └── desktop/          Tauri frontend entry point and Rust application shell
 ├── packages/
 │   └── app/              Shared React application, routes, features, styles, and content
-├── docs/                 Product and architecture documentation
-├── package.json          Root development commands
-├── pnpm-workspace.yaml   Workspace packages and dependency catalog
-├── tsconfig.json         Shared TypeScript defaults
-└── vite.config.ts        Repository-wide Vite+ checks and task configuration
+└── docs/                 Product and architecture documentation
 ```
 
-### `apps/website`
-
-The website entry mounts `createApp()` in a browser environment. It supplies no application services or content; its Vite configuration provides the browser build, React, and Tailwind CSS integration.
-
-### `apps/desktop`
-
-The desktop frontend mounts the same `createApp()` output inside Tauri. `src-tauri` contains the minimal Rust shell, application configuration, and default core permissions. Phase One does not use Tauri file-system plugins, AppData initialization, or desktop-only application behavior.
-
-### `packages/app`
-
-`@over-yonder/app` owns the complete shared Phase One experience:
-
-- TanStack Router configuration and route-level error handling.
-- The destination list, spot selection, scene drawer, and scene views.
-- The internal Scene Catalog interface, validation, indexing, and read models.
-- The built-in official Scene Pack and its media assets.
-- Shared Tailwind CSS styles and Base UI primitives.
-
-The package exposes `createApp()` without configuration arguments. Scene Pack definitions and catalog construction details remain internal and are not part of the package's public API.
-
-## Content Architecture
-
-Official Phase One content is compiled into `@over-yonder/app`. Destination and scene definitions reference media URLs, which may point to bundled local files or remotely hosted assets.
-
-The content layer separates authored definitions from UI-facing data:
-
-```mermaid
-flowchart LR
-    Definition["Internal Scene Pack definition"] --> Validation["Validation and indexes"]
-    Validation --> Catalog["SceneCatalog"]
-    Catalog --> UI["Route loaders and exploration UI"]
-```
-
-`SceneCatalog` is the application-facing boundary for listing destinations and resolving destination/scene relationships. It hides raw pack configuration, preserves authored display order, rejects invalid official content during application construction, and prevents routes and components from depending on the storage shape.
-
-Phase One intentionally defines no external Scene Pack file format, import adapter, compatibility contract, download flow, or persistence layer.
-
-## Technology Roles
+## Technology Stack
 
 | Technology      | Responsibility                                                                    |
 | --------------- | --------------------------------------------------------------------------------- |
@@ -83,13 +40,18 @@ Phase One intentionally defines no external Scene Pack file format, import adapt
 | Base UI         | Headless, accessible UI primitives, including the spot scene drawer               |
 | Tauri           | Desktop window and application shell                                              |
 | Vite+           | Development server, builds, formatting, linting, type checks, and workspace tasks |
-| pnpm catalog    | Central dependency versions shared by workspace packages                          |
 
-## Styling Guidelines
+## Development Guidelines
+
+### Styling
 
 - Prefer Tailwind CSS utility classes for component styling.
-- Reuse theme tokens for colors, breakpoints, and fonts. Add reusable design values to the theme before introducing one-off values.
 - Avoid arbitrary values for conventional styling, such as `text-[0.6875rem]`. Use them for dynamic or special styling only when neither a built-in utility nor a theme token can express the requirement.
+
+### Unit Testing
+
+- Unit tests should primarily cover deterministic application logic. Test public behavior and edge cases rather than private implementation details.
+- Keep UI tests selective. Use Testing Library for critical interactions, state transitions, and regressions that affect users; avoid broad snapshots, styling assertions, and tests that merely mirror component structure.
 
 ## Development Workflow
 
@@ -102,17 +64,3 @@ vp check
 vp run -r test
 vp run -r build
 ```
-
-The root `ready` script runs checks, workspace tests, and workspace builds. Vite+ also manages the staged-file checks used by the Git hooks.
-
-### Unit Testing
-
-Unit tests should primarily cover deterministic application logic, especially Scene Catalog validation, indexing, lookups, and read-model transformations. Test public behavior and edge cases rather than private implementation details.
-
-Keep UI tests selective. Use Testing Library for critical interactions, state transitions, and regressions that affect users; avoid broad snapshots, styling assertions, and tests that merely mirror component structure.
-
-## Dependency Direction and Future Platform Seams
-
-The website and desktop entry points depend on `@over-yonder/app`; the shared application does not depend on either entry point or on Tauri APIs. Built-in content belongs to the shared application because both platforms consume the same read-only catalog.
-
-A platform abstraction should be introduced only when a concrete feature has meaningfully different browser and desktop implementations. At that point, define the narrow contract required by that feature and compose its implementations at the platform boundary. Do not restore a general capabilities layer in anticipation of hypothetical divergence.
