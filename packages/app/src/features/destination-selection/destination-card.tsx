@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import CompassIcon from "@/assets/icons/compass.svg?react";
-import type { DestinationSummary } from "@/features/scene-pack/model.ts";
+import CompassIcon from "#app/assets/icons/compass.svg?react";
+import type { DestinationSummary } from "#app/features/scene-pack/model.ts";
 
 interface DestinationCardProps {
   readonly destination: DestinationSummary;

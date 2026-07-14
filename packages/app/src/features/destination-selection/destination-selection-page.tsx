@@ -1,4 +1,4 @@
-import type { DestinationSummary } from "@/features/scene-pack/model.ts";
+import type { DestinationSummary } from "#app/features/scene-pack/model.ts";
 import { DestinationCard } from "./destination-card.tsx";
 import "./destination-selection.css";
 

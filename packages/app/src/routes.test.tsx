@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { describe, expect, it } from "vite-plus/test";
-import { createSceneCatalog } from "@/features/scene-pack/catalog.ts";
-import type { ScenePackDefinition } from "@/features/scene-pack/model.ts";
+import { createSceneCatalog } from "#app/features/scene-pack/catalog.ts";
+import type { ScenePackDefinition } from "#app/features/scene-pack/model.ts";
 import { createAppRouter } from "./routes.tsx";
 
 const image = {

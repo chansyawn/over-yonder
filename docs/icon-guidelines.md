@@ -35,7 +35,7 @@ Only use `path`, `line`, `polygon`, `polyline`, `circle`, `ellipse`, and `rect` 
 Import icons as React components through Vite SVGR's `?react` query. Use PascalCase local names ending in `Icon`.
 
 ```tsx
-import AuroraTrailIcon from "@/assets/icons/aurora-trail.svg?react";
+import AuroraTrailIcon from "#app/assets/icons/aurora-trail.svg?react";
 
 <AuroraTrailIcon aria-hidden="true" className="size-5 shrink-0" />;
 ```

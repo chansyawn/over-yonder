@@ -6,12 +6,12 @@ import {
   notFound,
   type RouterHistory,
 } from "@tanstack/react-router";
-import { ErrorBoundaryPage } from "@/features/error-boundary/error-boundary-page.tsx";
-import type { SceneCatalog } from "@/features/scene-pack/catalog.ts";
-import { DestinationSelectionPage } from "@/features/destination-selection/destination-selection-page.tsx";
-import { NotFoundPage } from "@/features/not-found/not-found-page.tsx";
-import { ScenePage } from "@/features/scene-viewing/scene-page.tsx";
-import { SpotSelectionPage } from "@/features/spot-selection/spot-selection-page.tsx";
+import { ErrorBoundaryPage } from "#app/features/error-boundary/error-boundary-page.tsx";
+import type { SceneCatalog } from "#app/features/scene-pack/catalog.ts";
+import { DestinationSelectionPage } from "#app/features/destination-selection/destination-selection-page.tsx";
+import { NotFoundPage } from "#app/features/not-found/not-found-page.tsx";
+import { ScenePage } from "#app/features/scene-viewing/scene-page.tsx";
+import { SpotSelectionPage } from "#app/features/spot-selection/spot-selection-page.tsx";
 
 interface AppRouterContext {
   readonly catalog: SceneCatalog;

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import type { DestinationDetail, SpotDetail } from "@/features/scene-pack/model.ts";
+import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import { ScenePickerDrawer } from "./scene-picker-drawer.tsx";
 
 interface SpotSelectionPageProps {
