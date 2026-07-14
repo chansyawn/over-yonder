@@ -74,11 +74,40 @@ function renderRoute(initialEntry: string) {
 }
 
 describe("application routes", () => {
+  it("opens on the start screen and keeps unavailable actions inert", async () => {
+    const user = renderRoute("/");
+
+    expect(await screen.findByRole("heading", { name: "Over Yonder" })).toBeVisible();
+    expect(screen.queryByRole("link", { name: /Destination One/ })).not.toBeInTheDocument();
+
+    const continueButton = screen.getByRole("button", { name: /Continue/ });
+    const destinationsLink = screen.getByRole("link", { name: "Destinations" });
+    const settingsButton = screen.getByRole("button", { name: "Settings" });
+
+    await user.tab();
+    expect(continueButton).toHaveFocus();
+    await user.tab();
+    expect(destinationsLink).toHaveFocus();
+    await user.tab();
+    expect(settingsButton).toHaveFocus();
+
+    await user.click(continueButton);
+    await user.click(settingsButton);
+
+    expect(screen.getByRole("heading", { name: "Over Yonder" })).toBeVisible();
+    expect(destinationsLink).toHaveAttribute("href", "/destinations");
+  });
+
   it("lets the player choose a destination, spot, and scene", async () => {
     const user = renderRoute("/");
 
+    await user.click(await screen.findByRole("link", { name: "Destinations" }));
     await user.click(await screen.findByRole("link", { name: /Destination One/ }));
     expect(await screen.findByRole("heading", { name: "Destination One" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "All destinations" })).toHaveAttribute(
+      "href",
+      "/destinations",
+    );
 
     await user.click(screen.getByRole("button", { name: "Explore Spot One" }));
     expect(await screen.findByRole("heading", { name: "Spot One" })).toBeVisible();
@@ -97,7 +126,10 @@ describe("application routes", () => {
     expect(
       await screen.findByRole("heading", { name: "This destination could not be found" }),
     ).toBeVisible();
-    expect(screen.getByRole("link", { name: "Back to destinations" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Back to destinations" })).toHaveAttribute(
+      "href",
+      "/destinations",
+    );
   });
 
   it("shows not found for an unknown destination", async () => {

@@ -12,6 +12,7 @@ import { DestinationSelectionPage } from "#app/features/destination-selection/de
 import { NotFoundPage } from "#app/features/not-found/not-found-page.tsx";
 import { ScenePage } from "#app/features/scene-viewing/scene-page.tsx";
 import { SpotSelectionPage } from "#app/features/spot-selection/spot-selection-page.tsx";
+import { StartScreenPage } from "#app/features/start-screen/start-screen-page.tsx";
 
 interface AppRouterContext {
   readonly catalog: SceneCatalog;
@@ -23,9 +24,15 @@ const rootRoute = createRootRouteWithContext<AppRouterContext>()({
   notFoundComponent: NotFoundPage,
 });
 
-const destinationSelectionRoute = createRoute({
+const startScreenRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
+  component: StartScreenPage,
+});
+
+const destinationSelectionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/destinations",
   loader: ({ context }) => context.catalog.listDestinations(),
   component: DestinationSelectionRoute,
 });
@@ -60,6 +67,7 @@ const sceneRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([
+  startScreenRoute,
   destinationSelectionRoute,
   spotSelectionRoute,
   sceneRoute,
