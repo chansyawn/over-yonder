@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CompassIcon, MapPinIcon, OrbitIcon, SettingsIcon } from "lucide-react";
+import * as m from "#app/paraglide/messages.js";
 
 const menuItemClassName =
   "border-border bg-background/75 hover:bg-muted/80 focus-visible:ring-foreground/45 relative block w-full cursor-pointer rounded-lg border p-1 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -41,7 +42,7 @@ export function StartScreenPage() {
             className="text-muted-foreground size-14 stroke-1 sm:size-16"
           />
           <h1
-            aria-label="Over Yonder"
+            aria-label={m.app_name()}
             className="mt-2 flex flex-col font-serif text-6xl leading-none font-normal tracking-widest sm:text-7xl"
           >
             <span>OVER</span>
@@ -55,33 +56,33 @@ export function StartScreenPage() {
             <span className="bg-border h-px flex-1" />
           </div>
           <p className="text-muted-foreground mt-3 text-xs tracking-widest lowercase sm:text-sm">
-            quiet journeys
+            {m.start_tagline()}
           </p>
         </header>
 
         <nav
-          aria-label="Main menu"
+          aria-label={m.main_menu_label()}
           className="mt-10 grid w-full max-w-sm gap-2.5 sm:mt-12 sm:gap-3"
         >
           <button className={menuItemClassName} type="button">
             <MenuItemContent
-              description="Resume: Glass Coast"
+              description={m.continue_description()}
               icon={<CompassIcon className="size-6 stroke-1 sm:size-7" />}
-              label="Continue"
+              label={m.continue_action()}
             />
           </button>
           <Link className={menuItemClassName} to="/destinations">
             <MenuItemContent
               icon={<MapPinIcon className="size-6 stroke-1 sm:size-7" />}
-              label="Destinations"
+              label={m.destinations_action()}
             />
           </Link>
-          <button className={menuItemClassName} type="button">
+          <Link className={menuItemClassName} to="/settings">
             <MenuItemContent
               icon={<SettingsIcon className="size-6 stroke-1 sm:size-7" />}
-              label="Settings"
+              label={m.settings_action()}
             />
-          </button>
+          </Link>
         </nav>
       </div>
     </main>

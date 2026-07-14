@@ -2,15 +2,21 @@ import type {
   DestinationDefinition,
   DestinationDetail,
   DestinationSummary,
-  ImageAsset,
   SceneDefinition,
   SceneDetail,
   ScenePackDefinition,
   SceneSummary,
   SpotDefinition,
   SpotDetail,
-  VideoAsset,
 } from "./model.ts";
+import { localize, localizeImage, resolvePackLocale } from "./localization.ts";
+import {
+  ensureUnique,
+  validateDestination,
+  validatePack,
+  validateScene,
+  validateSpot,
+} from "./validation.ts";
 
 export interface SceneCatalog {
   listDestinations(): readonly DestinationSummary[];
@@ -22,7 +28,15 @@ interface IndexedScene {
   readonly detail: SceneDetail;
 }
 
-export function createSceneCatalog(packs: readonly ScenePackDefinition[]): SceneCatalog {
+export interface CreateSceneCatalogOptions {
+  readonly locale: string;
+  readonly baseLocale: string;
+}
+
+export function createSceneCatalog(
+  packs: readonly ScenePackDefinition[],
+  { locale, baseLocale }: CreateSceneCatalogOptions,
+): SceneCatalog {
   if (packs.length === 0) {
     throw new Error("Scene catalog must contain at least one pack.");
   }
@@ -37,38 +51,35 @@ export function createSceneCatalog(packs: readonly ScenePackDefinition[]): Scene
 
   for (const pack of packs) {
     const packPath = `pack ${JSON.stringify(pack.id)}`;
-    validateIdentity(pack.id, pack.title, packPath);
+    validatePack(pack, packPath);
     ensureUnique(packIds, pack.id, "pack");
-
-    if (pack.destinations.length === 0) {
-      throw new Error(`${packPath} must contain at least one destination.`);
-    }
+    const resolvedLocale = resolvePackLocale(pack.locales, locale, baseLocale);
 
     for (const destination of pack.destinations) {
       const destinationPath = `${packPath}, destination ${JSON.stringify(destination.id)}`;
-      validateDestination(destination, destinationPath);
+      validateDestination(destination, pack.locales, destinationPath);
       ensureUnique(destinationIds, destination.id, "destination");
 
       const spots = destination.spots.map((spot) => {
         const spotPath = `${destinationPath}, spot ${JSON.stringify(spot.id)}`;
-        validateSpot(spot, spotPath);
+        validateSpot(spot, pack.locales, spotPath);
         ensureUnique(spotIds, spot.id, "spot");
 
         const scenes = spot.scenes.map((scene) => {
           const scenePath = `${spotPath}, scene ${JSON.stringify(scene.id)}`;
-          validateScene(scene, scenePath);
+          validateScene(scene, pack.locales, scenePath);
           ensureUnique(sceneIds, scene.id, "scene");
 
-          const detail = createSceneDetail(scene);
+          const detail = createSceneDetail(scene, resolvedLocale);
           scenesById.set(scene.id, { destinationId: destination.id, detail });
-          return createSceneSummary(scene);
+          return createSceneSummary(scene, resolvedLocale);
         });
 
-        return createSpotDetail(spot, scenes);
+        return createSpotDetail(spot, scenes, resolvedLocale);
       });
 
       const sceneCount = spots.reduce((count, spot) => count + spot.scenes.length, 0);
-      const summary = createDestinationSummary(destination, sceneCount);
+      const summary = createDestinationSummary(destination, sceneCount, resolvedLocale);
       const detail: DestinationDetail = {
         ...summary,
         spots,
@@ -96,127 +107,60 @@ export function createSceneCatalog(packs: readonly ScenePackDefinition[]): Scene
 function createDestinationSummary(
   destination: DestinationDefinition,
   sceneCount: number,
+  locale: string,
 ): DestinationSummary {
   return {
     id: destination.id,
-    title: destination.title,
-    description: destination.description,
-    image: destination.image,
+    title: localize(destination.title, locale),
+    description: localize(destination.description, locale),
+    image: localizeImage(destination.image, locale),
     spotCount: destination.spots.length,
     sceneCount,
   };
 }
 
-function createSpotDetail(spot: SpotDefinition, scenes: readonly SceneSummary[]): SpotDetail {
+function createSpotDetail(
+  spot: SpotDefinition,
+  scenes: readonly SceneSummary[],
+  locale: string,
+): SpotDetail {
   return {
     id: spot.id,
-    title: spot.title,
-    ...(spot.description ? { description: spot.description } : {}),
+    title: localize(spot.title, locale),
+    ...(spot.description ? { description: localize(spot.description, locale) } : {}),
     position: spot.position,
     scenes,
   };
 }
 
-function createSceneSummary(scene: SceneDefinition): SceneSummary {
+function createSceneSummary(scene: SceneDefinition, locale: string): SceneSummary {
   return {
     id: scene.id,
     kind: scene.kind,
-    title: scene.title,
-    ...(scene.description ? { description: scene.description } : {}),
-    preview: scene.kind === "image" ? scene.media : scene.media.poster,
+    title: localize(scene.title, locale),
+    ...(scene.description ? { description: localize(scene.description, locale) } : {}),
+    preview: localizeImage(scene.kind === "image" ? scene.media : scene.media.poster, locale),
   };
 }
 
-function createSceneDetail(scene: SceneDefinition): SceneDetail {
+function createSceneDetail(scene: SceneDefinition, locale: string): SceneDetail {
   const common = {
     id: scene.id,
-    title: scene.title,
-    ...(scene.description ? { description: scene.description } : {}),
+    title: localize(scene.title, locale),
+    ...(scene.description ? { description: localize(scene.description, locale) } : {}),
   };
 
   if (scene.kind === "image") {
-    return { ...common, kind: "image", media: scene.media };
+    return { ...common, kind: "image", media: localizeImage(scene.media, locale) };
   }
 
-  return { ...common, kind: "video", media: scene.media };
-}
-
-function validateDestination(destination: DestinationDefinition, path: string): void {
-  validateIdentity(destination.id, destination.title, path);
-  assertNonEmpty(destination.description, `${path} description`);
-  validateImage(destination.image, `${path} image`);
-
-  if (destination.spots.length === 0) {
-    throw new Error(`${path} must contain at least one spot.`);
-  }
-}
-
-function validateSpot(spot: SpotDefinition, path: string): void {
-  validateIdentity(spot.id, spot.title, path);
-  validateNormalizedPosition(spot.position.x, `${path} x`);
-  validateNormalizedPosition(spot.position.y, `${path} y`);
-
-  if (spot.scenes.length === 0) {
-    throw new Error(`${path} must contain at least one scene.`);
-  }
-}
-
-function validateScene(scene: SceneDefinition, path: string): void {
-  validateIdentity(scene.id, scene.title, path);
-
-  const kind = (scene as { readonly kind: unknown }).kind;
-  if (kind !== "image" && kind !== "video") {
-    throw new Error(`${path} kind must be either "image" or "video".`);
-  }
-
-  if (scene.kind === "image") {
-    validateImage(scene.media, `${path} media`);
-    return;
-  }
-
-  validateVideo(scene.media, `${path} media`);
-}
-
-function validateVideo(video: VideoAsset, path: string): void {
-  assertNonEmpty(video.src, `${path} source`);
-  assertNonEmpty(video.label, `${path} label`);
-  validateImage(video.poster, `${path} poster`);
-}
-
-function validateImage(image: ImageAsset, path: string): void {
-  assertNonEmpty(image.src, `${path} source`);
-  assertNonEmpty(image.alt, `${path} alt text`);
-  validateDimension(image.width, `${path} width`);
-  validateDimension(image.height, `${path} height`);
-}
-
-function validateIdentity(id: string, title: string, path: string): void {
-  assertNonEmpty(id, `${path} id`);
-  assertNonEmpty(title, `${path} title`);
-}
-
-function validateNormalizedPosition(value: number, label: string): void {
-  if (!Number.isFinite(value) || value < 0 || value > 1) {
-    throw new Error(`${label} must be between 0 and 1.`);
-  }
-}
-
-function validateDimension(value: number, label: string): void {
-  if (!Number.isInteger(value) || value <= 0) {
-    throw new Error(`${label} must be a positive integer.`);
-  }
-}
-
-function assertNonEmpty(value: string, label: string): void {
-  if (value.trim().length === 0) {
-    throw new Error(`${label} must not be empty.`);
-  }
-}
-
-function ensureUnique(ids: Set<string>, id: string, entity: string): void {
-  if (ids.has(id)) {
-    throw new Error(`Duplicate ${entity} id ${JSON.stringify(id)}.`);
-  }
-
-  ids.add(id);
+  return {
+    ...common,
+    kind: "video",
+    media: {
+      src: scene.media.src,
+      label: localize(scene.media.label, locale),
+      poster: localizeImage(scene.media.poster, locale),
+    },
+  };
 }

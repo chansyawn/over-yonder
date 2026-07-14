@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { SceneDetail } from "#app/features/scene-pack/model.ts";
+import * as m from "#app/paraglide/messages.js";
 
 interface SceneMediaProps {
   readonly scene: SceneDetail;
@@ -13,8 +14,8 @@ export function SceneMedia({ scene }: SceneMediaProps) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-white p-8 text-center text-black">
         <div>
-          <h2 className="text-2xl font-semibold">Scene media unavailable</h2>
-          <p className="mt-2 text-sm">Return to the destination and choose another scene.</p>
+          <h2 className="text-2xl font-semibold">{m.scene_media_unavailable()}</h2>
+          <p className="mt-2 text-sm">{m.scene_media_unavailable_hint()}</p>
         </div>
       </div>
     );

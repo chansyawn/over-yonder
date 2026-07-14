@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "ready": "vp check && vp run -r test && vp run -r build",
+    "i18n:compile": "vp run -r i18n:compile",
+    "ready": "vp run i18n:compile && vp check && vp run -r test && vp run -r build",
     "dev": "vp run website#dev",
     "dev:web": "vp run website#dev",
     "dev:desktop": "vp run desktop#dev",
-    "prepare": "vp config"
+    "prepare": "vp config && vp run i18n:compile"
   },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260707.2",

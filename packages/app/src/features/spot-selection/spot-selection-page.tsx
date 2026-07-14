@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
+import * as m from "#app/paraglide/messages.js";
 import { ScenePickerDrawer } from "./scene-picker-drawer.tsx";
 
 interface SpotSelectionPageProps {
@@ -19,7 +20,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
           className="inline-flex border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           to="/destinations"
         >
-          All destinations
+          {m.all_destinations_action()}
         </Link>
         <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">{destination.title}</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6">{destination.description}</p>
@@ -33,8 +34,8 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
           {imageFailed ? (
             <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
               <div>
-                <h2 className="text-2xl font-semibold">Destination image unavailable</h2>
-                <p className="mt-2 text-sm">Return to the destination list and try another one.</p>
+                <h2 className="text-2xl font-semibold">{m.destination_image_unavailable()}</h2>
+                <p className="mt-2 text-sm">{m.destination_image_unavailable_hint()}</p>
               </div>
             </div>
           ) : (
@@ -53,7 +54,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
                 return (
                   <button
                     key={spot.id}
-                    aria-label={`Explore ${spot.title}`}
+                    aria-label={m.explore_spot_action({ spotTitle: spot.title })}
                     aria-pressed={isSelected}
                     className="absolute grid size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     style={{

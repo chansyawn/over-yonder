@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
 import svgr from "vite-plugin-svgr";
@@ -6,7 +7,17 @@ import svgr from "vite-plugin-svgr";
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
-  plugins: [react(), svgr(), tailwindcss()],
+  plugins: [
+    paraglideVitePlugin({
+      project: "../../project.inlang",
+      outdir: "./src/paraglide",
+      strategy: ["localStorage", "preferredLanguage", "baseLocale"],
+      emitTsDeclarations: true,
+    }),
+    react(),
+    svgr(),
+    tailwindcss(),
+  ],
   clearScreen: false,
   server: {
     host: host || false,

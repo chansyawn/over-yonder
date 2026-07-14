@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { DestinationDetail, SceneDetail } from "#app/features/scene-pack/model.ts";
+import * as m from "#app/paraglide/messages.js";
 import { SceneMedia } from "./scene-media.tsx";
 
 interface ScenePageProps {
@@ -17,7 +18,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         params={{ destinationId: destination.id }}
         to="/destinations/$destinationId"
       >
-        Back to {destination.title}
+        {m.back_to_destination_action({ destinationTitle: destination.title })}
       </Link>
     </main>
   );

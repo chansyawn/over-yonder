@@ -7,12 +7,12 @@ Over Yonder is a pnpm monorepo with one shared React application and two thin pl
 - A browser application built with Vite.
 - A desktop application hosted in a Tauri shell.
 
-Vite+ is the repository's sole Web and TypeScript toolchain. Both entry points call the same parameterless `createApp()` API and run the same Phase One experience. The shared application owns routing, UI, content lookup, and the built-in Scene Pack.
+Vite+ is the repository's sole Web and TypeScript toolchain. Both entry points call the shared `createApp()` API with their platform-specific Paraglide locale runtime and run the same Phase One experience. The shared application owns routing, UI messages, content lookup, and the built-in Scene Pack.
 
 ```mermaid
 flowchart TD
-    Website["Website entry"] --> App["@over-yonder/app"]
-    Desktop["Tauri desktop entry"] --> App
+    Website["Website entry + locale runtime"] --> App["@over-yonder/app"]
+    Desktop["Tauri entry + locale runtime"] --> App
     App --> Router["Routes and exploration UI"]
     App --> Catalog["Internal Scene Catalog"]
     Catalog --> Pack["Bundled official Scene Pack and media"]
@@ -38,6 +38,7 @@ over-yonder/
 | TanStack Router | Application routing inside the shared UI                                          |
 | Tailwind CSS    | Shared utility-first styling                                                      |
 | Base UI         | Headless, accessible UI primitives, including the spot scene drawer               |
+| Paraglide JS    | Type-safe UI messages, locale detection, and persisted language selection         |
 | Tauri           | Desktop window and application shell                                              |
 | Vite+           | Development server, builds, formatting, linting, type checks, and workspace tasks |
 
@@ -52,6 +53,12 @@ over-yonder/
 
 - Unit tests should primarily cover deterministic application logic. Test public behavior and edge cases rather than private implementation details.
 - Keep UI tests selective. Use Testing Library for critical interactions, state transitions, and regressions that affect users; avoid broad snapshots, styling assertions, and tests that merely mirror component structure.
+
+### Internationalization
+
+- The Website and Desktop Vite builds compile separate Paraglide runtimes from the shared root Inlang project. Platform runtimes own locale detection and persistence; the shared app receives `getLocale` and `setLocale` through `createApp()`.
+- Shared interface messages live in `messages/{locale}.json`. Scene Pack content carries its own localized fields and is resolved into plain UI-facing strings by the scene catalog.
+- Routes are not localized. A saved language preference takes priority over the browser or system language, with English as the final application fallback.
 
 ## Development Workflow
 

@@ -1,4 +1,5 @@
 import type { DestinationSummary } from "#app/features/scene-pack/model.ts";
+import * as m from "#app/paraglide/messages.js";
 import { DestinationCard } from "./destination-card.tsx";
 
 interface DestinationSelectionPageProps {
@@ -28,19 +29,19 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
         <header className="mb-4 max-w-3xl">
           <div className="text-muted-foreground mb-3 flex items-center gap-3 text-xs tracking-widest uppercase md:text-sm">
             <span aria-hidden="true" className="bg-border size-1.5 rounded-full" />
-            <span>Over Yonder</span>
+            <span>{m.app_name()}</span>
             <span aria-hidden="true" className="bg-border h-px w-16" />
           </div>
           <h1 className="font-serif text-5xl font-normal tracking-tight md:text-6xl">
-            Destinations
+            {m.destinations_action()}
           </h1>
           <p className="text-muted-foreground mt-3 text-base tracking-wider md:text-lg">
-            Open a place and begin wandering.
+            {m.destinations_intro()}
           </p>
         </header>
 
         <section
-          aria-label="Available destinations"
+          aria-label={m.available_destinations_label()}
           className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {destinations.map((destination, index) => (
@@ -54,7 +55,7 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
 
         <footer className="text-muted-foreground mt-auto flex items-center gap-3 pt-10 text-center text-xs tracking-widest md:text-sm">
           <span aria-hidden="true" className="bg-border/70 h-px flex-1" />
-          <p>Select a destination to continue</p>
+          <p>{m.select_destination_hint()}</p>
           <span aria-hidden="true" className="bg-border/70 h-px flex-1" />
         </footer>
       </div>

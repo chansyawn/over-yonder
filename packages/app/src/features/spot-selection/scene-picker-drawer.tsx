@@ -2,6 +2,7 @@ import { Drawer } from "@base-ui/react/drawer";
 import { Link } from "@tanstack/react-router";
 import type { RefObject } from "react";
 import type { SpotDetail } from "#app/features/scene-pack/model.ts";
+import * as m from "#app/paraglide/messages.js";
 
 interface ScenePickerDrawerProps {
   readonly spot: SpotDetail | undefined;
@@ -42,14 +43,14 @@ export function ScenePickerDrawer({
               <div className="mb-6 flex items-start justify-between gap-4">
                 <div>
                   <Drawer.Title className="text-2xl font-semibold">
-                    {spot?.title ?? "Choose a scene"}
+                    {spot?.title ?? m.choose_scene_title()}
                   </Drawer.Title>
                   <Drawer.Description className="mt-2 text-sm leading-6">
-                    {spot?.description ?? "Select a scene from this spot."}
+                    {spot?.description ?? m.choose_scene_hint()}
                   </Drawer.Description>
                 </div>
                 <Drawer.Close className="border border-black bg-white px-3 py-2 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
-                  Close
+                  {m.close_action()}
                 </Drawer.Close>
               </div>
 
@@ -73,7 +74,9 @@ export function ScenePickerDrawer({
                     <div className="p-4">
                       <div className="flex items-center justify-between gap-4">
                         <h3 className="text-lg font-semibold">{scene.title}</h3>
-                        <span className="text-xs uppercase">{scene.kind}</span>
+                        <span className="text-xs uppercase">
+                          {scene.kind === "image" ? m.scene_kind_image() : m.scene_kind_video()}
+                        </span>
                       </div>
                       {scene.description ? (
                         <p className="mt-2 text-sm leading-5">{scene.description}</p>

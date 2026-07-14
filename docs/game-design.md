@@ -40,7 +40,7 @@ Destination, spot, and scene order is authored by the Scene Pack and preserved i
 
 Phase One contains one official, read-only Scene Pack bundled with the shared application. Its destinations, images, videos, and video posters are local build assets and remain available without a network connection.
 
-The Scene Pack is an internal content source, not a user-facing file format or extension API. Players cannot import, download, install, edit, or remove packs in Phase One. No compatibility or migration promise is made for the internal definition shape.
+The Scene Pack is an internal content source, not a user-facing file format or extension API. Players cannot import, download, install, edit, or remove packs in Phase One. Its user-facing content is authored per supported locale so the catalog can resolve one consistent language for each pack. No compatibility or migration promise is made for the internal definition shape.
 
 The included open-license media is sample content for validating the experience. Asset provenance and licensing are recorded with the pack rather than shown as an in-game credits interface.
 
@@ -81,7 +81,7 @@ The scene view contains no direct destination, spot, or scene switcher. Returnin
 
 ## Persistence
 
-Phase One stores no player selection or exploration state. Every fresh visit to the root route starts at the destination list, and the application does not restore the last destination, spot, scene, or open drawer. Website and desktop follow the same behavior.
+Phase One stores no player selection or exploration state. Every fresh visit to the root route starts at the destination list, and the application does not restore the last destination, spot, scene, or open drawer. The language selected in Settings is the only persisted preference. Website and desktop follow the same behavior, with platform-local preferences rather than cross-platform synchronization.
 
 ## Out of Scope
 

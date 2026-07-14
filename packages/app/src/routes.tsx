@@ -11,6 +11,7 @@ import type { SceneCatalog } from "#app/features/scene-pack/catalog.ts";
 import { DestinationSelectionPage } from "#app/features/destination-selection/destination-selection-page.tsx";
 import { NotFoundPage } from "#app/features/not-found/not-found-page.tsx";
 import { ScenePage } from "#app/features/scene-viewing/scene-page.tsx";
+import { SettingsPage } from "#app/features/settings/settings-page.tsx";
 import { SpotSelectionPage } from "#app/features/spot-selection/spot-selection-page.tsx";
 import { StartScreenPage } from "#app/features/start-screen/start-screen-page.tsx";
 
@@ -35,6 +36,12 @@ const destinationSelectionRoute = createRoute({
   path: "/destinations",
   loader: ({ context }) => context.catalog.listDestinations(),
   component: DestinationSelectionRoute,
+});
+
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/settings",
+  component: SettingsPage,
 });
 
 const spotSelectionRoute = createRoute({
@@ -68,6 +75,7 @@ const sceneRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   startScreenRoute,
+  settingsRoute,
   destinationSelectionRoute,
   spotSelectionRoute,
   sceneRoute,

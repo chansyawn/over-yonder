@@ -1,6 +1,7 @@
 import { createSceneCatalog } from "../catalog.ts";
 import type { SceneCatalog } from "../catalog.ts";
 import type { ScenePackDefinition } from "../model.ts";
+import type { Locale } from "#app/paraglide/runtime.js";
 import { openHorizonsPack } from "./open-horizons-scene-pack.ts";
 import { placeholderPack } from "./placeholder-scene-pack.ts";
 
@@ -9,6 +10,6 @@ const officialScenePacks = [
   placeholderPack,
 ] satisfies readonly ScenePackDefinition[];
 
-export function createOfficialSceneCatalog(): SceneCatalog {
-  return createSceneCatalog(officialScenePacks);
+export function createOfficialSceneCatalog(locale: Locale, baseLocale: Locale): SceneCatalog {
+  return createSceneCatalog(officialScenePacks, { locale, baseLocale });
 }

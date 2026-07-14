@@ -1,3 +1,18 @@
+export type LocalizedText = Readonly<Record<string, string>>;
+
+export interface ImageAssetDefinition {
+  readonly src: string;
+  readonly alt: LocalizedText;
+  readonly width: number;
+  readonly height: number;
+}
+
+export interface VideoAssetDefinition {
+  readonly src: string;
+  readonly label: LocalizedText;
+  readonly poster: ImageAssetDefinition;
+}
+
 export interface ImageAsset {
   readonly src: string;
   readonly alt: string;
@@ -13,26 +28,26 @@ export interface VideoAsset {
 
 interface SceneDefinitionBase {
   readonly id: string;
-  readonly title: string;
-  readonly description?: string;
+  readonly title: LocalizedText;
+  readonly description?: LocalizedText;
 }
 
 export interface ImageSceneDefinition extends SceneDefinitionBase {
   readonly kind: "image";
-  readonly media: ImageAsset;
+  readonly media: ImageAssetDefinition;
 }
 
 export interface VideoSceneDefinition extends SceneDefinitionBase {
   readonly kind: "video";
-  readonly media: VideoAsset;
+  readonly media: VideoAssetDefinition;
 }
 
 export type SceneDefinition = ImageSceneDefinition | VideoSceneDefinition;
 
 export interface SpotDefinition {
   readonly id: string;
-  readonly title: string;
-  readonly description?: string;
+  readonly title: LocalizedText;
+  readonly description?: LocalizedText;
   readonly position: {
     readonly x: number;
     readonly y: number;
@@ -42,15 +57,16 @@ export interface SpotDefinition {
 
 export interface DestinationDefinition {
   readonly id: string;
-  readonly title: string;
-  readonly description: string;
-  readonly image: ImageAsset;
+  readonly title: LocalizedText;
+  readonly description: LocalizedText;
+  readonly image: ImageAssetDefinition;
   readonly spots: readonly SpotDefinition[];
 }
 
 export interface ScenePackDefinition {
   readonly id: string;
-  readonly title: string;
+  readonly locales: readonly string[];
+  readonly title: LocalizedText;
   readonly destinations: readonly DestinationDefinition[];
 }
 

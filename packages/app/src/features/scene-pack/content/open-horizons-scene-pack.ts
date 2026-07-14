@@ -1,11 +1,15 @@
-import type { ImageAsset, ScenePackDefinition } from "../model.ts";
+import type { ImageAssetDefinition, LocalizedText, ScenePackDefinition } from "../model.ts";
 
 const assetBaseUrl = "https://pub-c650704a0a0344179ceaa6f95c731202.r2.dev";
 
-function imageAsset(path: string, alt: string): ImageAsset {
+function text(en: string, zhCN: string): LocalizedText {
+  return { en, "zh-CN": zhCN };
+}
+
+function imageAsset(path: string, enAlt: string, zhCNAlt: string): ImageAssetDefinition {
   return {
     src: `${assetBaseUrl}/${path}`,
-    alt,
+    alt: text(enAlt, zhCNAlt),
     width: 1672,
     height: 941,
   };
@@ -13,88 +17,118 @@ function imageAsset(path: string, alt: string): ImageAsset {
 
 export const openHorizonsPack = {
   id: "open-horizons",
-  title: "Open Horizons",
+  locales: ["en", "zh-CN"],
+  title: text("Open Horizons", "开阔地平线"),
   destinations: [
     {
       id: "mars-city",
-      title: "Mars City",
-      description:
+      title: text("Mars City", "火星城"),
+      description: text(
         "A connected frontier settlement of industry, gardens, launch facilities, and dense city streets.",
+        "一座由工业区、花园、发射设施和密集街道相连的边疆聚居地。",
+      ),
       image: imageAsset(
         "maps/mars-city.png",
         "An illustrated overview of a connected city and industrial settlements across the Martian desert",
+        "火星荒漠中相互连接的城市与工业聚居地全景插画",
       ),
       spots: [
         {
           id: "open-pit-mine",
-          title: "Open-Pit Mine",
-          description: "A vast excavation ringed by refineries, rail lines, and processing plants.",
+          title: text("Open-Pit Mine", "露天矿场"),
+          description: text(
+            "A vast excavation ringed by refineries, rail lines, and processing plants.",
+            "巨大的矿坑四周环绕着精炼厂、铁路和加工设施。",
+          ),
           position: { x: 0.79, y: 0.43 },
           scenes: [
             {
               id: "open-pit-mine-overlook",
               kind: "image",
-              title: "Mine Overlook",
-              description: "Watch the industrial complex work along the edge of the terraced pit.",
+              title: text("Mine Overlook", "矿场眺望台"),
+              description: text(
+                "Watch the industrial complex work along the edge of the terraced pit.",
+                "眺望阶梯矿坑边缘持续运转的工业设施。",
+              ),
               media: imageAsset(
                 "scenes/mars-city/open-pit-mine.png",
                 "A large terraced Martian mine surrounded by refineries and a passing freight train",
+                "一座大型火星阶梯矿坑，周围是精炼厂和驶过的货运列车",
               ),
             },
           ],
         },
         {
           id: "city-center",
-          title: "City Center",
-          description:
+          title: text("City Center", "城市中心"),
+          description: text(
             "The settlement's busy circular core, built around a monumental central spire.",
+            "聚居地繁忙的环形核心区，围绕宏伟的中央尖塔而建。",
+          ),
           position: { x: 0.54, y: 0.73 },
           scenes: [
             {
               id: "city-center-overlook",
               kind: "image",
-              title: "City Overlook",
-              description: "Look across plazas, waterways, towers, and layered neighborhoods.",
+              title: text("City Overlook", "城市眺望台"),
+              description: text(
+                "Look across plazas, waterways, towers, and layered neighborhoods.",
+                "俯瞰广场、水道、高塔与层叠的街区。",
+              ),
               media: imageAsset(
                 "scenes/mars-city/city-center.png",
                 "A panoramic view over a dense circular Martian city with gardens and tall spires",
+                "遍布花园与高耸尖塔的火星环形城市全景",
               ),
             },
           ],
         },
         {
           id: "spaceport",
-          title: "Spaceport",
-          description: "Launch towers, transit lines, and hangars connect the settlement to orbit.",
+          title: text("Spaceport", "太空港"),
+          description: text(
+            "Launch towers, transit lines, and hangars connect the settlement to orbit.",
+            "发射塔、交通线和机库将聚居地与轨道相连。",
+          ),
           position: { x: 0.19, y: 0.2 },
           scenes: [
             {
               id: "spaceport-launch-complex",
               kind: "image",
-              title: "Launch Complex",
-              description: "Settle beside the rail platforms while a rocket waits on the pad.",
+              title: text("Launch Complex", "发射中心"),
+              description: text(
+                "Settle beside the rail platforms while a rocket waits on the pad.",
+                "在铁路站台旁稍作停留，看火箭静候发射。",
+              ),
               media: imageAsset(
                 "scenes/mars-city/spaceport.png",
                 "A rocket standing at a Martian spaceport surrounded by rail platforms and hangars",
+                "一枚火箭矗立在火星太空港，四周环绕着铁路站台和机库",
               ),
             },
           ],
         },
         {
           id: "biodome-gardens",
-          title: "Biodome Gardens",
-          description: "A green district of glass domes, waterways, farms, and shaded paths.",
+          title: text("Biodome Gardens", "生态穹顶花园"),
+          description: text(
+            "A green district of glass domes, waterways, farms, and shaded paths.",
+            "由玻璃穹顶、水道、农场和林荫小径组成的绿色街区。",
+          ),
           position: { x: 0.46, y: 0.42 },
           scenes: [
             {
               id: "biodome-garden-overlook",
               kind: "image",
-              title: "Garden Overlook",
-              description:
+              title: text("Garden Overlook", "花园眺望台"),
+              description: text(
                 "Rest above the settlement's reservoirs, conservatories, and cultivated terraces.",
+                "在聚居地的蓄水池、温室和种植梯田上方休憩。",
+              ),
               media: imageAsset(
                 "scenes/mars-city/biodome-gardens.png",
                 "A lush Martian garden district filled with glass biodomes, pools, and cultivated terraces",
+                "郁郁葱葱的火星花园区，遍布玻璃生态穹顶、水池和种植梯田",
               ),
             },
           ],
@@ -103,123 +137,169 @@ export const openHorizonsPack = {
     },
     {
       id: "habitat-home",
-      title: "Habitat Home",
-      description:
+      title: text("Habitat Home", "栖居之家"),
+      description: text(
         "A compact Martian home with warm rooms for resting, cooking, creating, and watching the city beyond.",
+        "一座紧凑温暖的火星住宅，可以休息、烹饪、创作，也能遥望远方的城市。",
+      ),
       image: imageAsset(
         "maps/habitat-home.png",
         "A cutaway illustration of a compact two-level home on Mars",
+        "火星上一座紧凑双层住宅的剖面插画",
       ),
       spots: [
         {
           id: "living-room",
-          title: "Living Room",
-          description: "A curved sofa and broad window make a quiet place to slow down.",
+          title: text("Living Room", "客厅"),
+          description: text(
+            "A curved sofa and broad window make a quiet place to slow down.",
+            "弧形沙发和宽阔窗户围成一处让人慢下来的安静角落。",
+          ),
           position: { x: 0.74, y: 0.68 },
           scenes: [
             {
               id: "living-room-journal",
               kind: "image",
-              title: "Window Journal",
-              description: "Write beside the window as evening settles over the city.",
+              title: text("Window Journal", "窗边手记"),
+              description: text(
+                "Write beside the window as evening settles over the city.",
+                "当暮色落在城市上空，在窗边静静书写。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/living-room-1.png",
                 "A person writing on a curved sofa beside a large window overlooking the Martian city",
+                "一人坐在弧形沙发上书写，身旁的大窗俯瞰火星城市",
               ),
             },
             {
               id: "living-room-rest",
               kind: "image",
-              title: "Evening Rest",
-              description: "Stretch out on the sofa and watch the distant skyline.",
+              title: text("Evening Rest", "晚间小憩"),
+              description: text(
+                "Stretch out on the sofa and watch the distant skyline.",
+                "舒展地躺在沙发上，凝望远处的城市天际线。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/living-room-2.png",
                 "A person resting on a curved sofa beside a panoramic window over the Martian city",
+                "一人在弧形沙发上休息，身旁的全景窗外是火星城市",
               ),
             },
           ],
         },
         {
           id: "kitchen",
-          title: "Kitchen",
-          description: "A small galley kitchen gathered around a table for two.",
+          title: text("Kitchen", "厨房"),
+          description: text(
+            "A small galley kitchen gathered around a table for two.",
+            "一间围绕双人餐桌布置的小型走廊式厨房。",
+          ),
           position: { x: 0.5, y: 0.68 },
           scenes: [
             {
               id: "kitchen-meal",
               kind: "image",
-              title: "Quiet Meal",
-              description: "Take a seat for a simple meal after a long day outside.",
+              title: text("Quiet Meal", "静谧一餐"),
+              description: text(
+                "Take a seat for a simple meal after a long day outside.",
+                "结束漫长的外出后，坐下来享用一顿简单的饭食。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/kitchen-1.png",
                 "A person seated at a round table in a warm compact habitat kitchen",
+                "一人坐在温暖紧凑的居所厨房圆桌旁",
               ),
             },
             {
               id: "kitchen-preparation",
               kind: "image",
-              title: "Kitchen Routine",
-              description: "Prepare something warm at the table beneath the galley lights.",
+              title: text("Kitchen Routine", "厨房日常"),
+              description: text(
+                "Prepare something warm at the table beneath the galley lights.",
+                "在厨房灯光下的餐桌旁准备一些温暖的食物。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/kitchen-2.png",
                 "A person preparing food at a round table in a compact Martian kitchen",
+                "一人在紧凑的火星厨房圆桌旁准备食物",
               ),
             },
           ],
         },
         {
           id: "studio",
-          title: "Studio",
-          description:
+          title: text("Studio", "工作室"),
+          description: text(
             "Cameras, sketches, and collected field notes fill a working corner of the home.",
+            "相机、速写和收集来的野外笔记填满了家中的工作角落。",
+          ),
           position: { x: 0.72, y: 0.31 },
           scenes: [
             {
               id: "studio-sketch",
               kind: "image",
-              title: "Field Sketch",
-              description: "Develop a new landscape study at the drawing desk.",
+              title: text("Field Sketch", "野外速写"),
+              description: text(
+                "Develop a new landscape study at the drawing desk.",
+                "在绘图桌前展开一幅新的风景习作。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/studio-1.png",
                 "A person drawing a Martian landscape in a studio filled with cameras and field photographs",
+                "一人在摆满相机和野外照片的工作室中描绘火星风景",
               ),
             },
             {
               id: "studio-camera",
               kind: "image",
-              title: "Camera Setup",
-              description: "Adjust the camera and prepare to document another expedition.",
+              title: text("Camera Setup", "调试相机"),
+              description: text(
+                "Adjust the camera and prepare to document another expedition.",
+                "调整相机，为记录下一次远行做好准备。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/studio-2.png",
                 "A person adjusting a camera on a tripod in a warm, equipment-filled studio",
+                "一人在温暖且摆满设备的工作室里调整三脚架上的相机",
               ),
             },
           ],
         },
         {
           id: "bedroom",
-          title: "Bedroom",
-          description: "A sheltered sleeping nook looks out across the red landscape.",
+          title: text("Bedroom", "卧室"),
+          description: text(
+            "A sheltered sleeping nook looks out across the red landscape.",
+            "一处安稳的睡眠角落，窗外铺展着红色大地。",
+          ),
           position: { x: 0.34, y: 0.3 },
           scenes: [
             {
               id: "bedroom-reading",
               kind: "image",
-              title: "Morning Reading",
-              description: "Read on the bed while soft light reaches through the window.",
+              title: text("Morning Reading", "晨间阅读"),
+              description: text(
+                "Read on the bed while soft light reaches through the window.",
+                "柔和的光线穿过窗户，在床上安静阅读。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/bedroom-1.png",
                 "A person reading on a bed beside a round window overlooking the Martian landscape",
+                "一人在床上阅读，旁边的圆窗外是火星地貌",
               ),
             },
             {
               id: "bedroom-packing",
               kind: "image",
-              title: "Packing Up",
-              description: "Gather supplies beside the bed before heading outside.",
+              title: text("Packing Up", "整理行装"),
+              description: text(
+                "Gather supplies beside the bed before heading outside.",
+                "出门前在床边收拾好所需物资。",
+              ),
               media: imageAsset(
                 "scenes/habitat-home/bedroom-2.png",
                 "A person packing supplies beside a bed in a compact Martian bedroom",
+                "一人在紧凑的火星卧室床边整理物资",
               ),
             },
           ],

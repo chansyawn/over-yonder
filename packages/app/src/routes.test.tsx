@@ -4,35 +4,39 @@ import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { describe, expect, it } from "vite-plus/test";
 import { createSceneCatalog } from "#app/features/scene-pack/catalog.ts";
 import type { ScenePackDefinition } from "#app/features/scene-pack/model.ts";
+import { overwriteGetLocale, overwriteSetLocale, type Locale } from "#app/paraglide/runtime.js";
 import { createAppRouter } from "./routes.tsx";
+
+const text = (en: string, zhCN = `中文：${en}`) => ({ en, "zh-CN": zhCN });
 
 const image = {
   src: "/image.jpg",
-  alt: "A destination overview",
+  alt: text("A destination overview", "目的地全景"),
   width: 1200,
   height: 800,
 } as const;
 
 const pack = {
   id: "test-pack",
-  title: "Test Pack",
+  locales: ["en", "zh-CN"],
+  title: text("Test Pack"),
   destinations: [
     {
       id: "destination-one",
-      title: "Destination One",
-      description: "A destination for route testing.",
+      title: text("Destination One", "目的地一"),
+      description: text("A destination for route testing.", "用于路由测试的目的地。"),
       image,
       spots: [
         {
           id: "spot-one",
-          title: "Spot One",
-          description: "A spot with one scene.",
+          title: text("Spot One", "地点一"),
+          description: text("A spot with one scene.", "包含一个场景的地点。"),
           position: { x: 0.5, y: 0.5 },
           scenes: [
             {
               id: "scene-one",
               kind: "image",
-              title: "Scene One",
+              title: text("Scene One", "场景一"),
               media: image,
             },
           ],
@@ -41,19 +45,19 @@ const pack = {
     },
     {
       id: "destination-two",
-      title: "Destination Two",
-      description: "Another destination for ownership testing.",
+      title: text("Destination Two", "目的地二"),
+      description: text("Another destination for ownership testing.", "用于归属测试的另一目的地。"),
       image,
       spots: [
         {
           id: "spot-two",
-          title: "Spot Two",
+          title: text("Spot Two", "地点二"),
           position: { x: 0.25, y: 0.75 },
           scenes: [
             {
               id: "scene-two",
               kind: "image",
-              title: "Scene Two",
+              title: text("Scene Two", "场景二"),
               media: image,
             },
           ],
@@ -63,9 +67,10 @@ const pack = {
   ],
 } satisfies ScenePackDefinition;
 
-function renderRoute(initialEntry: string) {
+function renderRoute(initialEntry: string, locale: Locale = "en") {
+  overwriteGetLocale(() => locale);
   const router = createAppRouter({
-    catalog: createSceneCatalog([pack]),
+    catalog: createSceneCatalog([pack], { locale, baseLocale: "en" }),
     history: createMemoryHistory({ initialEntries: [initialEntry] }),
   });
 
@@ -82,20 +87,20 @@ describe("application routes", () => {
 
     const continueButton = screen.getByRole("button", { name: /Continue/ });
     const destinationsLink = screen.getByRole("link", { name: "Destinations" });
-    const settingsButton = screen.getByRole("button", { name: "Settings" });
+    const settingsLink = screen.getByRole("link", { name: "Settings" });
 
     await user.tab();
     expect(continueButton).toHaveFocus();
     await user.tab();
     expect(destinationsLink).toHaveFocus();
     await user.tab();
-    expect(settingsButton).toHaveFocus();
+    expect(settingsLink).toHaveFocus();
 
     await user.click(continueButton);
-    await user.click(settingsButton);
 
     expect(screen.getByRole("heading", { name: "Over Yonder" })).toBeVisible();
     expect(destinationsLink).toHaveAttribute("href", "/destinations");
+    expect(settingsLink).toHaveAttribute("href", "/settings");
   });
 
   it("lets the player choose a destination, spot, and scene", async () => {
@@ -146,5 +151,32 @@ describe("application routes", () => {
     expect(
       await screen.findByRole("heading", { name: "This destination could not be found" }),
     ).toBeVisible();
+  });
+
+  it("opens settings and submits a language change through the shared runtime", async () => {
+    let selectedLocale: Locale | undefined;
+    let selectedOptions: { reload?: boolean } | undefined;
+    overwriteSetLocale((locale, options) => {
+      selectedLocale = locale;
+      selectedOptions = options;
+    });
+    const user = renderRoute("/settings");
+
+    expect(await screen.findByRole("heading", { name: "Settings" })).toBeVisible();
+    expect(screen.getByRole("radio", { name: "English" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "简体中文" })).not.toBeChecked();
+    expect(screen.getByRole("link", { name: "Back to main menu" })).toHaveAttribute("href", "/");
+
+    await user.click(screen.getByRole("radio", { name: "简体中文" }));
+    expect(selectedLocale).toBe("zh-CN");
+    expect(selectedOptions).toBeUndefined();
+  });
+
+  it("renders application and scene pack messages in Simplified Chinese", async () => {
+    renderRoute("/destinations", "zh-CN");
+
+    expect(await screen.findByRole("heading", { name: "目的地" })).toBeVisible();
+    expect(screen.getByRole("link", { name: /目的地一/ })).toBeVisible();
+    expect(screen.getAllByText("1 个地点 · 1 个场景")).toHaveLength(2);
   });
 });

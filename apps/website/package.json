@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "i18n:compile": "paraglide-js compile --project ../../project.inlang --outdir ./src/paraglide --strategy localStorage preferredLanguage baseLocale --emit-ts-declarations",
     "dev": "vp dev",
-    "build": "tsc && vp build",
+    "build": "vp build && tsc",
     "preview": "vp preview"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "@inlang/paraglide-js": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
