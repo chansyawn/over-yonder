@@ -19,7 +19,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
       <p className="sr-only" id="destination-map-instructions">
         {m.map_navigation_hint()}
       </p>
-      <section className="absolute inset-2 overflow-hidden rounded-lg sm:inset-3">
+      <section className="absolute inset-0 overflow-hidden">
         <DestinationMap
           destination={destination}
           selectedSpotId={selectedSpot?.id}
@@ -29,11 +29,6 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
           }}
         />
       </section>
-
-      <div
-        aria-hidden="true"
-        className="border-border/70 pointer-events-none absolute inset-2 z-20 rounded-lg border sm:inset-3"
-      />
 
       <header className="pointer-events-none absolute top-6 left-5 z-20 max-w-[min(32rem,calc(100vw-2.5rem))] sm:top-8 sm:left-8">
         <Link
