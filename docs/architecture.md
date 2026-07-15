@@ -52,7 +52,7 @@ over-yonder/
 ### Unit Testing
 
 - Unit tests should primarily cover deterministic application logic. Test public behavior and edge cases rather than private implementation details.
-- Keep UI tests selective. Use Testing Library for critical interactions, state transitions, and regressions that affect users; avoid broad snapshots, styling assertions, and tests that merely mirror component structure.
+- Do not add UI unit tests at this stage, including component rendering, DOM interaction, UI snapshots, or tests that require jsdom or UI testing libraries.
 
 ### Internationalization
 
