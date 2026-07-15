@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, MapIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
@@ -38,18 +38,6 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
           <ArrowLeftIcon aria-hidden="true" className="size-4" />
           {m.all_destinations_action()}
         </Link>
-        <div className="mt-4 sm:mt-6">
-          <p className="flex items-center gap-2 text-xs tracking-widest uppercase">
-            <MapIcon aria-hidden="true" className="size-4" />
-            {m.destination_map_label()}
-          </p>
-          <h1 className="mt-2 font-serif text-4xl leading-none font-normal sm:text-6xl">
-            {destination.title}
-          </h1>
-          <p className="mt-2 line-clamp-2 max-w-xs text-xs leading-5 sm:mt-3 sm:max-w-md sm:text-sm sm:leading-6">
-            {destination.description}
-          </p>
-        </div>
       </header>
 
       <ScenePickerDrawer
