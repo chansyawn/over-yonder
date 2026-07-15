@@ -1,6 +1,7 @@
 import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
 import {
   KeepScale,
+  type ReactZoomPanPinchRef,
   TransformComponent,
   TransformWrapper,
   useControls,
@@ -13,6 +14,13 @@ import "./destination-map.css";
 
 const minMapScale = 0.5;
 const maxMapScale = 3;
+const fullyVisibleMapScale = 1;
+
+function centerFullyVisibleMap(ref: ReactZoomPanPinchRef): void {
+  if (ref.state.scale <= fullyVisibleMapScale) {
+    ref.centerView(ref.state.scale);
+  }
+}
 
 interface DestinationMapProps {
   readonly destination: DestinationDetail;
@@ -80,7 +88,7 @@ function MapBackdrop({ image }: MapBackdropProps) {
     >
       <img
         alt=""
-        className="absolute -inset-[5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
+        className="absolute inset-[-5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
         draggable={false}
         src={image.src}
       />
@@ -97,17 +105,25 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
 
   return (
     <TransformWrapper
+      autoAlignment={{
+        animationTime: 200,
+        animationType: "easeOut",
+        disabled: false,
+        sizeX: 100,
+        sizeY: 100,
+      }}
       centerOnInit
-      centerZoomedOut
       disabled={imageFailed}
-      disablePadding
       limitToBounds
       maxScale={maxMapScale}
       minScale={minMapScale}
       panning={{ excluded: ["spot-marker"] }}
+      onPanningStop={centerFullyVisibleMap}
+      onPinchStop={centerFullyVisibleMap}
+      onWheelStop={centerFullyVisibleMap}
       pinch={{ excluded: ["spot-marker"] }}
       wheel={{ excluded: ["spot-marker"], step: 0.001 }}
-      doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.7 }}
+      doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.5 }}
     >
       {!imageFailed ? <MapBackdrop image={destination.image} /> : null}
       <MapControls disabled={imageFailed} />
