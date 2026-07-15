@@ -56,9 +56,9 @@ over-yonder/
 
 ### Internationalization
 
-- The Website and Desktop Vite builds compile separate Paraglide runtimes from the shared root Inlang project. Platform runtimes own locale detection and persistence; the shared app receives `getLocale` and `setLocale` through `createApp()`.
-- Shared interface messages live in `messages/{locale}.json`. Scene Pack content carries its own localized fields and is resolved into plain UI-facing strings by the scene catalog.
-- Routes are not localized. A saved language preference takes priority over the browser or system language, with English as the final application fallback.
+- Define user-visible UI copy in the shared message files and access it through the generated Paraglide message API.
+- Keep every message locale file in sync whenever adding or changing a message.
+- Provide every declared Scene Pack locale for user-visible content; do not hard-code or compose translations in the UI.
 
 ## Development Workflow
 
