@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { CompassIcon, MapPinIcon, OrbitIcon, SettingsIcon } from "lucide-react";
+import { CompassIcon, MapPinIcon, SettingsIcon } from "lucide-react";
+import appIconUrl from "#app/assets/app-icon.png";
 import * as m from "#app/paraglide/messages.js";
 
 const menuItemClassName =
@@ -37,10 +38,7 @@ export function StartScreenPage() {
     <main className="text-foreground flex min-h-screen items-center justify-center px-5 py-8 font-sans sm:px-8 sm:py-10">
       <div className="flex w-full max-w-md flex-col items-center sm:max-w-lg">
         <header className="flex flex-col items-center text-center">
-          <OrbitIcon
-            aria-hidden="true"
-            className="text-muted-foreground size-14 stroke-1 sm:size-16"
-          />
+          <img aria-hidden="true" alt="" className="size-48 object-contain" src={appIconUrl} />
           <h1
             aria-label={m.app_name()}
             className="mt-2 flex flex-col font-serif text-6xl leading-none font-normal tracking-widest sm:text-7xl"

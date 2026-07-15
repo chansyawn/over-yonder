@@ -14,6 +14,9 @@ export default defineConfig({
   ],
   pack: {
     plugins: [svgr()],
+    loader: {
+      ".png": "asset",
+    },
     dts: {
       tsgo: true,
     },
