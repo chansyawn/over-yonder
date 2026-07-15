@@ -4,6 +4,14 @@ import { afterEach, beforeEach, vi } from "vite-plus/test";
 
 beforeEach(() => {
   vi.stubGlobal("scrollTo", vi.fn());
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    },
+  );
   vi.stubGlobal("matchMedia", (query: string) => ({
     matches: false,
     media: query,

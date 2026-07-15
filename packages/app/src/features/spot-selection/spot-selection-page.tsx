@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowLeftIcon, MapIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
+import { DestinationMap } from "./destination-map.tsx";
 import { ScenePickerDrawer } from "./scene-picker-drawer.tsx";
 
 interface SpotSelectionPageProps {
@@ -10,73 +12,50 @@ interface SpotSelectionPageProps {
 
 export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
   const [selectedSpot, setSelectedSpot] = useState<SpotDetail>();
-  const [imageFailed, setImageFailed] = useState(false);
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <main className="flex min-h-screen flex-col text-black">
-      <header className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8">
+    <main className="bg-panel text-foreground relative h-dvh min-h-0 overflow-hidden font-sans">
+      <p className="sr-only" id="destination-map-instructions">
+        {m.map_navigation_hint()}
+      </p>
+      <section className="absolute inset-2 overflow-hidden rounded-lg sm:inset-3">
+        <DestinationMap
+          destination={destination}
+          selectedSpotId={selectedSpot?.id}
+          onSelectSpot={(spot, trigger) => {
+            lastTriggerRef.current = trigger;
+            setSelectedSpot(spot);
+          }}
+        />
+      </section>
+
+      <div
+        aria-hidden="true"
+        className="border-border/70 pointer-events-none absolute inset-2 z-20 rounded-lg border sm:inset-3"
+      />
+
+      <header className="pointer-events-none absolute top-6 left-5 z-20 max-w-[min(32rem,calc(100vw-2.5rem))] sm:top-8 sm:left-8">
         <Link
-          className="inline-flex border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          className="border-border bg-panel/92 focus-visible:ring-foreground/45 pointer-events-auto inline-flex min-h-10 items-center gap-2 rounded-md border px-3 text-sm backdrop-blur-sm outline-none focus-visible:ring-2"
           to="/destinations"
         >
+          <ArrowLeftIcon aria-hidden="true" className="size-4" />
           {m.all_destinations_action()}
         </Link>
-        <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">{destination.title}</h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6">{destination.description}</p>
-      </header>
-
-      <section className="flex flex-1 items-center justify-center px-5 pb-6 sm:px-8">
-        <div
-          className="relative w-full max-w-6xl overflow-hidden border border-black bg-white"
-          style={{ aspectRatio: `${destination.image.width} / ${destination.image.height}` }}
-        >
-          {imageFailed ? (
-            <div className="absolute inset-0 flex items-center justify-center p-8 text-center">
-              <div>
-                <h2 className="text-2xl font-semibold">{m.destination_image_unavailable()}</h2>
-                <p className="mt-2 text-sm">{m.destination_image_unavailable_hint()}</p>
-              </div>
-            </div>
-          ) : (
-            <>
-              <img
-                alt={destination.image.alt}
-                className="absolute inset-0 h-full w-full object-cover"
-                height={destination.image.height}
-                onError={() => setImageFailed(true)}
-                src={destination.image.src}
-                width={destination.image.width}
-              />
-              {destination.spots.map((spot) => {
-                const isSelected = selectedSpot?.id === spot.id;
-
-                return (
-                  <button
-                    key={spot.id}
-                    aria-label={m.explore_spot_action({ spotTitle: spot.title })}
-                    aria-pressed={isSelected}
-                    className="absolute grid size-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-items-center outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    style={{
-                      left: `${spot.position.x * 100}%`,
-                      top: `${spot.position.y * 100}%`,
-                    }}
-                    type="button"
-                    onClick={(event) => {
-                      lastTriggerRef.current = event.currentTarget;
-                      setSelectedSpot(spot);
-                    }}
-                  >
-                    <span
-                      className={`size-3 rotate-45 border border-black ${isSelected ? "bg-black" : "bg-white"}`}
-                    />
-                  </button>
-                );
-              })}
-            </>
-          )}
+        <div className="mt-4 sm:mt-6">
+          <p className="flex items-center gap-2 text-xs tracking-widest uppercase">
+            <MapIcon aria-hidden="true" className="size-4" />
+            {m.destination_map_label()}
+          </p>
+          <h1 className="mt-2 font-serif text-4xl leading-none font-normal sm:text-6xl">
+            {destination.title}
+          </h1>
+          <p className="mt-2 line-clamp-2 max-w-xs text-xs leading-5 sm:mt-3 sm:max-w-md sm:text-sm sm:leading-6">
+            {destination.description}
+          </p>
         </div>
-      </section>
+      </header>
 
       <ScenePickerDrawer
         destinationId={destination.id}

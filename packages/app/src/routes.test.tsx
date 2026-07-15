@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { createSceneCatalog } from "#app/features/scene-pack/catalog.ts";
 import type { ScenePackDefinition } from "#app/features/scene-pack/model.ts";
 import { overwriteGetLocale, overwriteSetLocale, type Locale } from "#app/paraglide/runtime.js";
@@ -113,15 +113,67 @@ describe("application routes", () => {
       "href",
       "/destinations",
     );
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Reset map view" })).toBeVisible();
 
-    await user.click(screen.getByRole("button", { name: "Explore Spot One" }));
+    const spotTrigger = screen.getByRole("button", { name: "Explore Spot One" });
+    await user.click(spotTrigger);
     expect(await screen.findByRole("heading", { name: "Spot One" })).toBeVisible();
+    expect(screen.getByRole("dialog", { name: "Spot One" })).toHaveAttribute(
+      "data-swipe-direction",
+      "down",
+    );
+    expect(screen.getByText("1 scene")).toBeVisible();
+    expect(screen.getByRole("link", { name: /Scene One/ })).toBeVisible();
+
+    await user.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(spotTrigger).toHaveFocus());
+
+    await user.click(spotTrigger);
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(spotTrigger).toHaveFocus());
+
+    await user.click(spotTrigger);
 
     await user.click(screen.getByRole("link", { name: /Scene One/ }));
     expect(await screen.findByRole("heading", { name: "Scene One" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Back to Destination One" })).toHaveAttribute(
       "href",
       "/destinations/destination-one",
+    );
+  });
+
+  it("shows an explicit fallback when the destination image fails", async () => {
+    renderRoute("/destinations/destination-one");
+
+    fireEvent.error(await screen.findByRole("img", { name: "A destination overview" }));
+
+    expect(
+      await screen.findByRole("heading", { name: "Destination image unavailable" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Explore Spot One" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+  });
+
+  it("opens the scene drawer from the right on desktop viewports", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query === "(min-width: 48rem)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    const user = renderRoute("/destinations/destination-one");
+
+    await user.click(await screen.findByRole("button", { name: "Explore Spot One" }));
+
+    expect(await screen.findByRole("dialog", { name: "Spot One" })).toHaveAttribute(
+      "data-swipe-direction",
+      "right",
     );
   });
 
@@ -178,5 +230,17 @@ describe("application routes", () => {
     expect(await screen.findByRole("heading", { name: "目的地" })).toBeVisible();
     expect(screen.getByRole("link", { name: /目的地一/ })).toBeVisible();
     expect(screen.getAllByText("1 个地点 · 1 个场景")).toHaveLength(2);
+  });
+
+  it("renders localized destination map controls in Simplified Chinese", async () => {
+    renderRoute("/destinations/destination-one", "zh-CN");
+
+    expect(await screen.findByRole("heading", { name: "目的地一" })).toBeVisible();
+    expect(screen.getByRole("region", { name: "目的地地图" })).toHaveAccessibleDescription(
+      "拖动浏览地图，使用鼠标滚轮或双指手势缩放。",
+    );
+    expect(screen.getByRole("button", { name: "放大地图" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "缩小地图" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "重置地图视图" })).toBeVisible();
   });
 });
