@@ -7,9 +7,6 @@ const text = (en: string, zhCN = `中文：${en}`) => ({ en, "zh-CN": zhCN });
 
 const image = {
   src: "/image.jpg",
-  alt: text("A landscape", "一片风景"),
-  width: 1200,
-  height: 800,
 } as const;
 
 function createPack(): ScenePackDefinition {
@@ -82,7 +79,7 @@ function createCatalog(packs: readonly ScenePackDefinition[], locale = "en", bas
 describe("createSceneCatalog", () => {
   it("preserves authored order and creates UI-facing read models", () => {
     const catalog = createCatalog([createPack()]);
-    const resolvedImage = { ...image, alt: "A landscape" };
+    const resolvedImage = { src: "/image.jpg" };
 
     expect(catalog.listDestinations()).toEqual([
       expect.objectContaining({ id: "destination-one", spotCount: 1, sceneCount: 2 }),
@@ -148,7 +145,7 @@ describe("createSceneCatalog", () => {
     ).toThrow('Duplicate destination id "destination-one"');
   });
 
-  it("rejects invalid spots and media dimensions", () => {
+  it("rejects invalid spots", () => {
     const pack = createPack();
     const destination = pack.destinations[0];
     const spot = destination?.spots[0];
@@ -166,15 +163,6 @@ describe("createSceneCatalog", () => {
         },
       ]),
     ).toThrow("x must be between 0 and 1");
-
-    expect(() =>
-      createCatalog([
-        {
-          ...pack,
-          destinations: [{ ...destination, image: { ...image, width: 0 } }],
-        },
-      ]),
-    ).toThrow("width must be a positive integer");
   });
 
   it("localizes each pack once using exact, language, base, and authored fallbacks", () => {

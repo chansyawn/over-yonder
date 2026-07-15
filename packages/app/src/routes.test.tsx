@@ -11,9 +11,6 @@ const text = (en: string, zhCN = `中文：${en}`) => ({ en, "zh-CN": zhCN });
 
 const image = {
   src: "/image.jpg",
-  alt: text("A destination overview", "目的地全景"),
-  width: 1200,
-  height: 800,
 } as const;
 
 const pack = {
@@ -78,6 +75,31 @@ function renderRoute(initialEntry: string, locale: Locale = "en") {
   return userEvent.setup();
 }
 
+function loadImage(image: HTMLImageElement, width = 1200, height = 800): void {
+  Object.defineProperties(image, {
+    naturalWidth: { configurable: true, value: width },
+    naturalHeight: { configurable: true, value: height },
+  });
+  fireEvent.load(image);
+}
+
+async function findDestinationMapImage(): Promise<HTMLImageElement> {
+  return waitFor(() => {
+    const image = document.querySelector<HTMLImageElement>(".destination-map-image-feather");
+    expect(image).not.toBeNull();
+    return image!;
+  });
+}
+
+async function findSceneImage(): Promise<HTMLImageElement> {
+  return waitFor(() => {
+    const region = screen.getByRole("region", { name: "Scene view" });
+    const image = region.querySelector<HTMLImageElement>('img[src="/image.jpg"]');
+    expect(image).not.toBeNull();
+    return image!;
+  });
+}
+
 describe("application routes", () => {
   it("opens on the start screen and keeps unavailable actions inert", async () => {
     const user = renderRoute("/");
@@ -116,8 +138,16 @@ describe("application routes", () => {
     expect(screen.getByRole("button", { name: "Zoom in" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Zoom out" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Reset map view" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Reset map view" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "Explore Spot One" })).not.toBeInTheDocument();
+
+    loadImage(await findDestinationMapImage());
 
     const spotTrigger = screen.getByRole("button", { name: "Explore Spot One" });
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Reset map view" })).toBeEnabled();
     await user.click(spotTrigger);
     expect(await screen.findByRole("heading", { name: "Spot One" })).toBeVisible();
     expect(screen.getByRole("dialog", { name: "Spot One" })).toHaveAttribute(
@@ -145,7 +175,9 @@ describe("application routes", () => {
     expect(screen.getByRole("button", { name: "Zoom in" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Zoom out" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Reset scene view" })).toBeVisible();
-    expect(screen.getByRole("img", { name: "A destination overview" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+    loadImage(await findSceneImage());
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeEnabled();
     expect(screen.getByRole("link", { name: "Back to Destination One" })).toHaveAttribute(
       "href",
       "/destinations/destination-one",
@@ -155,7 +187,7 @@ describe("application routes", () => {
   it("disables scene controls and shows a fallback when scene media fails", async () => {
     renderRoute("/destinations/destination-one/scenes/scene-one");
 
-    fireEvent.error(await screen.findByRole("img", { name: "A destination overview" }));
+    fireEvent.error(await findSceneImage());
 
     expect(await screen.findByRole("heading", { name: "Scene media unavailable" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
@@ -166,7 +198,7 @@ describe("application routes", () => {
   it("shows an explicit fallback when the destination image fails", async () => {
     renderRoute("/destinations/destination-one");
 
-    fireEvent.error(await screen.findByRole("img", { name: "A destination overview" }));
+    fireEvent.error(await findDestinationMapImage());
 
     expect(
       await screen.findByRole("heading", { name: "Destination image unavailable" }),
@@ -190,7 +222,8 @@ describe("application routes", () => {
     }));
     const user = renderRoute("/destinations/destination-one");
 
-    await user.click(await screen.findByRole("button", { name: "Explore Spot One" }));
+    loadImage(await findDestinationMapImage());
+    await user.click(screen.getByRole("button", { name: "Explore Spot One" }));
 
     expect(await screen.findByRole("dialog", { name: "Spot One" })).toHaveAttribute(
       "data-swipe-direction",

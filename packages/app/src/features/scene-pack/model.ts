@@ -2,9 +2,6 @@ export type LocalizedText = Readonly<Record<string, string>>;
 
 export interface ImageAssetDefinition {
   readonly src: string;
-  readonly alt: LocalizedText;
-  readonly width: number;
-  readonly height: number;
 }
 
 export interface VideoAssetDefinition {
@@ -15,9 +12,6 @@ export interface VideoAssetDefinition {
 
 export interface ImageAsset {
   readonly src: string;
-  readonly alt: string;
-  readonly width: number;
-  readonly height: number;
 }
 
 export interface VideoAsset {

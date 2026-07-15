@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import type { SceneDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 
+interface MediaDimensions {
+  readonly width: number;
+  readonly height: number;
+}
+
 interface SceneMediaProps {
   readonly scene: SceneDetail;
   readonly className?: string;
   readonly onError?: () => void;
+  readonly onReady?: (dimensions: MediaDimensions) => void;
 }
 
-export function SceneMedia({ scene, className, onError }: SceneMediaProps) {
+export function SceneMedia({ scene, className, onError, onReady }: SceneMediaProps) {
   const [failed, setFailed] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -31,12 +37,15 @@ export function SceneMedia({ scene, className, onError }: SceneMediaProps) {
   if (scene.kind === "image") {
     return (
       <img
-        alt={scene.media.alt}
         className={className ?? "absolute inset-0 size-full object-cover"}
-        height={scene.media.height}
+        onLoad={(event) =>
+          onReady?.({
+            width: event.currentTarget.naturalWidth,
+            height: event.currentTarget.naturalHeight,
+          })
+        }
         onError={handleError}
         src={scene.media.src}
-        width={scene.media.width}
       />
     );
   }
@@ -44,12 +53,15 @@ export function SceneMedia({ scene, className, onError }: SceneMediaProps) {
   if (prefersReducedMotion) {
     return (
       <img
-        alt={scene.media.poster.alt}
         className={className ?? "absolute inset-0 size-full object-cover"}
-        height={scene.media.poster.height}
+        onLoad={(event) =>
+          onReady?.({
+            width: event.currentTarget.naturalWidth,
+            height: event.currentTarget.naturalHeight,
+          })
+        }
         onError={handleError}
         src={scene.media.poster.src}
-        width={scene.media.poster.width}
       />
     );
   }
@@ -65,6 +77,12 @@ export function SceneMedia({ scene, className, onError }: SceneMediaProps) {
       poster={scene.media.poster.src}
       preload="auto"
       src={scene.media.src}
+      onLoadedMetadata={(event) =>
+        onReady?.({
+          width: event.currentTarget.videoWidth,
+          height: event.currentTarget.videoHeight,
+        })
+      }
       onError={handleError}
     />
   );

@@ -28,15 +28,11 @@ interface PlaceholderDestinationOptions {
 
 function placeholderImageAsset(
   label: string,
-  alt: LocalizedText,
   background: string,
   foreground: string,
 ): ImageAssetDefinition {
   return {
     src: `https://placehold.co/1920x1080/${background}/${foreground}.png?text=${encodeURIComponent(label)}`,
-    alt,
-    width: 1920,
-    height: 1080,
   };
 }
 
@@ -55,12 +51,7 @@ function createPlaceholderDestination({
     id,
     title,
     description: placeholderDescription,
-    image: placeholderImageAsset(
-      imageLabel,
-      text(`Placeholder image for ${imageLabel}`, `${title["zh-CN"]}的占位图片`),
-      background,
-      foreground,
-    ),
+    image: placeholderImageAsset(imageLabel, background, foreground),
     spots: [
       {
         id: spotId,
@@ -73,12 +64,7 @@ function createPlaceholderDestination({
             kind: "image",
             title: sceneTitle,
             description: placeholderDescription,
-            media: placeholderImageAsset(
-              imageLabel,
-              text(`Placeholder image for ${imageLabel}`, `${sceneTitle["zh-CN"]}的占位图片`),
-              background,
-              foreground,
-            ),
+            media: placeholderImageAsset(imageLabel, background, foreground),
           },
         ],
       },

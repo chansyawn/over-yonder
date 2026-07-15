@@ -9,17 +9,13 @@ describe("official scene packs", () => {
     expect(englishCatalog.getDestination("mars-city")).toEqual(
       expect.objectContaining({
         title: "Mars City",
-        image: expect.objectContaining({
-          alt: "An illustrated overview of a connected city and industrial settlements across the Martian desert",
-        }),
+        image: { src: expect.stringContaining("/maps/mars-city.png") },
       }),
     );
     expect(chineseCatalog.getDestination("mars-city")).toEqual(
       expect.objectContaining({
         title: "火星城",
-        image: expect.objectContaining({
-          alt: "火星荒漠中相互连接的城市与工业聚居地全景插画",
-        }),
+        image: { src: expect.stringContaining("/maps/mars-city.png") },
       }),
     );
     expect(chineseCatalog.listDestinations()).toHaveLength(

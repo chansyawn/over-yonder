@@ -1,4 +1,4 @@
-import type { ImageAsset, ImageAssetDefinition, LocalizedText } from "./model.ts";
+import type { LocalizedText } from "./model.ts";
 
 export function resolvePackLocale(
   locales: readonly string[],
@@ -16,15 +16,6 @@ export function resolvePackLocale(
 
 export function localize(text: LocalizedText, locale: string): string {
   return text[locale]!;
-}
-
-export function localizeImage(image: ImageAssetDefinition, locale: string): ImageAsset {
-  return {
-    src: image.src,
-    alt: localize(image.alt, locale),
-    width: image.width,
-    height: image.height,
-  };
 }
 
 function findLocale(

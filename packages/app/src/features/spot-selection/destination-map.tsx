@@ -7,7 +7,7 @@ import {
   useControls,
   useTransformComponent,
 } from "react-zoom-pan-pinch";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import "./destination-map.css";
@@ -87,7 +87,6 @@ function MapBackdrop({ image }: MapBackdropProps) {
       className="bg-muted pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
       <img
-        alt=""
         className="absolute inset-[-5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
         draggable={false}
         src={image.src}
@@ -99,12 +98,26 @@ function MapBackdrop({ image }: MapBackdropProps) {
 }
 
 export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: DestinationMapProps) {
+  const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const [imageFailed, setImageFailed] = useState(false);
-  const imageRatio = destination.image.width / destination.image.height;
-  const mapWidth = `min(100vw, calc(100dvh * ${imageRatio}))`;
+  const [imageDimensions, setImageDimensions] = useState<{
+    readonly width: number;
+    readonly height: number;
+  }>();
+  const imageReady = imageDimensions !== undefined;
+  const imageRatio = imageReady ? imageDimensions.width / imageDimensions.height : undefined;
+  const mapWidth = imageRatio ? `min(100vw, calc(100dvh * ${imageRatio}))` : "100vw";
+  const interactionDisabled = imageFailed || !imageReady;
+
+  useLayoutEffect(() => {
+    if (imageDimensions) {
+      transformRef.current?.centerView(fullyVisibleMapScale, 0);
+    }
+  }, [imageDimensions]);
 
   return (
     <TransformWrapper
+      ref={transformRef}
       autoAlignment={{
         animationTime: 200,
         animationType: "easeOut",
@@ -113,7 +126,7 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
         sizeY: 100,
       }}
       centerOnInit
-      disabled={imageFailed}
+      disabled={interactionDisabled}
       limitToBounds
       maxScale={maxMapScale}
       minScale={minMapScale}
@@ -126,7 +139,7 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
       doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.5 }}
     >
       {!imageFailed ? <MapBackdrop image={destination.image} /> : null}
-      <MapControls disabled={imageFailed} />
+      <MapControls disabled={interactionDisabled} />
       <TransformComponent
         contentClass="relative"
         contentStyle={{ width: mapWidth }}
@@ -139,8 +152,8 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
         wrapperStyle={{ height: "100%", width: "100%" }}
       >
         <div
-          className="relative w-full overflow-hidden select-none"
-          style={{ aspectRatio: `${destination.image.width} / ${destination.image.height}` }}
+          className={`relative w-full overflow-hidden select-none ${imageReady ? "" : "h-dvh"}`}
+          style={imageDimensions ? { aspectRatio: imageRatio } : undefined}
         >
           {imageFailed ? (
             <div className="bg-muted absolute inset-0 grid place-items-center p-8 text-center">
@@ -155,16 +168,19 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
             </div>
           ) : (
             <img
-              alt={destination.image.alt}
               className="destination-map-image-feather pointer-events-none absolute inset-0 h-full w-full object-cover"
               draggable={false}
-              height={destination.image.height}
               src={destination.image.src}
-              width={destination.image.width}
+              onLoad={(event) =>
+                setImageDimensions({
+                  width: event.currentTarget.naturalWidth,
+                  height: event.currentTarget.naturalHeight,
+                })
+              }
               onError={() => setImageFailed(true)}
             />
           )}
-          {!imageFailed
+          {imageReady && !imageFailed
             ? destination.spots.map((spot) => {
                 const isSelected = selectedSpotId === spot.id;
 

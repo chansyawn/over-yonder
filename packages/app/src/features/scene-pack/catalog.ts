@@ -9,7 +9,7 @@ import type {
   SpotDefinition,
   SpotDetail,
 } from "./model.ts";
-import { localize, localizeImage, resolvePackLocale } from "./localization.ts";
+import { localize, resolvePackLocale } from "./localization.ts";
 import {
   ensureUnique,
   validateDestination,
@@ -113,7 +113,7 @@ function createDestinationSummary(
     id: destination.id,
     title: localize(destination.title, locale),
     description: localize(destination.description, locale),
-    image: localizeImage(destination.image, locale),
+    image: destination.image,
     spotCount: destination.spots.length,
     sceneCount,
   };
@@ -139,7 +139,7 @@ function createSceneSummary(scene: SceneDefinition, locale: string): SceneSummar
     kind: scene.kind,
     title: localize(scene.title, locale),
     ...(scene.description ? { description: localize(scene.description, locale) } : {}),
-    preview: localizeImage(scene.kind === "image" ? scene.media : scene.media.poster, locale),
+    preview: scene.kind === "image" ? scene.media : scene.media.poster,
   };
 }
 
@@ -151,7 +151,7 @@ function createSceneDetail(scene: SceneDefinition, locale: string): SceneDetail 
   };
 
   if (scene.kind === "image") {
-    return { ...common, kind: "image", media: localizeImage(scene.media, locale) };
+    return { ...common, kind: "image", media: scene.media };
   }
 
   return {
@@ -160,7 +160,7 @@ function createSceneDetail(scene: SceneDefinition, locale: string): SceneDetail 
     media: {
       src: scene.media.src,
       label: localize(scene.media.label, locale),
-      poster: localizeImage(scene.media.poster, locale),
+      poster: scene.media.poster,
     },
   };
 }

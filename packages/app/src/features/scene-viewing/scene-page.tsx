@@ -7,7 +7,7 @@ import {
   useControls,
   useTransformComponent,
 } from "react-zoom-pan-pinch";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { DestinationDetail, SceneDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import { SceneMedia } from "./scene-media.tsx";
@@ -81,7 +81,6 @@ function SceneBackdrop({ scene }: SceneBackdropProps) {
       className="bg-muted pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
       <img
-        alt=""
         className="absolute inset-[-5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
         draggable={false}
         src={image.src}
@@ -99,10 +98,22 @@ function centerFullyVisibleScene(ref: ReactZoomPanPinchRef): void {
 }
 
 export function ScenePage({ destination, scene }: ScenePageProps) {
+  const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const [mediaFailed, setMediaFailed] = useState(false);
-  const image = scene.kind === "image" ? scene.media : scene.media.poster;
-  const mediaRatio = image.width / image.height;
-  const mediaWidth = `min(100vw, calc(100dvh * ${mediaRatio}))`;
+  const [mediaDimensions, setMediaDimensions] = useState<{
+    readonly width: number;
+    readonly height: number;
+  }>();
+  const mediaReady = mediaDimensions !== undefined;
+  const mediaRatio = mediaReady ? mediaDimensions.width / mediaDimensions.height : undefined;
+  const mediaWidth = mediaRatio ? `min(100vw, calc(100dvh * ${mediaRatio}))` : "100vw";
+  const interactionDisabled = mediaFailed || !mediaReady;
+
+  useLayoutEffect(() => {
+    if (mediaDimensions) {
+      transformRef.current?.centerView(fullyVisibleSceneScale, 0);
+    }
+  }, [mediaDimensions]);
 
   return (
     <main className="bg-muted relative min-h-screen overflow-hidden text-black">
@@ -110,6 +121,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         {m.scene_navigation_hint()}
       </p>
       <TransformWrapper
+        ref={transformRef}
         autoAlignment={{
           animationTime: 200,
           animationType: "easeOut",
@@ -118,7 +130,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
           sizeY: 100,
         }}
         centerOnInit
-        disabled={mediaFailed}
+        disabled={interactionDisabled}
         limitToBounds
         maxScale={maxSceneScale}
         minScale={minSceneScale}
@@ -129,7 +141,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         doubleClick={{ mode: "zoomIn", step: 0.5 }}
       >
         {!mediaFailed ? <SceneBackdrop scene={scene} /> : null}
-        <SceneControls disabled={mediaFailed} />
+        <SceneControls disabled={interactionDisabled} />
         <TransformComponent
           contentClass="relative"
           contentStyle={{ width: mediaWidth }}
@@ -142,13 +154,14 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
           wrapperStyle={{ height: "100vh", width: "100%" }}
         >
           <div
-            className="relative w-full overflow-hidden select-none"
-            style={{ aspectRatio: `${image.width} / ${image.height}` }}
+            className={`relative w-full overflow-hidden select-none ${mediaReady ? "" : "h-dvh"}`}
+            style={mediaDimensions ? { aspectRatio: mediaRatio } : undefined}
           >
             <SceneMedia
               className="scene-media-feather absolute inset-0 size-full object-contain"
               scene={scene}
               onError={() => setMediaFailed(true)}
+              onReady={setMediaDimensions}
             />
           </div>
         </TransformComponent>

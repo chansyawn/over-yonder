@@ -30,12 +30,9 @@ export function DestinationCard({ destination, priority }: DestinationCardProps)
       />
       <div className="border-border bg-muted aspect-2.25/1 overflow-hidden rounded-md border">
         <img
-          alt={destination.image.alt}
           className="block h-full w-full min-w-0 object-cover"
-          height={destination.image.height}
           loading={priority ? "eager" : "lazy"}
           src={destination.image.src}
-          width={destination.image.width}
         />
       </div>
       <div className="flex h-24 min-w-0 flex-col px-2 pt-2 pb-1">

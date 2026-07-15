@@ -25,7 +25,7 @@ export function validateDestination(
 ): void {
   validateIdentity(destination.id, destination.title, locales, path);
   validateLocalizedText(destination.description, locales, `${path} description`);
-  validateImage(destination.image, locales, `${path} image`);
+  validateImage(destination.image, `${path} image`);
 
   if (destination.spots.length === 0) {
     throw new Error(`${path} must contain at least one spot.`);
@@ -61,7 +61,7 @@ export function validateScene(
   }
 
   if (scene.kind === "image") {
-    validateImage(scene.media, locales, `${path} media`);
+    validateImage(scene.media, `${path} media`);
     return;
   }
 
@@ -83,18 +83,11 @@ function validateVideo(
 ): void {
   assertNonEmpty(video.src, `${path} source`);
   validateLocalizedText(video.label, locales, `${path} label`);
-  validateImage(video.poster, locales, `${path} poster`);
+  validateImage(video.poster, `${path} poster`);
 }
 
-function validateImage(
-  image: ImageAssetDefinition,
-  locales: readonly string[],
-  path: string,
-): void {
+function validateImage(image: ImageAssetDefinition, path: string): void {
   assertNonEmpty(image.src, `${path} source`);
-  validateLocalizedText(image.alt, locales, `${path} alt text`);
-  validateDimension(image.width, `${path} width`);
-  validateDimension(image.height, `${path} height`);
 }
 
 function validateIdentity(
@@ -155,12 +148,6 @@ function validateLocalizedText(
 function validateNormalizedPosition(value: number, label: string): void {
   if (!Number.isFinite(value) || value < 0 || value > 1) {
     throw new Error(`${label} must be between 0 and 1.`);
-  }
-}
-
-function validateDimension(value: number, label: string): void {
-  if (!Number.isInteger(value) || value <= 0) {
-    throw new Error(`${label} must be a positive integer.`);
   }
 }
 

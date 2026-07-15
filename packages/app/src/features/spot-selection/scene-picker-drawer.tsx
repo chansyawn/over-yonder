@@ -98,12 +98,9 @@ export function ScenePickerDrawer({
                   >
                     <div className="border-border bg-muted aspect-video overflow-hidden rounded-sm border">
                       <img
-                        alt={scene.preview.alt}
                         className="h-full w-full object-cover"
                         decoding="async"
-                        height={scene.preview.height}
                         src={scene.preview.src}
-                        width={scene.preview.width}
                       />
                     </div>
                     <div className="min-w-0 py-1">

@@ -108,7 +108,7 @@ function SpotSelectionRoute() {
 
 function SceneRoute() {
   const { destination, scene } = sceneRoute.useLoaderData();
-  return <ScenePage destination={destination} scene={scene} />;
+  return <ScenePage key={scene.id} destination={destination} scene={scene} />;
 }
 
 export type AppRouter = ReturnType<typeof createAppRouter>;
