@@ -138,10 +138,29 @@ describe("application routes", () => {
 
     await user.click(screen.getByRole("link", { name: /Scene One/ }));
     expect(await screen.findByRole("heading", { name: "Scene One" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Scene view" })).toHaveAttribute(
+      "aria-describedby",
+      "scene-navigation-instructions",
+    );
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Reset scene view" })).toBeVisible();
+    expect(screen.getByRole("img", { name: "A destination overview" })).toBeVisible();
     expect(screen.getByRole("link", { name: "Back to Destination One" })).toHaveAttribute(
       "href",
       "/destinations/destination-one",
     );
+  });
+
+  it("disables scene controls and shows a fallback when scene media fails", async () => {
+    renderRoute("/destinations/destination-one/scenes/scene-one");
+
+    fireEvent.error(await screen.findByRole("img", { name: "A destination overview" }));
+
+    expect(await screen.findByRole("heading", { name: "Scene media unavailable" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Reset scene view" })).toBeDisabled();
   });
 
   it("shows an explicit fallback when the destination image fails", async () => {

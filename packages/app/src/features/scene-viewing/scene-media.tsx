@@ -4,11 +4,18 @@ import * as m from "#app/paraglide/messages.js";
 
 interface SceneMediaProps {
   readonly scene: SceneDetail;
+  readonly className?: string;
+  readonly onError?: () => void;
 }
 
-export function SceneMedia({ scene }: SceneMediaProps) {
+export function SceneMedia({ scene, className, onError }: SceneMediaProps) {
   const [failed, setFailed] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  const handleError = () => {
+    setFailed(true);
+    onError?.();
+  };
 
   if (failed) {
     return (
@@ -25,9 +32,9 @@ export function SceneMedia({ scene }: SceneMediaProps) {
     return (
       <img
         alt={scene.media.alt}
-        className="absolute inset-0 size-full object-cover"
+        className={className ?? "absolute inset-0 size-full object-cover"}
         height={scene.media.height}
-        onError={() => setFailed(true)}
+        onError={handleError}
         src={scene.media.src}
         width={scene.media.width}
       />
@@ -38,9 +45,9 @@ export function SceneMedia({ scene }: SceneMediaProps) {
     return (
       <img
         alt={scene.media.poster.alt}
-        className="absolute inset-0 size-full object-cover"
+        className={className ?? "absolute inset-0 size-full object-cover"}
         height={scene.media.poster.height}
-        onError={() => setFailed(true)}
+        onError={handleError}
         src={scene.media.poster.src}
         width={scene.media.poster.width}
       />
@@ -51,14 +58,14 @@ export function SceneMedia({ scene }: SceneMediaProps) {
     <video
       aria-label={scene.media.label}
       autoPlay
-      className="absolute inset-0 size-full object-cover"
+      className={className ?? "absolute inset-0 size-full object-cover"}
       loop
       muted
       playsInline
       poster={scene.media.poster.src}
       preload="auto"
       src={scene.media.src}
-      onError={() => setFailed(true)}
+      onError={handleError}
     />
   );
 }

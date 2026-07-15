@@ -1,20 +1,161 @@
 import { Link } from "@tanstack/react-router";
+import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
+import {
+  type ReactZoomPanPinchRef,
+  TransformComponent,
+  TransformWrapper,
+  useControls,
+  useTransformComponent,
+} from "react-zoom-pan-pinch";
+import { useState } from "react";
 import type { DestinationDetail, SceneDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import { SceneMedia } from "./scene-media.tsx";
+import "./scene-page.css";
+
+const minSceneScale = 0.5;
+const maxSceneScale = 3;
+const fullyVisibleSceneScale = 1;
 
 interface ScenePageProps {
   readonly destination: DestinationDetail;
   readonly scene: SceneDetail;
 }
 
-export function ScenePage({ destination, scene }: ScenePageProps) {
+interface SceneControlsProps {
+  readonly disabled: boolean;
+}
+
+function SceneControls({ disabled }: SceneControlsProps) {
+  const { resetTransform, zoomIn, zoomOut } = useControls();
+  const scale = useTransformComponent(({ state }) => state.scale);
+  const controlClass =
+    "text-foreground hover:bg-muted focus-visible:ring-foreground/45 grid size-11 cursor-pointer place-items-center bg-panel outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45";
+
   return (
-    <main className="relative min-h-screen overflow-hidden text-black">
-      <SceneMedia scene={scene} />
+    <div className="border-border bg-panel/92 absolute bottom-6 left-5 z-20 grid overflow-hidden rounded-md border sm:bottom-8 sm:left-8">
+      <button
+        aria-label={m.scene_zoom_in_action()}
+        className={`${controlClass} border-border border-b`}
+        disabled={disabled || scale >= maxSceneScale}
+        title={m.scene_zoom_in_action()}
+        type="button"
+        onClick={() => zoomIn(0.35)}
+      >
+        <PlusIcon aria-hidden="true" className="size-5" />
+      </button>
+      <button
+        aria-label={m.scene_zoom_out_action()}
+        className={`${controlClass} border-border border-b`}
+        disabled={disabled || scale <= minSceneScale}
+        title={m.scene_zoom_out_action()}
+        type="button"
+        onClick={() => zoomOut(0.35)}
+      >
+        <MinusIcon aria-hidden="true" className="size-5" />
+      </button>
+      <button
+        aria-label={m.reset_scene_action()}
+        className={controlClass}
+        disabled={disabled}
+        title={m.reset_scene_action()}
+        type="button"
+        onClick={() => resetTransform()}
+      >
+        <LocateFixedIcon aria-hidden="true" className="size-5" />
+      </button>
+    </div>
+  );
+}
+
+interface SceneBackdropProps {
+  readonly scene: SceneDetail;
+}
+
+function SceneBackdrop({ scene }: SceneBackdropProps) {
+  const image = scene.kind === "image" ? scene.media : scene.media.poster;
+
+  return (
+    <div
+      aria-hidden="true"
+      className="bg-muted pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
+      <img
+        alt=""
+        className="absolute inset-[-5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
+        draggable={false}
+        src={image.src}
+      />
+      <div className="bg-panel/35 absolute inset-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,color-mix(in_oklab,var(--panel)_45%,transparent)_100%)]" />
+    </div>
+  );
+}
+
+function centerFullyVisibleScene(ref: ReactZoomPanPinchRef): void {
+  if (ref.state.scale <= fullyVisibleSceneScale) {
+    ref.centerView(ref.state.scale);
+  }
+}
+
+export function ScenePage({ destination, scene }: ScenePageProps) {
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const image = scene.kind === "image" ? scene.media : scene.media.poster;
+  const mediaRatio = image.width / image.height;
+  const mediaWidth = `min(100vw, calc(100dvh * ${mediaRatio}))`;
+
+  return (
+    <main className="bg-muted relative min-h-screen overflow-hidden text-black">
+      <p className="sr-only" id="scene-navigation-instructions">
+        {m.scene_navigation_hint()}
+      </p>
+      <TransformWrapper
+        autoAlignment={{
+          animationTime: 200,
+          animationType: "easeOut",
+          disabled: false,
+          sizeX: 100,
+          sizeY: 100,
+        }}
+        centerOnInit
+        disabled={mediaFailed}
+        limitToBounds
+        maxScale={maxSceneScale}
+        minScale={minSceneScale}
+        onPanningStop={centerFullyVisibleScene}
+        onPinchStop={centerFullyVisibleScene}
+        onWheelStop={centerFullyVisibleScene}
+        wheel={{ step: 0.001 }}
+        doubleClick={{ mode: "zoomIn", step: 0.5 }}
+      >
+        {!mediaFailed ? <SceneBackdrop scene={scene} /> : null}
+        <SceneControls disabled={mediaFailed} />
+        <TransformComponent
+          contentClass="relative"
+          contentStyle={{ width: mediaWidth }}
+          wrapperClass="relative z-10 h-full w-full"
+          wrapperProps={{
+            "aria-describedby": "scene-navigation-instructions",
+            "aria-label": m.scene_view_label(),
+            role: "region",
+          }}
+          wrapperStyle={{ height: "100vh", width: "100%" }}
+        >
+          <div
+            className="relative w-full overflow-hidden select-none"
+            style={{ aspectRatio: `${image.width} / ${image.height}` }}
+          >
+            <SceneMedia
+              className="scene-media-feather absolute inset-0 size-full object-contain"
+              scene={scene}
+              onError={() => setMediaFailed(true)}
+            />
+          </div>
+        </TransformComponent>
+      </TransformWrapper>
       <h1 className="sr-only">{scene.title}</h1>
       <Link
-        className="absolute top-4 left-4 z-10 border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black sm:top-6 sm:left-6"
+        className="absolute top-4 left-4 z-20 border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black sm:top-6 sm:left-6"
         params={{ destinationId: destination.id }}
         to="/destinations/$destinationId"
       >
