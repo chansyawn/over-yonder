@@ -3,6 +3,7 @@ import type {
   ImageAssetDefinition,
   LocalizedText,
   ScenePackDefinition,
+  VideoSceneDefinition,
 } from "../model.ts";
 
 function text(en: string, zhCN: string): LocalizedText {
@@ -36,6 +37,25 @@ function placeholderImageAsset(
   };
 }
 
+function placeholderVideoScene(imageSceneId: string): VideoSceneDefinition {
+  return {
+    id: `${imageSceneId}-video-placeholder`,
+    kind: "video",
+    title: text("Video Playback Sample", "视频播放样例"),
+    description: text(
+      "A generated video placeholder for validating scene playback.",
+      "用于验证场景播放的生成式占位视频。",
+    ),
+    media: {
+      src: "https://placeholdervideo.dev/1920x1080",
+      label: text("A 1920 by 1080 placeholder video", "一个 1920 × 1080 的占位视频"),
+      poster: {
+        src: "https://placeholdervideo.dev/poster/1920x1080",
+      },
+    },
+  };
+}
+
 function createPlaceholderDestination({
   id,
   title,
@@ -66,6 +86,7 @@ function createPlaceholderDestination({
             description: placeholderDescription,
             media: placeholderImageAsset(imageLabel, background, foreground),
           },
+          placeholderVideoScene(sceneId),
         ],
       },
     ],
