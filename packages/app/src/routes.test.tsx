@@ -154,6 +154,8 @@ describe("application routes", () => {
     ).toBeVisible();
     expect(screen.queryByRole("button", { name: "Explore Spot One" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Reset map view" })).toBeDisabled();
   });
 
   it("opens the scene drawer from the right on desktop viewports", async () => {

@@ -1,8 +1,18 @@
 import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
-import { KeepScale, TransformComponent, TransformWrapper, useControls } from "react-zoom-pan-pinch";
+import {
+  KeepScale,
+  TransformComponent,
+  TransformWrapper,
+  useControls,
+  useTransformComponent,
+} from "react-zoom-pan-pinch";
 import { useState } from "react";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
+import "./destination-map.css";
+
+const minMapScale = 0.5;
+const maxMapScale = 3;
 
 interface DestinationMapProps {
   readonly destination: DestinationDetail;
@@ -16,6 +26,9 @@ interface MapControlsProps {
 
 function MapControls({ disabled }: MapControlsProps) {
   const { resetTransform, zoomIn, zoomOut } = useControls();
+  const scale = useTransformComponent(({ state }) => state.scale);
+  const zoomInDisabled = disabled || scale >= maxMapScale;
+  const zoomOutDisabled = disabled || scale <= minMapScale;
   const controlClass =
     "text-foreground hover:bg-muted focus-visible:ring-foreground/45 grid size-11 cursor-pointer place-items-center bg-panel outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45";
 
@@ -24,7 +37,7 @@ function MapControls({ disabled }: MapControlsProps) {
       <button
         aria-label={m.zoom_in_action()}
         className={`${controlClass} border-border border-b`}
-        disabled={disabled}
+        disabled={zoomInDisabled}
         title={m.zoom_in_action()}
         type="button"
         onClick={() => zoomIn(0.35)}
@@ -34,7 +47,7 @@ function MapControls({ disabled }: MapControlsProps) {
       <button
         aria-label={m.zoom_out_action()}
         className={`${controlClass} border-border border-b`}
-        disabled={disabled}
+        disabled={zoomOutDisabled}
         title={m.zoom_out_action()}
         type="button"
         onClick={() => zoomOut(0.35)}
@@ -55,6 +68,28 @@ function MapControls({ disabled }: MapControlsProps) {
   );
 }
 
+interface MapBackdropProps {
+  readonly image: DestinationDetail["image"];
+}
+
+function MapBackdrop({ image }: MapBackdropProps) {
+  return (
+    <div
+      aria-hidden="true"
+      className="bg-muted pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
+      <img
+        alt=""
+        className="absolute -inset-[5%] h-[110%] w-[110%] max-w-none scale-105 object-cover opacity-75 blur-2xl saturate-75"
+        draggable={false}
+        src={image.src}
+      />
+      <div className="bg-panel/35 absolute inset-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,color-mix(in_oklab,var(--panel)_45%,transparent)_100%)]" />
+    </div>
+  );
+}
+
 export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: DestinationMapProps) {
   const [imageFailed, setImageFailed] = useState(false);
   const imageRatio = destination.image.width / destination.image.height;
@@ -67,18 +102,19 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
       disabled={imageFailed}
       disablePadding
       limitToBounds
-      maxScale={3}
-      minScale={1}
+      maxScale={maxMapScale}
+      minScale={minMapScale}
       panning={{ excluded: ["spot-marker"] }}
       pinch={{ excluded: ["spot-marker"] }}
-      wheel={{ excluded: ["spot-marker"], step: 0.12 }}
-      doubleClick={{ excluded: ["spot-marker"], mode: "toggle", step: 0.7 }}
+      wheel={{ excluded: ["spot-marker"], step: 0.001 }}
+      doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.7 }}
     >
+      {!imageFailed ? <MapBackdrop image={destination.image} /> : null}
       <MapControls disabled={imageFailed} />
       <TransformComponent
         contentClass="relative"
         contentStyle={{ width: mapWidth }}
-        wrapperClass="h-full w-full"
+        wrapperClass="relative z-10 h-full w-full"
         wrapperProps={{
           "aria-describedby": "destination-map-instructions",
           "aria-label": m.destination_map_label(),
@@ -87,11 +123,11 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
         wrapperStyle={{ height: "100%", width: "100%" }}
       >
         <div
-          className="bg-muted relative w-full overflow-hidden select-none"
+          className="relative w-full overflow-hidden select-none"
           style={{ aspectRatio: `${destination.image.width} / ${destination.image.height}` }}
         >
           {imageFailed ? (
-            <div className="absolute inset-0 grid place-items-center p-8 text-center">
+            <div className="bg-muted absolute inset-0 grid place-items-center p-8 text-center">
               <div className="bg-panel/90 border-border max-w-sm rounded-md border p-6 backdrop-blur-sm">
                 <h2 className="font-serif text-2xl font-normal">
                   {m.destination_image_unavailable()}
@@ -104,7 +140,7 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
           ) : (
             <img
               alt={destination.image.alt}
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              className="destination-map-image-feather pointer-events-none absolute inset-0 h-full w-full object-cover"
               draggable={false}
               height={destination.image.height}
               src={destination.image.src}
