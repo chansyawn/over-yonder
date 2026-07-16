@@ -2,8 +2,8 @@ import { Drawer } from "@base-ui/react/drawer";
 import { Link } from "@tanstack/react-router";
 import { ArrowRightIcon, ImagesIcon, XIcon } from "lucide-react";
 import type { RefObject } from "react";
+import { useMediaQuery } from "#app/features/media-query/use-media-query.ts";
 import type { SpotDetail } from "#app/features/scene-pack/model.ts";
-import { useMediaQuery } from "#app/hooks/use-media-query.ts";
 import * as m from "#app/paraglide/messages.js";
 
 interface ScenePickerDrawerProps {
