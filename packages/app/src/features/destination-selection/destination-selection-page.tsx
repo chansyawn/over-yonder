@@ -10,14 +10,14 @@ interface DestinationSelectionPageProps {
 
 export function DestinationSelectionPage({ destinations }: DestinationSelectionPageProps) {
   return (
-    <main className="text-foreground min-h-screen px-5 py-5 font-sans md:px-8 md:py-8">
+    <main className="text-foreground min-h-screen px-8 py-8 font-sans">
       <header className="mx-auto grid w-full max-w-7xl grid-cols-[1fr_auto_1fr] items-center font-serif">
         <Link
           aria-label={m.back_to_main_menu_action()}
           className="text-muted-foreground hover:text-foreground items-center rounded-sm uppercase"
           to="/"
         >
-          <ArrowLeftIcon aria-hidden="true" className="size-4" />
+          <ArrowLeftIcon aria-hidden="true" className="size-5" />
         </Link>
         <h1 className="text-center text-2xl tracking-widest uppercase">
           {m.destination_selection_title()}
