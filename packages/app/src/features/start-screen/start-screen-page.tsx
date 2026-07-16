@@ -1,25 +1,27 @@
 import { Link } from "@tanstack/react-router";
-import { CompassIcon, MapPinIcon, SettingsIcon } from "lucide-react";
 import appIconUrl from "#app/assets/app-icon.png";
+import atmosphereIllustrationUrl from "#app/assets/illustrations/atmosphere.png";
+import destinationSelectionIllustrationUrl from "#app/assets/illustrations/destination-selection.png";
+import settingsIllustrationUrl from "#app/assets/illustrations/settings.png";
 import * as m from "#app/paraglide/messages.js";
 
 const menuItemClassName =
   "border-border bg-background/75 hover:bg-muted/80 focus-visible:ring-foreground/45 relative block w-full cursor-pointer rounded-lg border p-1 text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 interface MenuItemContentProps {
-  readonly icon: React.ReactNode;
+  readonly illustrationUrl: string;
   readonly label: string;
   readonly description?: string;
 }
 
-function MenuItemContent({ icon, label, description }: MenuItemContentProps) {
+function MenuItemContent({ illustrationUrl, label, description }: MenuItemContentProps) {
   return (
     <span className="border-border/75 flex min-h-15 items-center rounded-md border px-4 py-2 sm:min-h-16 sm:px-5">
       <span
         aria-hidden="true"
         className="border-border/65 flex w-13 shrink-0 items-center border-r pr-4 sm:w-15 sm:pr-5"
       >
-        {icon}
+        <img alt="" className="size-9 object-contain sm:size-10" src={illustrationUrl} />
       </span>
       <span className="min-w-0 pl-4 sm:pl-5">
         <span className="block text-sm tracking-widest uppercase sm:text-base">{label}</span>
@@ -65,19 +67,19 @@ export function StartScreenPage() {
           <button className={menuItemClassName} type="button">
             <MenuItemContent
               description={m.continue_description()}
-              icon={<CompassIcon className="size-6 stroke-1 sm:size-7" />}
+              illustrationUrl={atmosphereIllustrationUrl}
               label={m.continue_action()}
             />
           </button>
           <Link className={menuItemClassName} to="/destinations">
             <MenuItemContent
-              icon={<MapPinIcon className="size-6 stroke-1 sm:size-7" />}
+              illustrationUrl={destinationSelectionIllustrationUrl}
               label={m.destinations_action()}
             />
           </Link>
           <Link className={menuItemClassName} to="/settings">
             <MenuItemContent
-              icon={<SettingsIcon className="size-6 stroke-1 sm:size-7" />}
+              illustrationUrl={settingsIllustrationUrl}
               label={m.settings_action()}
             />
           </Link>
