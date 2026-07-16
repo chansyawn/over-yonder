@@ -1,10 +1,59 @@
+.zoomable-media-effects {
+  --zoomable-media-feather-size: 2%;
+  --zoomable-media-halo-blur: 2rem;
+  --zoomable-media-halo-opacity: 0.7;
+  --zoomable-media-halo-scale: 1.05;
+  --zoomable-media-halo-spread: 12rem;
+}
+
+.zoomable-media-halo {
+  --zoomable-media-edge-size: var(--zoomable-media-halo-spread);
+
+  inset: calc(var(--zoomable-media-halo-spread) * -1);
+  padding: var(--zoomable-media-halo-spread);
+}
+
 .zoomable-media-feather {
+  --zoomable-media-edge-size: var(--zoomable-media-feather-size);
+}
+
+:is(.zoomable-media-halo, .zoomable-media-feather) {
   mask-image:
-    linear-gradient(to right, transparent, black 4%, black 96%, transparent),
-    linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    linear-gradient(
+      to right,
+      transparent,
+      black var(--zoomable-media-edge-size),
+      black calc(100% - var(--zoomable-media-edge-size)),
+      transparent
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      black var(--zoomable-media-edge-size),
+      black calc(100% - var(--zoomable-media-edge-size)),
+      transparent
+    );
   mask-composite: intersect;
   -webkit-mask-image:
-    linear-gradient(to right, transparent, black 4%, black 96%, transparent),
-    linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    linear-gradient(
+      to right,
+      transparent,
+      black var(--zoomable-media-edge-size),
+      black calc(100% - var(--zoomable-media-edge-size)),
+      transparent
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      black var(--zoomable-media-edge-size),
+      black calc(100% - var(--zoomable-media-edge-size)),
+      transparent
+    );
   -webkit-mask-composite: source-in;
+}
+
+.zoomable-media-halo-image {
+  transform: scale(var(--zoomable-media-halo-scale));
+  filter: blur(var(--zoomable-media-halo-blur));
+  opacity: var(--zoomable-media-halo-opacity);
 }

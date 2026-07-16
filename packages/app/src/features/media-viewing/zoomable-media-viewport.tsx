@@ -6,7 +6,7 @@ import {
 import { type ReactNode, useId, useLayoutEffect, useRef, useState } from "react";
 import "./zoomable-media-viewport.css";
 
-const defaultMediaScale = 1;
+const defaultMediaScale = 1.02;
 const maximumMediaScale = 3;
 const mediaAlignmentAnimationTime = 200;
 const minimumMediaScale = 0.1;
@@ -150,20 +150,37 @@ export function ZoomableMediaViewport({
           wrapperStyle={{ height: "100%", width: "100%" }}
         >
           <div
-            className={`relative w-full overflow-hidden select-none ${mediaReady ? "" : "h-dvh"}`}
+            className={`zoomable-media-effects relative isolate w-full select-none ${mediaReady ? "" : "h-dvh"}`}
             style={mediaDimensions ? { aspectRatio: mediaRatio } : undefined}
           >
             {mediaFailed ? (
-              failure
+              <div className="absolute inset-0 overflow-hidden">{failure}</div>
             ) : (
-              <div className="zoomable-media-feather absolute inset-0 size-full">
-                {renderMedia({
-                  onError: () => setMediaFailed(true),
-                  onReady: setMediaDimensions,
-                })}
-              </div>
+              <>
+                {mediaReady ? (
+                  <div
+                    aria-hidden="true"
+                    className="zoomable-media-halo pointer-events-none absolute z-0"
+                  >
+                    <img
+                      alt=""
+                      className="zoomable-media-halo-image block h-full w-full max-w-none object-cover"
+                      draggable={false}
+                      src={backdropSrc}
+                    />
+                  </div>
+                ) : null}
+                <div className="absolute inset-0 z-10 overflow-hidden">
+                  <div className="zoomable-media-feather absolute inset-0">
+                    {renderMedia({
+                      onError: () => setMediaFailed(true),
+                      onReady: setMediaDimensions,
+                    })}
+                  </div>
+                  {mediaReady ? overlay : null}
+                </div>
+              </>
             )}
-            {mediaReady && !mediaFailed ? overlay : null}
           </div>
         </TransformComponent>
       </TransformWrapper>
