@@ -1,10 +1,7 @@
-import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
 import {
   type ReactZoomPanPinchRef,
   TransformComponent,
   TransformWrapper,
-  useControls,
-  useTransformComponent,
 } from "react-zoom-pan-pinch";
 import { useRef, useState } from "react";
 import {
@@ -24,52 +21,6 @@ const maxSceneScale = 3;
 interface ScenePageProps {
   readonly destination: DestinationDetail;
   readonly scene: SceneDetail;
-}
-
-interface SceneControlsProps {
-  readonly disabled: boolean;
-}
-
-function SceneControls({ disabled }: SceneControlsProps) {
-  const { resetTransform, zoomIn, zoomOut } = useControls();
-  const scale = useTransformComponent(({ state }) => state.scale);
-  const controlClass =
-    "text-foreground hover:bg-muted focus-visible:ring-foreground/45 grid size-11 cursor-pointer place-items-center bg-panel outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45";
-
-  return (
-    <div className="border-border bg-panel/92 absolute bottom-6 left-5 z-20 grid overflow-hidden rounded-md border sm:bottom-8 sm:left-8">
-      <button
-        aria-label={m.scene_zoom_in_action()}
-        className={`${controlClass} border-border border-b`}
-        disabled={disabled || scale >= maxSceneScale}
-        title={m.scene_zoom_in_action()}
-        type="button"
-        onClick={() => zoomIn(0.35)}
-      >
-        <PlusIcon aria-hidden="true" className="size-5" />
-      </button>
-      <button
-        aria-label={m.scene_zoom_out_action()}
-        className={`${controlClass} border-border border-b`}
-        disabled={disabled || scale <= minimumMediaScale}
-        title={m.scene_zoom_out_action()}
-        type="button"
-        onClick={() => zoomOut(0.35)}
-      >
-        <MinusIcon aria-hidden="true" className="size-5" />
-      </button>
-      <button
-        aria-label={m.reset_scene_action()}
-        className={controlClass}
-        disabled={disabled}
-        title={m.reset_scene_action()}
-        type="button"
-        onClick={() => resetTransform()}
-      >
-        <LocateFixedIcon aria-hidden="true" className="size-5" />
-      </button>
-    </div>
-  );
 }
 
 interface SceneBackdropProps {
@@ -132,7 +83,6 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         doubleClick={{ mode: "zoomIn", step: 0.5 }}
       >
         {!mediaFailed ? <SceneBackdrop scene={scene} /> : null}
-        <SceneControls disabled={interactionDisabled} />
         <TransformComponent
           contentClass="relative"
           contentStyle={{ width: mediaWidth }}

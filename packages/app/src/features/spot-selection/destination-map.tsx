@@ -1,11 +1,8 @@
-import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
 import {
   KeepScale,
   type ReactZoomPanPinchRef,
   TransformComponent,
   TransformWrapper,
-  useControls,
-  useTransformComponent,
 } from "react-zoom-pan-pinch";
 import { useRef, useState } from "react";
 import {
@@ -24,54 +21,6 @@ interface DestinationMapProps {
   readonly destination: DestinationDetail;
   readonly selectedSpotId: string | undefined;
   readonly onSelectSpot: (spot: SpotDetail, trigger: HTMLButtonElement) => void;
-}
-
-interface MapControlsProps {
-  readonly disabled: boolean;
-}
-
-function MapControls({ disabled }: MapControlsProps) {
-  const { resetTransform, zoomIn, zoomOut } = useControls();
-  const scale = useTransformComponent(({ state }) => state.scale);
-  const zoomInDisabled = disabled || scale >= maxMapScale;
-  const zoomOutDisabled = disabled || scale <= minimumMediaScale;
-  const controlClass =
-    "text-foreground hover:bg-muted focus-visible:ring-foreground/45 grid size-11 cursor-pointer place-items-center bg-panel outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45";
-
-  return (
-    <div className="border-border bg-panel/92 absolute bottom-6 left-5 z-20 grid overflow-hidden rounded-md border sm:bottom-8 sm:left-8">
-      <button
-        aria-label={m.zoom_in_action()}
-        className={`${controlClass} border-border border-b`}
-        disabled={zoomInDisabled}
-        title={m.zoom_in_action()}
-        type="button"
-        onClick={() => zoomIn(0.35)}
-      >
-        <PlusIcon aria-hidden="true" className="size-5" />
-      </button>
-      <button
-        aria-label={m.zoom_out_action()}
-        className={`${controlClass} border-border border-b`}
-        disabled={zoomOutDisabled}
-        title={m.zoom_out_action()}
-        type="button"
-        onClick={() => zoomOut(0.35)}
-      >
-        <MinusIcon aria-hidden="true" className="size-5" />
-      </button>
-      <button
-        aria-label={m.reset_map_action()}
-        className={controlClass}
-        disabled={disabled}
-        title={m.reset_map_action()}
-        type="button"
-        onClick={() => resetTransform()}
-      >
-        <LocateFixedIcon aria-hidden="true" className="size-5" />
-      </button>
-    </div>
-  );
 }
 
 interface MapBackdropProps {
@@ -130,7 +79,6 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
       doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.5 }}
     >
       {!imageFailed ? <MapBackdrop image={destination.image} /> : null}
-      <MapControls disabled={interactionDisabled} />
       <TransformComponent
         contentClass="relative"
         contentStyle={{ width: mapWidth }}
