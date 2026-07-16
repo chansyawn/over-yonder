@@ -7,20 +7,18 @@ import {
   useControls,
   useTransformComponent,
 } from "react-zoom-pan-pinch";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import {
+  alignMediaToViewport,
+  type MediaDimensions,
+  minimumMediaScale,
+  useHeightFittedMedia,
+} from "#app/features/media-viewing/use-height-fitted-media.ts";
 import type { DestinationDetail, SpotDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import "./destination-map.css";
 
-const minMapScale = 0.5;
 const maxMapScale = 3;
-const fullyVisibleMapScale = 1;
-
-function centerFullyVisibleMap(ref: ReactZoomPanPinchRef): void {
-  if (ref.state.scale <= fullyVisibleMapScale) {
-    ref.centerView(ref.state.scale);
-  }
-}
 
 interface DestinationMapProps {
   readonly destination: DestinationDetail;
@@ -36,7 +34,7 @@ function MapControls({ disabled }: MapControlsProps) {
   const { resetTransform, zoomIn, zoomOut } = useControls();
   const scale = useTransformComponent(({ state }) => state.scale);
   const zoomInDisabled = disabled || scale >= maxMapScale;
-  const zoomOutDisabled = disabled || scale <= minMapScale;
+  const zoomOutDisabled = disabled || scale <= minimumMediaScale;
   const controlClass =
     "text-foreground hover:bg-muted focus-visible:ring-foreground/45 grid size-11 cursor-pointer place-items-center bg-panel outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-45";
 
@@ -100,20 +98,13 @@ function MapBackdrop({ image }: MapBackdropProps) {
 export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: DestinationMapProps) {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const [imageFailed, setImageFailed] = useState(false);
-  const [imageDimensions, setImageDimensions] = useState<{
-    readonly width: number;
-    readonly height: number;
-  }>();
-  const imageReady = imageDimensions !== undefined;
-  const imageRatio = imageReady ? imageDimensions.width / imageDimensions.height : undefined;
-  const mapWidth = imageRatio ? `min(100vw, calc(100dvh * ${imageRatio}))` : "100vw";
+  const [imageDimensions, setImageDimensions] = useState<MediaDimensions>();
+  const {
+    aspectRatio: imageRatio,
+    contentWidth: mapWidth,
+    isReady: imageReady,
+  } = useHeightFittedMedia(imageDimensions, transformRef);
   const interactionDisabled = imageFailed || !imageReady;
-
-  useLayoutEffect(() => {
-    if (imageDimensions) {
-      transformRef.current?.centerView(fullyVisibleMapScale, 0);
-    }
-  }, [imageDimensions]);
 
   return (
     <TransformWrapper
@@ -129,11 +120,11 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
       disabled={interactionDisabled}
       limitToBounds
       maxScale={maxMapScale}
-      minScale={minMapScale}
+      minScale={minimumMediaScale}
+      onPanningStop={alignMediaToViewport}
+      onPinchStop={alignMediaToViewport}
+      onZoomStop={alignMediaToViewport}
       panning={{ excluded: ["spot-marker"] }}
-      onPanningStop={centerFullyVisibleMap}
-      onPinchStop={centerFullyVisibleMap}
-      onWheelStop={centerFullyVisibleMap}
       pinch={{ excluded: ["spot-marker"] }}
       wheel={{ excluded: ["spot-marker"], step: 0.001 }}
       doubleClick={{ excluded: ["spot-marker"], mode: "zoomIn", step: 0.5 }}

@@ -7,15 +7,19 @@ import {
   useControls,
   useTransformComponent,
 } from "react-zoom-pan-pinch";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import {
+  alignMediaToViewport,
+  type MediaDimensions,
+  minimumMediaScale,
+  useHeightFittedMedia,
+} from "#app/features/media-viewing/use-height-fitted-media.ts";
 import type { DestinationDetail, SceneDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import { SceneMedia } from "./scene-media.tsx";
 import "./scene-page.css";
 
-const minSceneScale = 0.5;
 const maxSceneScale = 3;
-const fullyVisibleSceneScale = 1;
 
 interface ScenePageProps {
   readonly destination: DestinationDetail;
@@ -47,7 +51,7 @@ function SceneControls({ disabled }: SceneControlsProps) {
       <button
         aria-label={m.scene_zoom_out_action()}
         className={`${controlClass} border-border border-b`}
-        disabled={disabled || scale <= minSceneScale}
+        disabled={disabled || scale <= minimumMediaScale}
         title={m.scene_zoom_out_action()}
         type="button"
         onClick={() => zoomOut(0.35)}
@@ -91,32 +95,19 @@ function SceneBackdrop({ scene }: SceneBackdropProps) {
   );
 }
 
-function centerFullyVisibleScene(ref: ReactZoomPanPinchRef): void {
-  if (ref.state.scale <= fullyVisibleSceneScale) {
-    ref.centerView(ref.state.scale);
-  }
-}
-
 export function ScenePage({ destination, scene }: ScenePageProps) {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const [mediaFailed, setMediaFailed] = useState(false);
-  const [mediaDimensions, setMediaDimensions] = useState<{
-    readonly width: number;
-    readonly height: number;
-  }>();
-  const mediaReady = mediaDimensions !== undefined;
-  const mediaRatio = mediaReady ? mediaDimensions.width / mediaDimensions.height : undefined;
-  const mediaWidth = mediaRatio ? `min(100vw, calc(100dvh * ${mediaRatio}))` : "100vw";
+  const [mediaDimensions, setMediaDimensions] = useState<MediaDimensions>();
+  const {
+    aspectRatio: mediaRatio,
+    contentWidth: mediaWidth,
+    isReady: mediaReady,
+  } = useHeightFittedMedia(mediaDimensions, transformRef);
   const interactionDisabled = mediaFailed || !mediaReady;
 
-  useLayoutEffect(() => {
-    if (mediaDimensions) {
-      transformRef.current?.centerView(fullyVisibleSceneScale, 0);
-    }
-  }, [mediaDimensions]);
-
   return (
-    <main className="bg-muted relative min-h-screen overflow-hidden text-black">
+    <main className="bg-muted relative h-dvh min-h-0 overflow-hidden text-black">
       <p className="sr-only" id="scene-navigation-instructions">
         {m.scene_navigation_hint()}
       </p>
@@ -133,10 +124,10 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         disabled={interactionDisabled}
         limitToBounds
         maxScale={maxSceneScale}
-        minScale={minSceneScale}
-        onPanningStop={centerFullyVisibleScene}
-        onPinchStop={centerFullyVisibleScene}
-        onWheelStop={centerFullyVisibleScene}
+        minScale={minimumMediaScale}
+        onPanningStop={alignMediaToViewport}
+        onPinchStop={alignMediaToViewport}
+        onZoomStop={alignMediaToViewport}
         wheel={{ step: 0.001 }}
         doubleClick={{ mode: "zoomIn", step: 0.5 }}
       >
@@ -151,7 +142,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
             "aria-label": m.scene_view_label(),
             role: "region",
           }}
-          wrapperStyle={{ height: "100vh", width: "100%" }}
+          wrapperStyle={{ height: "100%", width: "100%" }}
         >
           <div
             className={`relative w-full overflow-hidden select-none ${mediaReady ? "" : "h-dvh"}`}
