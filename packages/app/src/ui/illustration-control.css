@@ -1,0 +1,17 @@
+.illustration-control-image {
+  filter: drop-shadow(0 -3px 0 var(--panel)) drop-shadow(3px 0 0 var(--panel))
+    drop-shadow(0 3px 0 var(--panel)) drop-shadow(-3px 0 0 var(--panel))
+    drop-shadow(0 3px 4px color-mix(in oklab, var(--foreground) 35%, transparent));
+  transition: transform 200ms ease-out;
+}
+
+:where(a:hover, a:focus-visible, button:hover:not(:disabled), button:focus-visible:not(:disabled))
+  > .illustration-control-image {
+  transform: scale(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .illustration-control-image {
+    transition: none;
+  }
+}

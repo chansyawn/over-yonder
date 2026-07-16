@@ -4,6 +4,8 @@ import {
   TransformWrapper,
 } from "react-zoom-pan-pinch";
 import { type ReactNode, useId, useLayoutEffect, useRef, useState } from "react";
+import resetViewIllustrationUrl from "#app/assets/illustrations/reset-view.png";
+import { IllustrationButton } from "#app/ui/illustration-button.tsx";
 import "./zoomable-media-viewport.css";
 
 const defaultMediaScale = 1.02;
@@ -29,6 +31,7 @@ interface ZoomableMediaViewportProps {
   readonly navigationHint: string;
   readonly overlay?: ReactNode;
   readonly renderMedia: (handlers: MediaRenderHandlers) => ReactNode;
+  readonly resetActionLabel: string;
 }
 
 interface MediaBackdropProps {
@@ -93,6 +96,7 @@ export function ZoomableMediaViewport({
   navigationHint,
   overlay,
   renderMedia,
+  resetActionLabel,
 }: ZoomableMediaViewportProps) {
   const transformRef = useRef<ReactZoomPanPinchRef>(null);
   const instructionsId = useId();
@@ -109,6 +113,10 @@ export function ZoomableMediaViewport({
       transformRef.current?.centerView(defaultMediaScale, 0);
     }
   }, [mediaDimensions]);
+
+  const resetMediaView = () => {
+    transformRef.current?.centerView(defaultMediaScale, mediaAlignmentAnimationTime, "easeOut");
+  };
 
   return (
     <>
@@ -184,6 +192,13 @@ export function ZoomableMediaViewport({
           </div>
         </TransformComponent>
       </TransformWrapper>
+      <IllustrationButton
+        className="absolute bottom-5 left-5 z-20 sm:bottom-8 sm:left-8"
+        disabled={interactionDisabled}
+        illustrationSrc={resetViewIllustrationUrl}
+        label={resetActionLabel}
+        onClick={resetMediaView}
+      />
     </>
   );
 }

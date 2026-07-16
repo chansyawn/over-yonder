@@ -3,7 +3,7 @@ import destinationSelectionIllustrationUrl from "#app/assets/illustrations/desti
 import homeIllustrationUrl from "#app/assets/illustrations/home.png";
 import spotSelectionIllustrationUrl from "#app/assets/illustrations/spot-selection.png";
 import * as m from "#app/paraglide/messages.js";
-import "./page-navigation.css";
+import "#app/ui/illustration-control.css";
 
 const navigationLinkClassName = "grid size-12 place-items-center outline-none";
 
@@ -24,7 +24,12 @@ export function PageNavigation({ destinationId, destinationTitle }: PageNavigati
         title={m.back_to_main_menu_action()}
         to="/"
       >
-        <img alt="" aria-hidden="true" className="page-navigation-icon" src={homeIllustrationUrl} />
+        <img
+          alt=""
+          aria-hidden="true"
+          className="illustration-control-image size-11 object-contain"
+          src={homeIllustrationUrl}
+        />
       </Link>
       <Link
         aria-label={m.all_destinations_action()}
@@ -35,7 +40,7 @@ export function PageNavigation({ destinationId, destinationTitle }: PageNavigati
         <img
           alt=""
           aria-hidden="true"
-          className="page-navigation-icon"
+          className="illustration-control-image size-11 object-contain"
           src={destinationSelectionIllustrationUrl}
         />
       </Link>
@@ -50,7 +55,7 @@ export function PageNavigation({ destinationId, destinationTitle }: PageNavigati
           <img
             alt=""
             aria-hidden="true"
-            className="page-navigation-icon"
+            className="illustration-control-image size-11 object-contain"
             src={spotSelectionIllustrationUrl}
           />
         </Link>

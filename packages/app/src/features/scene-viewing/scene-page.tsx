@@ -30,6 +30,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         backdropSrc={backdrop.src}
         failure={<SceneMediaFailure />}
         navigationHint={m.scene_navigation_hint()}
+        resetActionLabel={m.reset_scene_action()}
         renderMedia={({ onError, onReady }) => (
           <SceneMedia
             className="absolute inset-0 size-full object-contain"

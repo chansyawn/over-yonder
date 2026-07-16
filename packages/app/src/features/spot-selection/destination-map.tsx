@@ -30,6 +30,7 @@ export function DestinationMap({ destination, selectedSpotId, onSelectSpot }: De
       failure={<DestinationMapFailure />}
       interactionExclusionClassName="spot-marker"
       navigationHint={m.map_navigation_hint()}
+      resetActionLabel={m.reset_map_action()}
       renderMedia={({ onError, onReady }) => (
         <img
           className="pointer-events-none absolute inset-0 h-full w-full object-cover"
