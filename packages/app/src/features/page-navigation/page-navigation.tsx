@@ -1,0 +1,60 @@
+import { Link } from "@tanstack/react-router";
+import destinationSelectionIllustrationUrl from "#app/assets/illustrations/destination-selection.png";
+import homeIllustrationUrl from "#app/assets/illustrations/home.png";
+import spotSelectionIllustrationUrl from "#app/assets/illustrations/spot-selection.png";
+import * as m from "#app/paraglide/messages.js";
+import "./page-navigation.css";
+
+const navigationLinkClassName = "grid size-12 place-items-center outline-none";
+
+interface PageNavigationProps {
+  readonly destinationId?: string;
+  readonly destinationTitle?: string;
+}
+
+export function PageNavigation({ destinationId, destinationTitle }: PageNavigationProps) {
+  return (
+    <nav
+      aria-label={m.page_navigation_label()}
+      className="absolute top-5 left-5 z-20 flex gap-2 sm:top-8 sm:left-8"
+    >
+      <Link
+        aria-label={m.back_to_main_menu_action()}
+        className={navigationLinkClassName}
+        title={m.back_to_main_menu_action()}
+        to="/"
+      >
+        <img alt="" aria-hidden="true" className="page-navigation-icon" src={homeIllustrationUrl} />
+      </Link>
+      <Link
+        aria-label={m.all_destinations_action()}
+        className={navigationLinkClassName}
+        title={m.all_destinations_action()}
+        to="/destinations"
+      >
+        <img
+          alt=""
+          aria-hidden="true"
+          className="page-navigation-icon"
+          src={destinationSelectionIllustrationUrl}
+        />
+      </Link>
+      {destinationId && destinationTitle ? (
+        <Link
+          aria-label={m.back_to_destination_action({ destinationTitle })}
+          className={navigationLinkClassName}
+          params={{ destinationId }}
+          title={m.back_to_destination_action({ destinationTitle })}
+          to="/destinations/$destinationId"
+        >
+          <img
+            alt=""
+            aria-hidden="true"
+            className="page-navigation-icon"
+            src={spotSelectionIllustrationUrl}
+          />
+        </Link>
+      ) : null}
+    </nav>
+  );
+}

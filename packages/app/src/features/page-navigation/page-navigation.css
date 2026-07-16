@@ -1,0 +1,19 @@
+.page-navigation-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+  filter: drop-shadow(0 -2px 0 var(--panel)) drop-shadow(2px 0 0 var(--panel))
+    drop-shadow(0 2px 0 var(--panel)) drop-shadow(-2px 0 0 var(--panel))
+    drop-shadow(0 3px 4px color-mix(in oklab, var(--foreground) 35%, transparent));
+  transition: transform 200ms ease-out;
+}
+
+:where(a:hover, a:focus-visible) > .page-navigation-icon {
+  transform: scale(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-navigation-icon {
+    transition: none;
+  }
+}

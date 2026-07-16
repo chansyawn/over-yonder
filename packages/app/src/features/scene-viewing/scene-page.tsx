@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { LocateFixedIcon, MinusIcon, PlusIcon } from "lucide-react";
 import {
   type ReactZoomPanPinchRef,
@@ -14,6 +13,7 @@ import {
   minimumMediaScale,
   useHeightFittedMedia,
 } from "#app/features/media-viewing/use-height-fitted-media.ts";
+import { PageNavigation } from "#app/features/page-navigation/page-navigation.tsx";
 import type { DestinationDetail, SceneDetail } from "#app/features/scene-pack/model.ts";
 import * as m from "#app/paraglide/messages.js";
 import { SceneMedia } from "./scene-media.tsx";
@@ -158,13 +158,7 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         </TransformComponent>
       </TransformWrapper>
       <h1 className="sr-only">{scene.title}</h1>
-      <Link
-        className="absolute top-4 left-4 z-20 border border-black bg-white px-3 py-2 text-sm font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black sm:top-6 sm:left-6"
-        params={{ destinationId: destination.id }}
-        to="/destinations/$destinationId"
-      >
-        {m.back_to_destination_action({ destinationTitle: destination.title })}
-      </Link>
+      <PageNavigation destinationId={destination.id} destinationTitle={destination.title} />
     </main>
   );
 }

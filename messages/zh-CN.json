@@ -3,6 +3,7 @@
   "app_name": "Over Yonder",
   "start_tagline": "静谧旅途",
   "main_menu_label": "主菜单",
+  "page_navigation_label": "页面导航",
   "continue_action": "继续",
   "continue_description": "继续：琉璃海岸",
   "destinations_action": "目的地",

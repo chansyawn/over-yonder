@@ -3,6 +3,7 @@
   "app_name": "Over Yonder",
   "start_tagline": "quiet journeys",
   "main_menu_label": "Main menu",
+  "page_navigation_label": "Page navigation",
   "continue_action": "Continue",
   "continue_description": "Resume: Glass Coast",
   "destinations_action": "Destinations",
