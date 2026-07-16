@@ -6,6 +6,7 @@
   "continue_action": "Continue",
   "continue_description": "Resume: Glass Coast",
   "destinations_action": "Destinations",
+  "destination_selection_title": "Destination",
   "settings_action": "Settings",
   "destinations_intro": "Open a place and begin wandering.",
   "available_destinations_label": "Available destinations",

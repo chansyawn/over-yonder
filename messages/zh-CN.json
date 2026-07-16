@@ -6,6 +6,7 @@
   "continue_action": "继续",
   "continue_description": "继续：琉璃海岸",
   "destinations_action": "目的地",
+  "destination_selection_title": "目的地",
   "settings_action": "设置",
   "destinations_intro": "打开一个地方，开始漫游。",
   "available_destinations_label": "可选目的地",
