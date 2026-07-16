@@ -1,50 +1,28 @@
 import { useEffect, useState } from "react";
+import type { MediaDimensions } from "#app/features/media-viewing/zoomable-media-viewport.tsx";
 import type { SceneDetail } from "#app/features/scene-pack/model.ts";
-import * as m from "#app/paraglide/messages.js";
-
-interface MediaDimensions {
-  readonly width: number;
-  readonly height: number;
-}
 
 interface SceneMediaProps {
   readonly scene: SceneDetail;
   readonly className?: string;
-  readonly onError?: () => void;
-  readonly onReady?: (dimensions: MediaDimensions) => void;
+  readonly onError: () => void;
+  readonly onReady: (dimensions: MediaDimensions) => void;
 }
 
 export function SceneMedia({ scene, className, onError, onReady }: SceneMediaProps) {
-  const [failed, setFailed] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
-
-  const handleError = () => {
-    setFailed(true);
-    onError?.();
-  };
-
-  if (failed) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center bg-white p-8 text-center text-black">
-        <div>
-          <h2 className="text-2xl font-semibold">{m.scene_media_unavailable()}</h2>
-          <p className="mt-2 text-sm">{m.scene_media_unavailable_hint()}</p>
-        </div>
-      </div>
-    );
-  }
 
   if (scene.kind === "image") {
     return (
       <img
         className={className ?? "absolute inset-0 size-full object-cover"}
         onLoad={(event) =>
-          onReady?.({
+          onReady({
             width: event.currentTarget.naturalWidth,
             height: event.currentTarget.naturalHeight,
           })
         }
-        onError={handleError}
+        onError={onError}
         src={scene.media.src}
       />
     );
@@ -55,12 +33,12 @@ export function SceneMedia({ scene, className, onError, onReady }: SceneMediaPro
       <img
         className={className ?? "absolute inset-0 size-full object-cover"}
         onLoad={(event) =>
-          onReady?.({
+          onReady({
             width: event.currentTarget.naturalWidth,
             height: event.currentTarget.naturalHeight,
           })
         }
-        onError={handleError}
+        onError={onError}
         src={scene.media.poster.src}
       />
     );
@@ -78,12 +56,12 @@ export function SceneMedia({ scene, className, onError, onReady }: SceneMediaPro
       preload="auto"
       src={scene.media.src}
       onLoadedMetadata={(event) =>
-        onReady?.({
+        onReady({
           width: event.currentTarget.videoWidth,
           height: event.currentTarget.videoHeight,
         })
       }
-      onError={handleError}
+      onError={onError}
     />
   );
 }
