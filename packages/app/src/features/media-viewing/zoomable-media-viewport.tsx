@@ -82,8 +82,8 @@ function MediaBackdrop({ src }: MediaBackdropProps) {
         draggable={false}
         src={src}
       />
-      <div className="bg-panel/35 absolute inset-0" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,color-mix(in_oklab,var(--panel)_45%,transparent)_100%)]" />
+      <div className="bg-background/35 absolute inset-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_25%,color-mix(in_oklab,var(--background)_45%,transparent)_100%)]" />
     </div>
   );
 }

@@ -13,7 +13,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
   const lastTriggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <main className="bg-panel text-foreground relative h-dvh min-h-0 overflow-hidden font-sans">
+    <main className="bg-background text-foreground relative h-dvh min-h-0 overflow-hidden font-sans">
       <section className="absolute inset-0 overflow-hidden">
         <DestinationMap
           destination={destination}

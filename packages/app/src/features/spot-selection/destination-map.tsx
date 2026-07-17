@@ -12,7 +12,7 @@ interface DestinationMapProps {
 function DestinationMapFailure() {
   return (
     <div className="bg-muted absolute inset-0 grid place-items-center p-8 text-center">
-      <div className="bg-panel/90 border-border max-w-sm rounded-md border p-6 backdrop-blur-sm">
+      <div className="bg-background/90 border-border max-w-sm rounded-md border p-6 backdrop-blur-sm">
         <h2 className="font-serif text-2xl font-normal">{m.destination_image_unavailable()}</h2>
         <p className="text-muted-foreground mt-2 text-sm leading-6">
           {m.destination_image_unavailable_hint()}

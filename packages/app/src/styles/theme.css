@@ -4,7 +4,6 @@
   --muted: oklch(96.2% 0.014 78);
   --muted-foreground: oklch(52% 0.025 245);
   --border: oklch(70% 0.025 70);
-  --panel: oklch(98% 0.014 78);
 }
 
 @theme inline {
@@ -15,7 +14,6 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --color-panel: var(--panel);
 
   --font-sans: sans-serif;
   --font-serif: serif;

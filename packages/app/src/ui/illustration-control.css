@@ -1,6 +1,6 @@
 .illustration-control-image {
-  filter: drop-shadow(0 -3px 0 var(--panel)) drop-shadow(3px 0 0 var(--panel))
-    drop-shadow(0 3px 0 var(--panel)) drop-shadow(-3px 0 0 var(--panel))
+  filter: drop-shadow(0 -3px 0 var(--background)) drop-shadow(3px 0 0 var(--background))
+    drop-shadow(0 3px 0 var(--background)) drop-shadow(-3px 0 0 var(--background))
     drop-shadow(0 3px 4px color-mix(in oklab, var(--foreground) 35%, transparent));
   transition: transform 200ms ease-out;
 }
