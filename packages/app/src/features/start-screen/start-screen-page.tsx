@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import appIconUrl from "#app/assets/app-icon.png";
 import atmosphereIllustrationUrl from "#app/assets/illustrations/atmosphere.png";
-import destinationSelectionIllustrationUrl from "#app/assets/illustrations/destination-selection.png";
+import destinationSelectionIllustrationUrl from "#app/assets/illustrations/spot-selection.png";
 import settingsIllustrationUrl from "#app/assets/illustrations/settings.png";
 import * as m from "#app/paraglide/messages.js";
 
