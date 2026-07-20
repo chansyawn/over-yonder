@@ -16,4 +16,7 @@ export default defineConfig({
     svgr(),
     tailwindcss(),
   ],
+  server: {
+    port: 8521,
+  },
 });
