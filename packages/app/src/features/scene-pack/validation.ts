@@ -8,8 +8,11 @@ import type {
   VideoAssetDefinition,
 } from "./model.ts";
 
+const BASE58_ID_PATTERN = /^[1-9A-HJ-NP-Za-km-z]{12}$/;
+const builtInPackIds = new Set(["official", "placeholder"]);
+
 export function validatePack(pack: ScenePackDefinition, path: string): void {
-  validateId(pack.id, path);
+  validatePackId(pack.id, path);
   validateLocales(pack.locales, path);
   validateLocalizedText(pack.title, pack.locales, `${path} title`);
 
@@ -100,8 +103,18 @@ function validateIdentity(
   validateLocalizedText(title, locales, `${path} title`);
 }
 
+function validatePackId(id: string, path: string): void {
+  if (builtInPackIds.has(id)) {
+    return;
+  }
+
+  validateId(id, path);
+}
+
 function validateId(id: string, path: string): void {
-  assertNonEmpty(id, `${path} id`);
+  if (!BASE58_ID_PATTERN.test(id)) {
+    throw new Error(`${path} id must be a 12-character Base58 ID.`);
+  }
 }
 
 function validateLocales(locales: readonly string[], path: string): void {

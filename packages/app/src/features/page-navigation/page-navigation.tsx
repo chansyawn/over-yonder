@@ -8,11 +8,12 @@ import "#app/ui/illustration-control.css";
 const navigationLinkClassName = "grid size-12 place-items-center outline-none";
 
 interface PageNavigationProps {
+  readonly packId?: string;
   readonly destinationId?: string;
   readonly destinationTitle?: string;
 }
 
-export function PageNavigation({ destinationId, destinationTitle }: PageNavigationProps) {
+export function PageNavigation({ packId, destinationId, destinationTitle }: PageNavigationProps) {
   return (
     <nav
       aria-label={m.page_navigation_label()}
@@ -44,13 +45,13 @@ export function PageNavigation({ destinationId, destinationTitle }: PageNavigati
           src={destinationSelectionIllustrationUrl}
         />
       </Link>
-      {destinationId && destinationTitle ? (
+      {packId && destinationId && destinationTitle ? (
         <Link
           aria-label={m.back_to_destination_action({ destinationTitle })}
           className={navigationLinkClassName}
-          params={{ destinationId }}
+          params={{ packId, destinationId }}
           title={m.back_to_destination_action({ destinationTitle })}
-          to="/destinations/$destinationId"
+          to="/packs/$packId/destinations/$destinationId"
         >
           <img
             alt=""

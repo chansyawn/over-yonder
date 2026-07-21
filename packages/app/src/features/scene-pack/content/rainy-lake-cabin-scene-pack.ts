@@ -7,12 +7,12 @@ function text(en: string, zhCN: string): LocalizedText {
 }
 
 export const rainyLakeCabinPack = {
-  id: "rainy-lake-cabin",
+  id: "official",
   locales: ["en", "zh-CN"],
   title: text("Rainy Lake Cabin", "雨湖小屋"),
   destinations: [
     {
-      id: "rainy-lake-cabin",
+      id: "7Yp3mK9Qa2Xv",
       title: text("Rainy Lake Cabin", "雨湖小屋"),
       description: text(
         "A warm timber retreat tucked between a quiet lake and rain-soaked forest.",
@@ -23,7 +23,7 @@ export const rainyLakeCabinPack = {
       },
       spots: [
         {
-          id: "rainy-lake-cabin-living-room",
+          id: "Bd8Hk2Wq6NzR",
           title: text("Lakeside Living Room", "临湖客厅"),
           description: text(
             "A music-filled living room overlooking the lake through broad glass walls.",
@@ -32,7 +32,7 @@ export const rainyLakeCabinPack = {
           position: { x: 0.43, y: 0.39 },
           scenes: [
             {
-              id: "rainy-lake-cabin-living-room-rain",
+              id: "3nT7cQ5yV9Lm",
               kind: "video",
               title: text("Rain by the Lake", "湖畔听雨"),
               description: text(

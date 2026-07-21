@@ -65,6 +65,7 @@ export interface ScenePackDefinition {
 }
 
 export interface DestinationSummary {
+  readonly packId: string;
   readonly id: string;
   readonly title: string;
   readonly description: string;

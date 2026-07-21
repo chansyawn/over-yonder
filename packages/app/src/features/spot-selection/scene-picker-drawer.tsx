@@ -8,6 +8,7 @@ import * as m from "#app/paraglide/messages.js";
 
 interface ScenePickerDrawerProps {
   readonly spot: SpotDetail | undefined;
+  readonly packId: string;
   readonly destinationId: string;
   readonly finalFocusRef: RefObject<HTMLButtonElement | null>;
   readonly onClose: () => void;
@@ -15,6 +16,7 @@ interface ScenePickerDrawerProps {
 
 export function ScenePickerDrawer({
   spot,
+  packId,
   destinationId,
   finalFocusRef,
   onClose,
@@ -82,8 +84,8 @@ export function ScenePickerDrawer({
                   <Link
                     key={scene.id}
                     className="border-border bg-background/75 hover:bg-muted/70 focus-visible:ring-foreground/45 grid min-w-0 grid-cols-[8rem_minmax(0,1fr)] items-stretch gap-2 overflow-hidden rounded-md border p-2 transition-colors outline-none focus-visible:ring-2 sm:grid-cols-[9rem_minmax(0,1fr)]"
-                    params={{ destinationId, sceneId: scene.id }}
-                    to="/destinations/$destinationId/scenes/$sceneId"
+                    params={{ packId, destinationId, sceneId: scene.id }}
+                    to="/packs/$packId/destinations/$destinationId/scenes/$sceneId"
                   >
                     <div className="border-border bg-muted h-full overflow-hidden rounded-sm border">
                       <img

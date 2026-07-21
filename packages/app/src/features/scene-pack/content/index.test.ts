@@ -8,7 +8,7 @@ describe("official scene packs", () => {
 
     expect(englishCatalog.listDestinations()).toHaveLength(5);
     expect(chineseCatalog.listDestinations()).toHaveLength(5);
-    expect(englishCatalog.getDestination("rainy-lake-cabin")).toEqual(
+    expect(englishCatalog.getDestination("official", "7Yp3mK9Qa2Xv")).toEqual(
       expect.objectContaining({
         title: "Rainy Lake Cabin",
         image: {
@@ -18,12 +18,10 @@ describe("official scene packs", () => {
         sceneCount: 1,
       }),
     );
-    expect(chineseCatalog.getDestination("rainy-lake-cabin")).toEqual(
+    expect(chineseCatalog.getDestination("official", "7Yp3mK9Qa2Xv")).toEqual(
       expect.objectContaining({ title: "雨湖小屋" }),
     );
-    expect(
-      englishCatalog.getScene("rainy-lake-cabin", "rainy-lake-cabin-living-room-rain"),
-    ).toEqual(
+    expect(englishCatalog.getScene("official", "7Yp3mK9Qa2Xv", "3nT7cQ5yV9Lm")).toEqual(
       expect.objectContaining({
         kind: "video",
         title: "Rain by the Lake",
@@ -36,21 +34,22 @@ describe("official scene packs", () => {
         },
       }),
     );
-    expect(
-      chineseCatalog.getScene("rainy-lake-cabin", "rainy-lake-cabin-living-room-rain"),
-    ).toEqual(
+    expect(chineseCatalog.getScene("official", "7Yp3mK9Qa2Xv", "3nT7cQ5yV9Lm")).toEqual(
       expect.objectContaining({
         title: "湖畔听雨",
         media: expect.objectContaining({ label: "一间俯瞰雨中山湖的温暖客厅" }),
       }),
     );
-    expect(englishCatalog.getDestination("lunar-outpost")).toEqual(
+    expect(englishCatalog.getDestination("placeholder", "4Fq8rT2Wm9Ks")).toEqual(
       expect.objectContaining({
         title: "Lunar Outpost",
         spotCount: 1,
         sceneCount: 2,
       }),
     );
-    expect(englishCatalog.getDestination("mars-city")).toBeUndefined();
+    expect(englishCatalog.getDestination("official", "7Yp3mK9Qa2Xv")).toMatchObject({
+      packId: "official",
+    });
+    expect(englishCatalog.getDestination("placeholder", "7Yp3mK9Qa2Xv")).toBeUndefined();
   });
 });

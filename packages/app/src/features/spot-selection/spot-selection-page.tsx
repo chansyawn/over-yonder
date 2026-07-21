@@ -28,6 +28,7 @@ export function SpotSelectionPage({ destination }: SpotSelectionPageProps) {
       <PageNavigation />
 
       <ScenePickerDrawer
+        packId={destination.packId}
         destinationId={destination.id}
         finalFocusRef={lastTriggerRef}
         spot={selectedSpot}

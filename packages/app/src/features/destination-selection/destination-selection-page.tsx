@@ -32,7 +32,11 @@ export function DestinationSelectionPage({ destinations }: DestinationSelectionP
         className="mx-auto mt-6 grid w-full max-w-7xl grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {destinations.map((destination, index) => (
-          <DestinationCard key={destination.id} destination={destination} priority={index === 0} />
+          <DestinationCard
+            key={`${destination.packId}:${destination.id}`}
+            destination={destination}
+            priority={index === 0}
+          />
         ))}
       </section>
     </main>

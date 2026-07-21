@@ -21,6 +21,7 @@ interface PlaceholderDestinationOptions {
   readonly spotId: string;
   readonly spotTitle: LocalizedText;
   readonly sceneId: string;
+  readonly videoSceneId: string;
   readonly sceneTitle: LocalizedText;
   readonly imageLabel: string;
   readonly background: string;
@@ -37,9 +38,9 @@ function placeholderImageAsset(
   };
 }
 
-function placeholderVideoScene(imageSceneId: string): VideoSceneDefinition {
+function placeholderVideoScene(sceneId: string): VideoSceneDefinition {
   return {
-    id: `${imageSceneId}-video-placeholder`,
+    id: sceneId,
     kind: "video",
     title: text("Video Playback Sample", "视频播放样例"),
     description: text(
@@ -62,6 +63,7 @@ function createPlaceholderDestination({
   spotId,
   spotTitle,
   sceneId,
+  videoSceneId,
   sceneTitle,
   imageLabel,
   background,
@@ -86,7 +88,7 @@ function createPlaceholderDestination({
             description: placeholderDescription,
             media: placeholderImageAsset(imageLabel, background, foreground),
           },
-          placeholderVideoScene(sceneId),
+          placeholderVideoScene(videoSceneId),
         ],
       },
     ],
@@ -95,44 +97,48 @@ function createPlaceholderDestination({
 
 const placeholderDestinationOptions = [
   {
-    id: "lunar-outpost",
+    id: "4Fq8rT2Wm9Ks",
     title: text("Lunar Outpost", "月球前哨站"),
-    spotId: "observation-point",
+    spotId: "6Vd3pX8Hn5Qz",
     spotTitle: text("Observation Point", "观测点"),
-    sceneId: "lunar-observation",
+    sceneId: "2Jm7Rk4Yp8Vc",
+    videoSceneId: "8qN5tK3Wx7Ha",
     sceneTitle: text("Lunar Observation", "月面观测"),
     imageLabel: "Lunar Outpost",
     background: "d9d5cc",
     foreground: "2e2b26",
   },
   {
-    id: "cloud-harbor",
+    id: "5Zr9mD2Kv6Pt",
     title: text("Cloud Harbor", "云端港湾"),
-    spotId: "docking-platform",
+    spotId: "9Hs4qW7Xn3Mb",
     spotTitle: text("Docking Platform", "停靠平台"),
-    sceneId: "platform-view",
+    sceneId: "7Ld2pV8Qm4Yx",
+    videoSceneId: "3Kz6tR9Wq5Nc",
     sceneTitle: text("Platform View", "平台景观"),
     imageLabel: "Cloud Harbor",
     background: "cbd9df",
     foreground: "24323b",
   },
   {
-    id: "verdant-basin",
+    id: "6Qm3Xv7Kp9Ta",
     title: text("Verdant Basin", "苍翠盆地"),
-    spotId: "basin-overlook",
+    spotId: "2Wn8qH5Yt4Kr",
     spotTitle: text("Basin Overlook", "盆地眺望台"),
-    sceneId: "verdant-overlook",
+    sceneId: "9Vp4mT7Xq2Kb",
+    videoSceneId: "5Hr8Wn3Qy6La",
     sceneTitle: text("Verdant Overlook", "苍翠远眺"),
     imageLabel: "Verdant Basin",
     background: "ccd8c3",
     foreground: "263326",
   },
   {
-    id: "polar-station",
+    id: "8Kq5Yv2Tm7Xr",
     title: text("Polar Station", "极地站"),
-    spotId: "survey-deck",
+    spotId: "4Np7Qm9Xv3Kt",
     spotTitle: text("Survey Deck", "勘测平台"),
-    sceneId: "polar-survey",
+    sceneId: "6Tz2Wq8Km5Yr",
+    videoSceneId: "3Xr9Vp4Qn7Ka",
     sceneTitle: text("Polar Survey", "极地勘测"),
     imageLabel: "Polar Station",
     background: "d8dee3",
@@ -141,7 +147,7 @@ const placeholderDestinationOptions = [
 ] satisfies readonly PlaceholderDestinationOptions[];
 
 export const placeholderPack = {
-  id: "placeholders",
+  id: "placeholder",
   locales: ["en", "zh-CN"],
   title: text("Placeholder Destinations", "占位目的地"),
   destinations: placeholderDestinationOptions.map(createPlaceholderDestination),

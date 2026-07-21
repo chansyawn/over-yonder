@@ -46,9 +46,9 @@ const settingsRoute = createRoute({
 
 const spotSelectionRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/destinations/$destinationId",
+  path: "/packs/$packId/destinations/$destinationId",
   loader: ({ context, params }) => {
-    const destination = context.catalog.getDestination(params.destinationId);
+    const destination = context.catalog.getDestination(params.packId, params.destinationId);
     if (!destination) {
       throw notFound();
     }
@@ -60,10 +60,10 @@ const spotSelectionRoute = createRoute({
 
 const sceneRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/destinations/$destinationId/scenes/$sceneId",
+  path: "/packs/$packId/destinations/$destinationId/scenes/$sceneId",
   loader: ({ context, params }) => {
-    const destination = context.catalog.getDestination(params.destinationId);
-    const scene = context.catalog.getScene(params.destinationId, params.sceneId);
+    const destination = context.catalog.getDestination(params.packId, params.destinationId);
+    const scene = context.catalog.getScene(params.packId, params.destinationId, params.sceneId);
     if (!destination || !scene) {
       throw notFound();
     }
@@ -103,12 +103,20 @@ function DestinationSelectionRoute() {
 
 function SpotSelectionRoute() {
   const destination = spotSelectionRoute.useLoaderData();
-  return <SpotSelectionPage key={destination.id} destination={destination} />;
+  return (
+    <SpotSelectionPage key={`${destination.packId}:${destination.id}`} destination={destination} />
+  );
 }
 
 function SceneRoute() {
   const { destination, scene } = sceneRoute.useLoaderData();
-  return <ScenePage key={scene.id} destination={destination} scene={scene} />;
+  return (
+    <ScenePage
+      key={`${destination.packId}:${destination.id}:${scene.id}`}
+      destination={destination}
+      scene={scene}
+    />
+  );
 }
 
 export type AppRouter = ReturnType<typeof createAppRouter>;

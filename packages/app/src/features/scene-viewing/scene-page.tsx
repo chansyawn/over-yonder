@@ -41,7 +41,11 @@ export function ScenePage({ destination, scene }: ScenePageProps) {
         )}
       />
       <h1 className="sr-only">{scene.title}</h1>
-      <PageNavigation destinationId={destination.id} destinationTitle={destination.title} />
+      <PageNavigation
+        packId={destination.packId}
+        destinationId={destination.id}
+        destinationTitle={destination.title}
+      />
     </main>
   );
 }

@@ -21,8 +21,8 @@ export function DestinationCard({ destination, priority }: DestinationCardProps)
   return (
     <Link
       className="border-border bg-background/88 relative grid min-w-0 grid-cols-1 overflow-hidden rounded-lg border p-3 outline-none"
-      params={{ destinationId: destination.id }}
-      to="/destinations/$destinationId"
+      params={{ packId: destination.packId, destinationId: destination.id }}
+      to="/packs/$packId/destinations/$destinationId"
     >
       <span
         aria-hidden="true"

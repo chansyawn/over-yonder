@@ -20,12 +20,8 @@ import {
 
 export interface SceneCatalog {
   listDestinations(): readonly DestinationSummary[];
-  getDestination(destinationId: string): DestinationDetail | undefined;
-  getScene(destinationId: string, sceneId: string): SceneDetail | undefined;
-}
-interface IndexedScene {
-  readonly destinationId: string;
-  readonly detail: SceneDetail;
+  getDestination(packId: string, destinationId: string): DestinationDetail | undefined;
+  getScene(packId: string, destinationId: string, sceneId: string): SceneDetail | undefined;
 }
 
 export interface CreateSceneCatalogOptions {
@@ -42,23 +38,26 @@ export function createSceneCatalog(
   }
 
   const packIds = new Set<string>();
-  const destinationIds = new Set<string>();
-  const spotIds = new Set<string>();
-  const sceneIds = new Set<string>();
   const destinationSummaries: DestinationSummary[] = [];
-  const destinationsById = new Map<string, DestinationDetail>();
-  const scenesById = new Map<string, IndexedScene>();
+  const destinationsByPackId = new Map<string, Map<string, DestinationDetail>>();
+  const scenesByPackId = new Map<string, Map<string, Map<string, SceneDetail>>>();
 
   for (const pack of packs) {
     const packPath = `pack ${JSON.stringify(pack.id)}`;
     validatePack(pack, packPath);
     ensureUnique(packIds, pack.id, "pack");
     const resolvedLocale = resolvePackLocale(pack.locales, locale, baseLocale);
+    const destinationIds = new Set<string>();
+    const destinationsById = new Map<string, DestinationDetail>();
+    const scenesByDestinationId = new Map<string, Map<string, SceneDetail>>();
 
     for (const destination of pack.destinations) {
       const destinationPath = `${packPath}, destination ${JSON.stringify(destination.id)}`;
       validateDestination(destination, pack.locales, destinationPath);
       ensureUnique(destinationIds, destination.id, "destination");
+      const spotIds = new Set<string>();
+      const sceneIds = new Set<string>();
+      const scenesById = new Map<string, SceneDetail>();
 
       const spots = destination.spots.map((spot) => {
         const spotPath = `${destinationPath}, spot ${JSON.stringify(spot.id)}`;
@@ -71,7 +70,7 @@ export function createSceneCatalog(
           ensureUnique(sceneIds, scene.id, "scene");
 
           const detail = createSceneDetail(scene, resolvedLocale);
-          scenesById.set(scene.id, { destinationId: destination.id, detail });
+          scenesById.set(scene.id, detail);
           return createSceneSummary(scene, resolvedLocale);
         });
 
@@ -79,7 +78,7 @@ export function createSceneCatalog(
       });
 
       const sceneCount = spots.reduce((count, spot) => count + spot.scenes.length, 0);
-      const summary = createDestinationSummary(destination, sceneCount, resolvedLocale);
+      const summary = createDestinationSummary(pack.id, destination, sceneCount, resolvedLocale);
       const detail: DestinationDetail = {
         ...summary,
         spots,
@@ -87,29 +86,34 @@ export function createSceneCatalog(
 
       destinationSummaries.push(summary);
       destinationsById.set(destination.id, detail);
+      scenesByDestinationId.set(destination.id, scenesById);
     }
+
+    destinationsByPackId.set(pack.id, destinationsById);
+    scenesByPackId.set(pack.id, scenesByDestinationId);
   }
 
   return {
     listDestinations() {
       return destinationSummaries;
     },
-    getDestination(destinationId) {
-      return destinationsById.get(destinationId);
+    getDestination(packId, destinationId) {
+      return destinationsByPackId.get(packId)?.get(destinationId);
     },
-    getScene(destinationId, sceneId) {
-      const scene = scenesById.get(sceneId);
-      return scene?.destinationId === destinationId ? scene.detail : undefined;
+    getScene(packId, destinationId, sceneId) {
+      return scenesByPackId.get(packId)?.get(destinationId)?.get(sceneId);
     },
   };
 }
 
 function createDestinationSummary(
+  packId: string,
   destination: DestinationDefinition,
   sceneCount: number,
   locale: string,
 ): DestinationSummary {
   return {
+    packId,
     id: destination.id,
     title: localize(destination.title, locale),
     description: localize(destination.description, locale),
