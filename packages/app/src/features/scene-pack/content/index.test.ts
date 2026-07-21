@@ -12,9 +12,8 @@ describe("official scene packs", () => {
       expect.objectContaining({
         title: "Rainy Lake Cabin",
         image: {
-          src: expect.stringContaining("/maps/rainy-lake-cabin.webp"),
+          src: expect.stringContaining("/packs/official/destinations/7Yp3mK9Qa2Xv/map.webp"),
         },
-        spotCount: 1,
         sceneCount: 1,
       }),
     );
@@ -26,10 +25,14 @@ describe("official scene packs", () => {
         kind: "video",
         title: "Rain by the Lake",
         media: {
-          src: expect.stringContaining("/scenes/rainy-lake-cabin/living-room.mp4"),
+          src: expect.stringContaining(
+            "/packs/official/destinations/7Yp3mK9Qa2Xv/scenes/3nT7cQ5yV9Lm/media.mp4",
+          ),
           label: "A warm living room overlooking a rainy mountain lake",
           poster: {
-            src: expect.stringContaining("/maps/rainy-lake-cabin.webp"),
+            src: expect.stringContaining(
+              "/packs/official/destinations/7Yp3mK9Qa2Xv/scenes/3nT7cQ5yV9Lm/poster.webp",
+            ),
           },
         },
       }),
@@ -43,7 +46,6 @@ describe("official scene packs", () => {
     expect(englishCatalog.getDestination("placeholder", "4Fq8rT2Wm9Ks")).toEqual(
       expect.objectContaining({
         title: "Lunar Outpost",
-        spotCount: 1,
         sceneCount: 2,
       }),
     );

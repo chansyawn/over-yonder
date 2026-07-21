@@ -4,7 +4,6 @@ import type {
   LocalizedText,
   SceneDefinition,
   ScenePackDefinition,
-  SpotDefinition,
   VideoAssetDefinition,
 } from "./model.ts";
 
@@ -30,20 +29,7 @@ export function validateDestination(
   validateLocalizedText(destination.description, locales, `${path} description`);
   validateImage(destination.image, `${path} image`);
 
-  if (destination.spots.length === 0) {
-    throw new Error(`${path} must contain at least one spot.`);
-  }
-}
-
-export function validateSpot(spot: SpotDefinition, locales: readonly string[], path: string): void {
-  validateIdentity(spot.id, spot.title, locales, path);
-  if (spot.description) {
-    validateLocalizedText(spot.description, locales, `${path} description`);
-  }
-  validateNormalizedPosition(spot.position.x, `${path} x`);
-  validateNormalizedPosition(spot.position.y, `${path} y`);
-
-  if (spot.scenes.length === 0) {
+  if (destination.scenes.length === 0) {
     throw new Error(`${path} must contain at least one scene.`);
   }
 }
@@ -54,6 +40,8 @@ export function validateScene(
   path: string,
 ): void {
   validateIdentity(scene.id, scene.title, locales, path);
+  validateNormalizedPosition(scene.position.x, `${path} x`);
+  validateNormalizedPosition(scene.position.y, `${path} y`);
   if (scene.description) {
     validateLocalizedText(scene.description, locales, `${path} description`);
   }

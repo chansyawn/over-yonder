@@ -12,7 +12,7 @@ import { DestinationSelectionPage } from "#app/features/destination-selection/de
 import { NotFoundPage } from "#app/features/not-found/not-found-page.tsx";
 import { ScenePage } from "#app/features/scene-viewing/scene-page.tsx";
 import { SettingsPage } from "#app/features/settings/settings-page.tsx";
-import { SpotSelectionPage } from "#app/features/spot-selection/spot-selection-page.tsx";
+import { DestinationPage } from "#app/features/destination-exploration/destination-page.tsx";
 import { StartScreenPage } from "#app/features/start-screen/start-screen-page.tsx";
 
 interface AppRouterContext {
@@ -44,7 +44,7 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 });
 
-const spotSelectionRoute = createRoute({
+const destinationRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/packs/$packId/destinations/$destinationId",
   loader: ({ context, params }) => {
@@ -55,7 +55,7 @@ const spotSelectionRoute = createRoute({
 
     return destination;
   },
-  component: SpotSelectionRoute,
+  component: DestinationRoute,
 });
 
 const sceneRoute = createRoute({
@@ -77,7 +77,7 @@ const routeTree = rootRoute.addChildren([
   startScreenRoute,
   settingsRoute,
   destinationSelectionRoute,
-  spotSelectionRoute,
+  destinationRoute,
   sceneRoute,
 ]);
 
@@ -101,10 +101,10 @@ function DestinationSelectionRoute() {
   return <DestinationSelectionPage destinations={destinations} />;
 }
 
-function SpotSelectionRoute() {
-  const destination = spotSelectionRoute.useLoaderData();
+function DestinationRoute() {
+  const destination = destinationRoute.useLoaderData();
   return (
-    <SpotSelectionPage key={`${destination.packId}:${destination.id}`} destination={destination} />
+    <DestinationPage key={`${destination.packId}:${destination.id}`} destination={destination} />
   );
 }
 

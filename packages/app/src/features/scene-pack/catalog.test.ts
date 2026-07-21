@@ -8,8 +8,6 @@ const ids = {
   secondPack: "Bd8Hk2Wq6NzR",
   destination: "3nT7cQ5yV9Lm",
   secondDestination: "4Fq8rT2Wm9Ks",
-  spot: "6Vd3pX8Hn5Qz",
-  secondSpot: "2Jm7Rk4Yp8Vc",
   imageScene: "8qN5tK3Wx7Ha",
   videoScene: "5Zr9mD2Kv6Pt",
   secondScene: "9Hs4qW7Xn3Mb",
@@ -29,30 +27,25 @@ function createPack(overrides: Partial<ScenePackDefinition> = {}): ScenePackDefi
         title: text("Destination One", "目的地一"),
         description: text("The first destination.", "第一个目的地。"),
         image,
-        spots: [
+        scenes: [
           {
-            id: ids.spot,
-            title: text("Spot One", "地点一"),
+            id: ids.imageScene,
+            kind: "image",
+            title: text("Image Scene", "图片场景"),
             position: { x: 0.25, y: 0.75 },
-            scenes: [
-              {
-                id: ids.imageScene,
-                kind: "image",
-                title: text("Image Scene", "图片场景"),
-                media: image,
-              },
-              {
-                id: ids.videoScene,
-                kind: "video",
-                title: text("Video Scene", "视频场景"),
-                description: text("A moving landscape.", "一片流动的风景。"),
-                media: {
-                  src: "/video.mp4",
-                  label: text("Clouds crossing the landscape", "云朵飘过风景"),
-                  poster: { ...image, src: "/poster.jpg" },
-                },
-              },
-            ],
+            media: image,
+          },
+          {
+            id: ids.videoScene,
+            kind: "video",
+            title: text("Video Scene", "视频场景"),
+            description: text("A moving landscape.", "一片流动的风景。"),
+            position: { x: 0.5, y: 0.5 },
+            media: {
+              src: "/video.mp4",
+              label: text("Clouds crossing the landscape", "云朵飘过风景"),
+              poster: { ...image, src: "/poster.jpg" },
+            },
           },
         ],
       },
@@ -61,19 +54,13 @@ function createPack(overrides: Partial<ScenePackDefinition> = {}): ScenePackDefi
         title: text("Destination Two", "目的地二"),
         description: text("The second destination.", "第二个目的地。"),
         image,
-        spots: [
+        scenes: [
           {
-            id: ids.secondSpot,
-            title: text("Spot Two", "地点二"),
+            id: ids.secondScene,
+            kind: "image",
+            title: text("Second Destination Scene", "第二个目的地场景"),
             position: { x: 0.5, y: 0.5 },
-            scenes: [
-              {
-                id: ids.secondScene,
-                kind: "image",
-                title: text("Second Destination Scene", "第二个目的地场景"),
-                media: image,
-              },
-            ],
+            media: image,
           },
         ],
       },
@@ -87,25 +74,27 @@ function createCatalog(packs: readonly ScenePackDefinition[], locale = "en", bas
 }
 
 describe("createSceneCatalog", () => {
-  it("preserves authored order and attaches pack IDs to destination read models", () => {
+  it("preserves authored scene order and attaches pack IDs to destination read models", () => {
     const catalog = createCatalog([createPack()]);
 
     expect(catalog.listDestinations()).toEqual([
       expect.objectContaining({
         id: ids.destination,
         packId: ids.pack,
-        spotCount: 1,
         sceneCount: 2,
       }),
       expect.objectContaining({
         id: ids.secondDestination,
         packId: ids.pack,
-        spotCount: 1,
         sceneCount: 1,
       }),
     ]);
-    expect(catalog.getDestination(ids.pack, ids.destination)?.spots[0]?.scenes).toEqual([
-      expect.objectContaining({ id: ids.imageScene, preview: image }),
+    expect(catalog.getDestination(ids.pack, ids.destination)?.scenes).toEqual([
+      expect.objectContaining({
+        id: ids.imageScene,
+        position: { x: 0.25, y: 0.75 },
+        preview: image,
+      }),
       expect.objectContaining({ id: ids.videoScene, preview: { ...image, src: "/poster.jpg" } }),
     ]);
   });
@@ -114,7 +103,7 @@ describe("createSceneCatalog", () => {
     const catalog = createCatalog([createPack()]);
 
     expect(catalog.getScene(ids.pack, ids.destination, ids.videoScene)).toEqual(
-      expect.objectContaining({ id: ids.videoScene, kind: "video" }),
+      expect.objectContaining({ id: ids.videoScene, kind: "video", position: { x: 0.5, y: 0.5 } }),
     );
     expect(catalog.getScene(ids.pack, ids.secondDestination, ids.videoScene)).toBeUndefined();
     expect(catalog.getScene(ids.secondPack, ids.destination, ids.videoScene)).toBeUndefined();
@@ -125,20 +114,18 @@ describe("createSceneCatalog", () => {
   it("allows content IDs to be reused by different packs", () => {
     const firstPack = createPack();
     const secondPack = createPack({ id: ids.secondPack, title: text("Pack Two") });
-    const catalog = createCatalog([firstPack, secondPack]);
 
-    expect(catalog.getDestination(ids.pack, ids.destination)).toEqual(
-      expect.objectContaining({ packId: ids.pack }),
-    );
-    expect(catalog.getDestination(ids.secondPack, ids.destination)).toEqual(
-      expect.objectContaining({ packId: ids.secondPack }),
-    );
+    expect(
+      createCatalog([firstPack, secondPack]).getDestination(ids.pack, ids.destination),
+    ).toEqual(expect.objectContaining({ packId: ids.pack }));
+    expect(
+      createCatalog([firstPack, secondPack]).getDestination(ids.secondPack, ids.destination),
+    ).toEqual(expect.objectContaining({ packId: ids.secondPack }));
   });
 
   it("rejects duplicate identifiers within their parent scope", () => {
     const pack = createPack();
     const destination = pack.destinations[0]!;
-    const spot = destination.spots[0]!;
 
     expect(() =>
       createCatalog([{ ...pack, destinations: [...pack.destinations, { ...destination }] }]),
@@ -147,16 +134,8 @@ describe("createSceneCatalog", () => {
       createCatalog([
         {
           ...pack,
-          destinations: [{ ...destination, spots: [...destination.spots, { ...spot }] }],
-        },
-      ]),
-    ).toThrow(`Duplicate spot id ${JSON.stringify(ids.spot)}`);
-    expect(() =>
-      createCatalog([
-        {
-          ...pack,
           destinations: [
-            { ...destination, spots: [{ ...spot, scenes: [...spot.scenes, spot.scenes[0]!] }] },
+            { ...destination, scenes: [...destination.scenes, destination.scenes[0]!] },
           ],
         },
       ]),
@@ -166,57 +145,35 @@ describe("createSceneCatalog", () => {
     );
   });
 
-  it("rejects invalid Base58 IDs and unauthorized pack IDs", () => {
+  it("rejects invalid identifiers and normalized scene positions", () => {
     const pack = createPack();
     const destination = pack.destinations[0]!;
-    const spot = destination.spots[0]!;
+    const scene = destination.scenes[0]!;
 
-    for (const id of [
-      "7Yp3mK9Qa2X",
-      "7Yp3mK9Qa2Xvv",
-      "0Yp3mK9Qa2Xv",
-      "OYp3mK9Qa2Xv",
-      "IYp3mK9Qa2Xv",
-      "lYp3mK9Qa2Xv",
-      "中文识别码1234567",
-    ]) {
+    for (const id of ["7Yp3mK9Qa2X", "7Yp3mK9Qa2Xvv", "0Yp3mK9Qa2Xv", "中文识别码1234567"]) {
       expect(() => createCatalog([{ ...pack, id }])).toThrow("must be a 12-character Base58 ID");
     }
     expect(() => createCatalog([{ ...pack, id: "unofficial" }])).toThrow(
       "must be a 12-character Base58 ID",
     );
     expect(() =>
-      createCatalog([{ ...pack, destinations: [{ ...destination, id: "official" }] }]),
-    ).toThrow("must be a 12-character Base58 ID");
-    expect(() =>
       createCatalog([
-        { ...pack, destinations: [{ ...destination, spots: [{ ...spot, id: " " }] }] },
+        {
+          ...pack,
+          destinations: [{ ...destination, scenes: [{ ...scene, position: { x: -0.1, y: 0.5 } }] }],
+        },
       ]),
-    ).toThrow("must be a 12-character Base58 ID");
+    ).toThrow("must be between 0 and 1");
     expect(() =>
       createCatalog([
         {
           ...pack,
           destinations: [
-            {
-              ...destination,
-              spots: [{ ...spot, scenes: [{ ...spot.scenes[0]!, id: "0Yp3mK9Qa2Xv" }] }],
-            },
+            { ...destination, scenes: [{ ...scene, position: { x: 0.5, y: Number.NaN } }] },
           ],
         },
       ]),
-    ).toThrow("must be a 12-character Base58 ID");
-  });
-
-  it("accepts the reserved built-in pack IDs", () => {
-    const pack = createPack({ id: "official" });
-    expect(createCatalog([pack]).getDestination("official", ids.destination)).toBeDefined();
-    expect(
-      createCatalog([{ ...pack, id: "placeholder" }]).getDestination(
-        "placeholder",
-        ids.destination,
-      ),
-    ).toBeDefined();
+    ).toThrow("must be between 0 and 1");
   });
 
   it("rejects empty catalog hierarchy levels", () => {
@@ -227,13 +184,7 @@ describe("createSceneCatalog", () => {
     );
     const destination = pack.destinations[0]!;
     expect(() =>
-      createCatalog([{ ...pack, destinations: [{ ...destination, spots: [] }] }]),
-    ).toThrow("at least one spot");
-    const spot = destination.spots[0]!;
-    expect(() =>
-      createCatalog([
-        { ...pack, destinations: [{ ...destination, spots: [{ ...spot, scenes: [] }] }] },
-      ]),
+      createCatalog([{ ...pack, destinations: [{ ...destination, scenes: [] }] }]),
     ).toThrow("at least one scene");
   });
 

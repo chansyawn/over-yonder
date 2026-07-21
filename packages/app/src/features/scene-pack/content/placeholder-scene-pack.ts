@@ -18,8 +18,6 @@ const placeholderDescription = text(
 interface PlaceholderDestinationOptions {
   readonly id: string;
   readonly title: LocalizedText;
-  readonly spotId: string;
-  readonly spotTitle: LocalizedText;
   readonly sceneId: string;
   readonly videoSceneId: string;
   readonly sceneTitle: LocalizedText;
@@ -47,6 +45,7 @@ function placeholderVideoScene(sceneId: string): VideoSceneDefinition {
       "A generated video placeholder for validating scene playback.",
       "用于验证场景播放的生成式占位视频。",
     ),
+    position: { x: 0.6, y: 0.55 },
     media: {
       src: "https://placeholdervideo.dev/1920x1080",
       label: text("A 1920 by 1080 placeholder video", "一个 1920 × 1080 的占位视频"),
@@ -60,8 +59,6 @@ function placeholderVideoScene(sceneId: string): VideoSceneDefinition {
 function createPlaceholderDestination({
   id,
   title,
-  spotId,
-  spotTitle,
   sceneId,
   videoSceneId,
   sceneTitle,
@@ -74,23 +71,16 @@ function createPlaceholderDestination({
     title,
     description: placeholderDescription,
     image: placeholderImageAsset(imageLabel, background, foreground),
-    spots: [
+    scenes: [
       {
-        id: spotId,
-        title: spotTitle,
+        id: sceneId,
+        kind: "image",
+        title: sceneTitle,
         description: placeholderDescription,
         position: { x: 0.5, y: 0.5 },
-        scenes: [
-          {
-            id: sceneId,
-            kind: "image",
-            title: sceneTitle,
-            description: placeholderDescription,
-            media: placeholderImageAsset(imageLabel, background, foreground),
-          },
-          placeholderVideoScene(videoSceneId),
-        ],
+        media: placeholderImageAsset(imageLabel, background, foreground),
       },
+      placeholderVideoScene(videoSceneId),
     ],
   };
 }
@@ -99,8 +89,6 @@ const placeholderDestinationOptions = [
   {
     id: "4Fq8rT2Wm9Ks",
     title: text("Lunar Outpost", "月球前哨站"),
-    spotId: "6Vd3pX8Hn5Qz",
-    spotTitle: text("Observation Point", "观测点"),
     sceneId: "2Jm7Rk4Yp8Vc",
     videoSceneId: "8qN5tK3Wx7Ha",
     sceneTitle: text("Lunar Observation", "月面观测"),
@@ -111,8 +99,6 @@ const placeholderDestinationOptions = [
   {
     id: "5Zr9mD2Kv6Pt",
     title: text("Cloud Harbor", "云端港湾"),
-    spotId: "9Hs4qW7Xn3Mb",
-    spotTitle: text("Docking Platform", "停靠平台"),
     sceneId: "7Ld2pV8Qm4Yx",
     videoSceneId: "3Kz6tR9Wq5Nc",
     sceneTitle: text("Platform View", "平台景观"),
@@ -123,8 +109,6 @@ const placeholderDestinationOptions = [
   {
     id: "6Qm3Xv7Kp9Ta",
     title: text("Verdant Basin", "苍翠盆地"),
-    spotId: "2Wn8qH5Yt4Kr",
-    spotTitle: text("Basin Overlook", "盆地眺望台"),
     sceneId: "9Vp4mT7Xq2Kb",
     videoSceneId: "5Hr8Wn3Qy6La",
     sceneTitle: text("Verdant Overlook", "苍翠远眺"),
@@ -135,8 +119,6 @@ const placeholderDestinationOptions = [
   {
     id: "8Kq5Yv2Tm7Xr",
     title: text("Polar Station", "极地站"),
-    spotId: "4Np7Qm9Xv3Kt",
-    spotTitle: text("Survey Deck", "勘测平台"),
     sceneId: "6Tz2Wq8Km5Yr",
     videoSceneId: "3Xr9Vp4Qn7Ka",
     sceneTitle: text("Polar Survey", "极地勘测"),

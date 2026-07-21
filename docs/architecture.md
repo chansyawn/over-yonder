@@ -37,7 +37,7 @@ over-yonder/
 | React           | Shared user interface                                                             |
 | TanStack Router | Application routing inside the shared UI                                          |
 | Tailwind CSS    | Shared utility-first styling                                                      |
-| Base UI         | Headless, accessible UI primitives, including the spot scene drawer               |
+| Base UI         | Headless, accessible UI primitives                                                |
 | Paraglide JS    | Type-safe UI messages, locale detection, and persisted language selection         |
 | Tauri           | Desktop window and application shell                                              |
 | Vite+           | Development server, builds, formatting, linting, type checks, and workspace tasks |

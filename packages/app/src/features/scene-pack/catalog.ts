@@ -6,17 +6,9 @@ import type {
   SceneDetail,
   ScenePackDefinition,
   SceneSummary,
-  SpotDefinition,
-  SpotDetail,
 } from "./model.ts";
 import { localize, resolvePackLocale } from "./localization.ts";
-import {
-  ensureUnique,
-  validateDestination,
-  validatePack,
-  validateScene,
-  validateSpot,
-} from "./validation.ts";
+import { ensureUnique, validateDestination, validatePack, validateScene } from "./validation.ts";
 
 export interface SceneCatalog {
   listDestinations(): readonly DestinationSummary[];
@@ -55,33 +47,22 @@ export function createSceneCatalog(
       const destinationPath = `${packPath}, destination ${JSON.stringify(destination.id)}`;
       validateDestination(destination, pack.locales, destinationPath);
       ensureUnique(destinationIds, destination.id, "destination");
-      const spotIds = new Set<string>();
       const sceneIds = new Set<string>();
       const scenesById = new Map<string, SceneDetail>();
+      const scenes = destination.scenes.map((scene) => {
+        const scenePath = `${destinationPath}, scene ${JSON.stringify(scene.id)}`;
+        validateScene(scene, pack.locales, scenePath);
+        ensureUnique(sceneIds, scene.id, "scene");
 
-      const spots = destination.spots.map((spot) => {
-        const spotPath = `${destinationPath}, spot ${JSON.stringify(spot.id)}`;
-        validateSpot(spot, pack.locales, spotPath);
-        ensureUnique(spotIds, spot.id, "spot");
-
-        const scenes = spot.scenes.map((scene) => {
-          const scenePath = `${spotPath}, scene ${JSON.stringify(scene.id)}`;
-          validateScene(scene, pack.locales, scenePath);
-          ensureUnique(sceneIds, scene.id, "scene");
-
-          const detail = createSceneDetail(scene, resolvedLocale);
-          scenesById.set(scene.id, detail);
-          return createSceneSummary(scene, resolvedLocale);
-        });
-
-        return createSpotDetail(spot, scenes, resolvedLocale);
+        const detail = createSceneDetail(scene, resolvedLocale);
+        scenesById.set(scene.id, detail);
+        return createSceneSummary(scene, resolvedLocale);
       });
 
-      const sceneCount = spots.reduce((count, spot) => count + spot.scenes.length, 0);
-      const summary = createDestinationSummary(pack.id, destination, sceneCount, resolvedLocale);
+      const summary = createDestinationSummary(pack.id, destination, scenes.length, resolvedLocale);
       const detail: DestinationDetail = {
         ...summary,
-        spots,
+        scenes,
       };
 
       destinationSummaries.push(summary);
@@ -118,22 +99,7 @@ function createDestinationSummary(
     title: localize(destination.title, locale),
     description: localize(destination.description, locale),
     image: destination.image,
-    spotCount: destination.spots.length,
     sceneCount,
-  };
-}
-
-function createSpotDetail(
-  spot: SpotDefinition,
-  scenes: readonly SceneSummary[],
-  locale: string,
-): SpotDetail {
-  return {
-    id: spot.id,
-    title: localize(spot.title, locale),
-    ...(spot.description ? { description: localize(spot.description, locale) } : {}),
-    position: spot.position,
-    scenes,
   };
 }
 
@@ -143,6 +109,7 @@ function createSceneSummary(scene: SceneDefinition, locale: string): SceneSummar
     kind: scene.kind,
     title: localize(scene.title, locale),
     ...(scene.description ? { description: localize(scene.description, locale) } : {}),
+    position: scene.position,
     preview: scene.kind === "image" ? scene.media : scene.media.poster,
   };
 }
@@ -152,6 +119,7 @@ function createSceneDetail(scene: SceneDefinition, locale: string): SceneDetail 
     id: scene.id,
     title: localize(scene.title, locale),
     ...(scene.description ? { description: localize(scene.description, locale) } : {}),
+    position: scene.position,
   };
 
   if (scene.kind === "image") {

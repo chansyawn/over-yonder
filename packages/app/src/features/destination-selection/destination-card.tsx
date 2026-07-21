@@ -9,10 +9,6 @@ interface DestinationCardProps {
 }
 
 export function DestinationCard({ destination, priority }: DestinationCardProps) {
-  const spotCount =
-    destination.spotCount === 1
-      ? m.destination_spot_count_one({ count: destination.spotCount })
-      : m.destination_spot_count_other({ count: destination.spotCount });
   const sceneCount =
     destination.sceneCount === 1
       ? m.destination_scene_count_one({ count: destination.sceneCount })
@@ -39,7 +35,7 @@ export function DestinationCard({ destination, priority }: DestinationCardProps)
         <h2 className="truncate font-serif text-xl font-normal">{destination.title}</h2>
         <p className="text-muted-foreground mt-1 line-clamp-1 text-xs">{destination.description}</p>
         <div className="border-border/70 text-muted-foreground mt-auto flex items-center justify-between gap-2 border-t pt-1.5 text-xs tracking-wide md:gap-3">
-          <p>{`${spotCount} · ${sceneCount}`}</p>
+          <p>{sceneCount}</p>
           <CompassIcon aria-hidden="true" className="size-5 shrink-0 stroke-1" />
         </div>
       </div>

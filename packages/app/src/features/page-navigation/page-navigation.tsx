@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import spotSelectionIllustrationUrl from "#app/assets/illustrations/destination-selection.png";
+import destinationExplorationIllustrationUrl from "#app/assets/illustrations/destination-selection.png";
 import homeIllustrationUrl from "#app/assets/illustrations/home.png";
-import destinationSelectionIllustrationUrl from "#app/assets/illustrations/spot-selection.png";
+import destinationSelectionIllustrationUrl from "#app/assets/illustrations/destination-exploration.png";
 import * as m from "#app/paraglide/messages.js";
 import "#app/ui/illustration-control.css";
 
@@ -57,7 +57,7 @@ export function PageNavigation({ packId, destinationId, destinationTitle }: Page
             alt=""
             aria-hidden="true"
             className="illustration-control-image size-11 object-contain"
-            src={spotSelectionIllustrationUrl}
+            src={destinationExplorationIllustrationUrl}
           />
         </Link>
       ) : null}

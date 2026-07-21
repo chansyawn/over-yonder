@@ -24,6 +24,10 @@ interface SceneDefinitionBase {
   readonly id: string;
   readonly title: LocalizedText;
   readonly description?: LocalizedText;
+  readonly position: {
+    readonly x: number;
+    readonly y: number;
+  };
 }
 
 export interface ImageSceneDefinition extends SceneDefinitionBase {
@@ -38,23 +42,12 @@ export interface VideoSceneDefinition extends SceneDefinitionBase {
 
 export type SceneDefinition = ImageSceneDefinition | VideoSceneDefinition;
 
-export interface SpotDefinition {
-  readonly id: string;
-  readonly title: LocalizedText;
-  readonly description?: LocalizedText;
-  readonly position: {
-    readonly x: number;
-    readonly y: number;
-  };
-  readonly scenes: readonly SceneDefinition[];
-}
-
 export interface DestinationDefinition {
   readonly id: string;
   readonly title: LocalizedText;
   readonly description: LocalizedText;
   readonly image: ImageAssetDefinition;
-  readonly spots: readonly SpotDefinition[];
+  readonly scenes: readonly SceneDefinition[];
 }
 
 export interface ScenePackDefinition {
@@ -70,7 +63,6 @@ export interface DestinationSummary {
   readonly title: string;
   readonly description: string;
   readonly image: ImageAsset;
-  readonly spotCount: number;
   readonly sceneCount: number;
 }
 
@@ -79,25 +71,19 @@ export interface SceneSummary {
   readonly kind: SceneDefinition["kind"];
   readonly title: string;
   readonly description?: string;
+  readonly position: SceneDefinition["position"];
   readonly preview: ImageAsset;
 }
 
-export interface SpotDetail {
-  readonly id: string;
-  readonly title: string;
-  readonly description?: string;
-  readonly position: SpotDefinition["position"];
-  readonly scenes: readonly SceneSummary[];
-}
-
 export interface DestinationDetail extends DestinationSummary {
-  readonly spots: readonly SpotDetail[];
+  readonly scenes: readonly SceneSummary[];
 }
 
 interface SceneDetailBase {
   readonly id: string;
   readonly title: string;
   readonly description?: string;
+  readonly position: SceneDefinition["position"];
 }
 
 export interface ImageSceneDetail extends SceneDetailBase {
